@@ -2,9 +2,26 @@
 #
 # mysql-had
 # this file is part of the mysql-ha suite (named rc-script on the cvs tree)
-# Copyright (C) 2002 - Fernando Ipar. see the file COPYING for more
-# info
+
+# Copyright 2002 Fernando Ipar - fipar@acm.org / fipar@users.sourceforge.net
+
+# This program is free software; you can redistribute it
+# and/or modify it under the terms of the GNU General Public
+# License as published by the Free Software Foundation;
+# either version 2 of the License, or (at your option) any
+# later version.
 #
+# This program is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied
+# warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+# PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 59 Temple Place, Suite 330,
+# Boston, MA 02111-1307 USA
+
 # chkconfig: 2345 98 88
 # description: mysql-ha is a high availability clustering system for use \
 # with the mysql database server. it uses mysql's builtin replication \
@@ -30,8 +47,7 @@ start()
 	usleep 30
 	[ -f $pidf ] && {
 		[ -d $(cat $pidf) ] && echo "OK">&2 || {
-			echo "ERROR ($(cat $pidf) does not appear to be running)">&2
-			return 1
+			echo "ERROR ($(cat $pidf) does not appear to be running)">&2			return 1
 		}
 	} || echo "ERROR ($pidf not found after nohup)">&2 && return 1
 	return 0
@@ -78,7 +94,7 @@ case "$1" in
   stop)
   	stop
 	;;
-  restart)
+  restart)\]\
   	restart
 	;;
   status)
