@@ -2,7 +2,7 @@
 
 use Net::SSH "ssh_cmd";
 
-sub MasterCmd($masteruser,$masterhost,$command){
+sub RemoteCmd($remoteuser,$remotehost,$command){
     local($user,$host,$command) = @_;
     print "user = $user\nhost=$host\ncmd=$command\n";
     $uh = $user."\@".$host;
