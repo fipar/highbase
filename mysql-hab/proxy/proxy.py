@@ -32,13 +32,6 @@ ADMIN_LISTEN_BACKLOG = 16
 ADMIN_LISTEN_PORT = 8888
 ADMIN_ALLOWED_ADDR = "127.0.0.1", "192.168.0.1"
 
-#servers
-servers = {}
-servers[0] = "192.168.0.10", 3308
-#servers[1] = "192.168.0.2", 3308
-#servers[2] = "192.168.0.3", 3308
-
-
 # ******************************************************
 # ### you shouldn't need to modify anything from now on
 # ******************************************************
@@ -47,10 +40,15 @@ servers[0] = "192.168.0.10", 3308
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((LISTEN_ADDR, LISTEN_PORT))
 s.listen(LISTEN_BACKLOG)
+servers = {}
 nextid = 0
 
-def schandler(sig, frame):
-	syslog.syslog("mysql-proxy: child exited")
+servers[0] = "192.168.0.10", 3306
+#servers[1] = "192.168.0.2", 3308
+#servers[2] = "192.168.0.3", 3308
+
+def schandler(signum, frame):
+	syslog.syslog("child exited")
 
 def process_client(sock, addr, ip, port):
 	cont = 1
@@ -81,11 +79,14 @@ def process_client(sock, addr, ip, port):
 				except:
 					cont = 1
 
+signal.signal(signal.SIGCHLD,schandler)
 while 1:
-	con = s.accept()
+	try:
+		con = s.accept()
+	except:
+		con = s.accept()
 	sock, addr = con
 	peer, ignore =  addr
-	signal.signal(signal.SIGCHLD, schandler)
 	if nextid == (len(servers) - 1):
 		currid = nextid
 		nextid = 0
