@@ -125,7 +125,7 @@ read option
 	read OTHERBOX
 	echo "when asked for a file, use the provided default, when asked for a passphrase, type enter">&2
 	ssh-keygen -t dsa
-	scp .ssh/id_dsa.pub $OTHERBOX:/root/id_peer
+	scp /root/.ssh/id_dsa.pub $OTHERBOX:/root/id_peer
 	ssh $OTHERBOX "cat /root/id_peer >> /root/.ssh/authorized_keys2"
 	ssh $OTHERBOX "ssh-keygen -t dsa"
 	scp $OTHERBOX:/root/.ssh/id_dsa.pub /root/id_peer

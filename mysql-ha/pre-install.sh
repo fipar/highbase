@@ -23,7 +23,6 @@
 # check for things we need to run mysql-ha
 
 
-
 #check for mysql's init script
 [ -x /etc/init.d/mysqld -o -x /etc/init.d/mysql ] || {
 	echo "mysql is not properly installed or i can't execute the init script">&2
@@ -69,6 +68,7 @@
 #check for smbclient, only warn if not found
 [ -n "$(type -a smbclient)" ] || {
 	echo "i coudn't find smblient in your path, netbios notification will be unavailable">&2
+	sleep 2
 }
 
 

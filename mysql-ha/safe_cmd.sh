@@ -56,7 +56,7 @@ check_pid_name ()
 TIMEOUT=$1
 COMMAND=$2
 
-shift 2 
+shift 2
 $COMMAND $* &
 childpid=$!
 

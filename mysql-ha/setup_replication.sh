@@ -39,6 +39,7 @@ CNF="/etc/my.cnf" #change this if the file has a different path on your system. 
 enable_slave()
 {
 echo "please enter mysql's root password for the master node">&2
+echo "(this password won't be stored, it's passed as an argument to mysql)">&2
 cat <<EOSCR|mysql -uroot -p
 GRANT REPLICATION CLIENT, REPLICATION SLAVE, SUPER, RELOAD ON *.* to $MYSQL_USER identified by "$MYSQL_PASSWORD";
 FLUSH PRIVILEGES;
@@ -60,6 +61,7 @@ echo "I'm going to try to set up mysql to replicate, you'll need to answer a few
 	read myloc
 	[ -z "$myloc" ] || CNF=$myloc
 }
+
 [ -z "$master" ] && {
 	echo "Is this the master node? (y/n)">&2
 	read master
