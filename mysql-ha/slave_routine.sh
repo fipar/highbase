@@ -6,6 +6,14 @@
 
 . /usr/mysql-ha/common.sh
 
+#timeout in seconds for the ssh command
+#take into consideration that this is not just an ssh timeout, 
+#if the failover/takeover procedure is delayed, it will be deemed
+#as timeout too...
+SSH_PATIENCE=40
+#timeout in seconds for the mysql.monitor command
+MONITOR_PATIENCE=20
+
 #when mysql.monitor fails, we wait this time (secs) until we check again
 #to see if the master is really gone
 CHK_THRESHOLD=300
@@ -29,22 +37,24 @@ CHK_PROG="mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --data
 attempt_kill()
 {
 	log "about to run mysql_kill on $MASTER_NODE"
-	ssh root@$MASTER_NODE /usr/mysql-ha/mysql_kill.sh
+	wrapper_safe_cmd.sh $SSH_PATIENCE ssh root@$MASTER_NODE /usr/mysql-ha/mysql_kill.sh || log "could not run mysql_kill.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
 	sleep $T_KILL
-	$CHK_PROG && return 0 || return 1
+	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && return 0 || return 1
 }
 
 
 attempt_restart()
 {
 	log "about to run mysql_restart on $MASTER_NODE"
-	ssj root@$MASTER_NODE /usr/mysql-ha/mysql_restart.sh
+	wrapper_safe_cmd.sh $SSH_PATIENCE ssh root@$MASTER_NODE /usr/mysql-ha/mysql_restart.sh || log "could not run mysql_restart.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
 	sleep $T_RESTART
-	$CHK_PROG && return 0 || return 1
+	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && return 0 || return 1
 }
 
 
 #see if we should be running
+#file /tmp/nocluster acts as an inhibitor of the cluster.
+#this mechanism should be improved for security in the future
 shouldrun()
 {
 [ -f /tmp/nocluster ] && return 1 || return 0
@@ -57,9 +67,9 @@ shouldrun || log "shouldrun was unsuccessfull (ok)"
 
 CHK_PROG="mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $MASTER_NODE"
 
-$CHK_PROG && log "mysql responded (ok)" || {
+wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && log "mysql responded (ok)" || {
 	sleep $CHK_THRESHOLD
-	$CHK_PROG && "mysql responded within CHK_THRESHOLD (warning)" || {
+	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && "mysql responded within CHK_THRESHOLD (warning)" || {
 		fping -c$ATTEMPTS $MASTER_NODE && {
 			attempt_kill && {
 				log "mysql.monitor was succesfull after kill (notify)"
@@ -74,7 +84,7 @@ $CHK_PROG && log "mysql responded (ok)" || {
 			#problems like a loop on the scsi driver, it has happened to me!. in this case, linux is running ok, 
 			#but it can't access the filesystem so nothing that depends on files can run (including mysql, but
 			#also including remote shells, or anything that uses files/sockets). 
-			ssh root@$MASTER_NODE /usr/mysql-ha/failover.sh
+			wrapper_safe_cmd.sh $SSH_PATIENCE ssh root@$MASTER_NODE /usr/mysql-ha/failover.sh || log "could not failover.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
 
 		} || {
 			log "mysql.monitor failed but $MASTER_NODE was dead (error)"
