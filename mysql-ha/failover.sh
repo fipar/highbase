@@ -45,5 +45,5 @@ ifconfig $CLUSTER_DEVICE del $CLUSTER_IP
 } || {
 	sync
 	log "starting failover, hard mode, shutting down box (notify)"
-	/sbin/shutdown -h now
+	nohup /sbin/shutdown -h now &
 }

@@ -27,7 +27,16 @@
 # user on the mysql-ha.conf file
 #
 
-. /usr/common.sh
+CONF_FILE=/etc/mysql-ha.conf
+
+variables=$(grep '=' $CONF_FILE|awk -F= '{print $1}')
+. $CONF_FILE
+for variable in $variables; do
+	eval "export $variable"
+done
+
+. /usr/mysql-ha/common.sh
+
 
 FAKEDIR=/etc/fake/
 FAKEINSTANCEDIR=/etc/fake/instance_config
@@ -45,4 +54,3 @@ SPOOF_NETMASK=$CLUSTER_NETMASK
 SPOOF_BROADCAST=$CLUSTER_BROADCAST
 TARGET_INTERFACE=$CLUSTER_DEVICE
 EOF
-

@@ -69,11 +69,11 @@ wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && log "mysql responded (ok)" ||
 		fping -c $FPING_ATTEMPTS $MASTER_NODE && {
 			attempt_kill && {
 				log "mysql.monitor was succesfull after kill (notify)"
-				exit 0
+				return 0
 			}
 			attempt_restart && {
 				log "mysql.monitor was succesfull after restart (notify)"
-				exit 0
+				return 0
 			} 
 			#this should change for a service running on the master node itself, so we can discover weird
 			#problems like a loop on the scsi driver, it has happened to me!. in this case, linux is running ok, 
@@ -85,7 +85,7 @@ wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && log "mysql responded (ok)" ||
 		}
 			/usr/mysql-ha/takeover.sh
 			[ $should_failover -eq 1 ] && {
-				log "mysql.monitor failed but $MASTER_NODE is running, going for the takeover (error)"
+				log "mysql.monitor failed but $MASTER_NODE is running, going for the failover (error)"
 				wrapper_safe_cmd.sh $SSH_PATIENCE /usr/mysql-ha/pwrap ssh root@$MASTER_NODE /usr/mysql-ha/failover.sh || {
 					log "could not failover.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
 					}

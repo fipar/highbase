@@ -33,7 +33,7 @@
 # pidfile: /var/run/mysql-ha.pid
 
 
-progname=mysql-had
+progname=$(basename $0)
 pidf="/var/run/mysql-ha.pid"
 logf="/var/log/mysql-ha.log"
 startedname="/usr/mysql-ha/configurator.sh"

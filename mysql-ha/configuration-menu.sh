@@ -10,6 +10,8 @@
 #
 
 clear
+. /etc/bashrc
+
 
 cat <<EOMSG
 
@@ -163,6 +165,10 @@ while [ -z "$DB_PASSWORD" ]; do
 done
 echo "DB_PASSWORD=$DB_PASSWORD" >> $FIL;echo
 
+[ -n "$N_SLAVE" -o -n "$N_MASTER" ] && {
+	echo done
+	exit 0
+}
 NODE=2
 echo
 while [ $NODE -ne 0 -a $NODE -ne 1 ] ; do

@@ -45,6 +45,7 @@ fping -c$ATTEMPTS $CLUSTER_IP && {
 	log "takeover with master node still holding cluster ip, going to gratuitious ARP mode (error)"
 	nohup fake $CLUSTER_IP &
 } || {
+	log "takeover with master node down, doing simple ifconfig"
 	#start listening
 	ifconfig $CLUSTER_DEVICE add $CLUSTER_IP
 }
