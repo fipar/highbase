@@ -10,6 +10,7 @@ use DBI;
 use Net::Ping;
 use Sys::Syslog;
 use Mail::Send;
+use Net::Ifconfig::Wrapper;
 
 # read configuration info
 %conf = &ReadConf;
@@ -26,8 +27,24 @@ $testdb = $conf{'MYSQL_DATABASE'};
 $localuser = $conf{'DB_USER'};
 $localpass = $conf{'DB_PASSWORD'};
 
-## can match against a list of slaves from the config file
-if($conf{'SLAVE'} =~ /$hostname/i){
+## determine if this host is the currently running master by searching
+#  for the clusterip in the currently configured network devices
+$master = 0;
+my $Info = Net::Ifconfig::Wrapper::Ifconfig('list', '', '', '')
+    or die $@;
+scalar(keys(%{$Info}))
+    or die "No one interface found. Something wrong?\n";
+foreach (sort(keys(%{$Info}))){
+    ($addr,$mask) = each(%{$Info->{$_}{'inet'}});
+    if($addr =~ $clusterip){
+	print "This host is the current master.\n";
+	$master = 1;
+	last;
+    }
+};
+
+## match against a list of slaves from the config file
+if(($master != 1) && ($conf{'SLAVE'} =~ /$hostname/i)){
     print "This a slave, test the master.\n";
     ## Determine masterhost
     ## can determine masterhost from my.cnf or from show slave status
@@ -67,11 +84,16 @@ if($conf{'SLAVE'} =~ /$hostname/i){
 
 		    if(&TakeOver){
 			&Log("info","mysql takeover successful, mysql-had shutting down");
-			print "Takeover successful, shutting down mysql-had\n";
-			
+			print "Takeover successful, shifting to monitoring as master now\n";
+
+			# This should work because the master loop check is
+			# after the slave loop check
+			$master = 1;
+			last;
+
 			## is it possible to switch into master monitoring mode
 			#  instead of just stopping mysql-had?
-			exit 1;
+#			exit 1;
 		    }
 
 		}else{
@@ -87,6 +109,16 @@ if($conf{'SLAVE'} =~ /$hostname/i){
 	sleep($conf{'MONITOR_CHK_THRESHOLD'});	
     }
 }
+if($master == 1){
+
+    print "Entering master loop...\n";
+## loop master here
+ # it should monitor all slaves unless they match the local hostname
+ #  (in the case of mysql-had converting to master mode after a takeover)
+
+}
+
+
 
 sub TakeOver(){
 
