@@ -1,3 +1,9 @@
+05-19-2003
+* fixed spelling mistake in mysqlhad.pl during slave thread monitoring
+  (mike dopheide)
+* added GetMasterHost() in mysqlhad.pl that tries to grab the master hostname
+  from several places (mike dopheide)
+
 05-15-2003
 * added mysqlmonitor.pl and basic mysqlhad.pl to show how to use MysqlMonitor()
   (mike dopheide)
