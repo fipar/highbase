@@ -25,16 +25,14 @@ done
 
 . /usr/mysql-ha/common.sh
 
-[ -x /etc/init.d/mysqld ] && RC_SCRIPT=/etc/init.d/mysqld
-[ -x /etc/init.d/mysql ] && RC_SCRIPT=/etc/init.d/mysql
 
 [ $($RC_SCRIPT status |grep -c stop) -eq 0 ] || $RC_SCRIPT start
 
 [ -n "$N_MASTER" ] && NODEOK=0 && {
-	/usr/mysql-ha/master_routine.sh
 	ifconfig $CLUSTER_DEVICE |grep $CLUSTER_IP >/dev/null || ifconfig $CLUSTER_DEVICE add $CLUSTER_IP
+	. /usr/mysql-ha/master_routine.sh
 }
-[ -n "$N_SLAVE" ] && NODEOK=0 && /usr/mysql-ha/slave_routine.sh
+[ -n "$N_SLAVE" ] && NODEOK=0 && . /usr/mysql-ha/slave_routine.sh
 [ -z "$NODEOK" ] && {
 	echo "i couldn't figure out if i'm master or slave, aborting">&2
 	exit 1

@@ -109,9 +109,9 @@ export MASTER_NODE
 prepare_environment()
 {
 export SAFE_CMD_DONE=143 # exit code from SAFE_CMD that means it was killed by it's child
-[ -x /etc/init.d/mysql ] && MYSQL_RC=/etc/init.d/mysql
-[ -x /etc/init.d/mysqld ] && MYSQL_RC=/etc/init.d/mysqld
-export MYSQL_RC
+[ -x /etc/init.d/mysqld ] && RC_SCRIPT=/etc/init.d/mysqld
+[ -x /etc/init.d/mysql ] && RC_SCRIPT=/etc/init.d/mysql
+export RC_SCRIPT
 }
 
 

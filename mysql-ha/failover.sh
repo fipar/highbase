@@ -36,7 +36,7 @@ ifconfig $CLUSTER_DEVICE del $CLUSTER_IP
 	     #since this call may wait forever. still, if this was the case, ssh wouldn't probably
 	     #work either so this script would never be executed (gratuitious ARP would have
 	     #to do the job)
-	$MYSQL_RC stop
+	$RC_SCRIPT stop
 	ps -fu mysql |awk '{print $2}'|xargs kill
 	sleep $SIG_KILL_WAIT 
 	ps -fu mysql |awk '{print $2}'|xargs kill -9

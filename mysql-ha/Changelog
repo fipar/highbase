@@ -1,3 +1,8 @@
+09-24-2002
+* minor changes to eliminate redundant script sourcing (of common.sh) 
+* changed logger so syslog lines are tagged 'mysql-had'
+* fixed inconsistency in variable naming for mysql rc script (RC_SCRIPT vs MYSQL_RC)
+
 09-21-2002
 * fixed slave_routine so it performs the check against the cluster ip, and not
 against the master's actual ip. 

@@ -35,7 +35,7 @@ mysql_kill.sh
 	performs a mysql kill (internal SQL command KILL) on every process
 	running on mysql except for the replication thread
 	
-mysql_restart.sh
+restart_mysql.sh
 	restarts the mysql daemon using the proper rc script
 	
 

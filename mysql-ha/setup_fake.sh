@@ -27,6 +27,8 @@
 # user on the mysql-ha.conf file
 #
 
+. /usr/mysql-ha/common.sh
+
 CONF_FILE=/etc/mysql-ha.conf
 
 variables=$(grep '=' $CONF_FILE|awk -F= '{print $1}')
@@ -34,8 +36,6 @@ variables=$(grep '=' $CONF_FILE|awk -F= '{print $1}')
 for variable in $variables; do
 	eval "export $variable"
 done
-
-. /usr/mysql-ha/common.sh
 
 
 FAKEDIR=/etc/fake/

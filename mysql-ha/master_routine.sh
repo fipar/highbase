@@ -3,8 +3,6 @@
 # master_routine.sh
 # this file is part of the mysql-ha suite
 # Copyright (C) 2002 Fernando Ipar, see the file COPYING for more info
-. /usr/mysql-ha/common.sh
-
 
 shouldrun()
 {

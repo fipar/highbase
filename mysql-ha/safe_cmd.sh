@@ -25,7 +25,6 @@
 # by the user. 
 ######################################
 
-. /usr/mysql-ha/common.sh
 
 [ $# -lt 2 ] && {
 	echo "usage: safe_cmd.sh <timeout (secs)> <command> [cmd arg1 arg2 arg3 ... ]">&2

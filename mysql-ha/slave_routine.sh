@@ -21,9 +21,6 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 
-. /usr/mysql-ha/common.sh
-
-
 
 CHK_PROG="/usr/mysql-ha/pwrap mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $CLUSTER_IP"
 

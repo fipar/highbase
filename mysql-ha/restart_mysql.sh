@@ -24,11 +24,7 @@
 . /usr/mysql-ha/common.sh
 OF=/tmp/restart_mysql.$$
 
-
-[ -x /etc/init.d/mysql ] && MYSQL_RC=/etc/init.d/mysql
-[ -x /etc/init.d/mysqld ] && MYSQL_RC=/etc/init.d/mysqld
-
-$MYSQL_RC stop >$OF 2>&1
-$MYSQL_RC start >>$OF 2>&1 || log "$MYSQL_RC could not restart properly (error) $(cat $OF)"
+$RC_SCRIPT stop >$OF 2>&1
+$RC_SCRIPT start >>$OF 2>&1 || log "$RC_SCRIPT could not restart properly (error) $(cat $OF)"
 rm -f $OF
 
