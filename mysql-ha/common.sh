@@ -54,7 +54,7 @@ echo $*
 
 send_netbios()
 {
-destinations=''#include a space-separated list of netbios names here
+destinations='' #include a space-separated list of netbios names here
 for destination in $destinations; do
 	echo $* | smbclient -M $destination
 done
