@@ -6,28 +6,29 @@
 . /usr/mysql-ha/common.sh
 
 
-CHK_THRESHOLD=300
-
-ATTEMPTS=3
-ATTEMPTS_SLEEP=5
-
 shouldrun()
 {
 [ -f /tmp/nocluster ] && return 1 || return 0
 }
 
-#main()
+main()
+{
 
 shouldrun || log "shouldrun returned false (ok)"
 
-#this is untidy
-SLAVE="slave_node"
+
 CHK_PROG="mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $SLAVE"
 
 $CHK_PROG && log "mysql.monitor was succesfull (ok)" || {
-	sleep $CHK_THRESHOLD
+	sleep $MONITOR_CHK_THRESHOLD
 	$CHK_PROG && log "mysql.monitor was successfull in $SLAVE within CHK_THRESHOLD (warning)" || {
 		log "mysql.monitor was unsuccssessfull in $SLAVE (warning)"
 	}
 }
 
+}
+
+while :; do
+	main
+	sleep $MASTER_SLEEP_TIME
+done

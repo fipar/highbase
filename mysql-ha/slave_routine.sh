@@ -6,30 +6,7 @@
 
 . /usr/mysql-ha/common.sh
 
-#timeout in seconds for the ssh command
-#take into consideration that this is not just an ssh timeout, 
-#if the failover/takeover procedure is delayed, it will be deemed
-#as timeout too...
-SSH_PATIENCE=40
-#timeout in seconds for the mysql.monitor command
-MONITOR_PATIENCE=20
 
-#when mysql.monitor fails, we wait this time (secs) until we check again
-#to see if the master is really gone
-CHK_THRESHOLD=300
-
-
-#time we wait before checking, after running mysql_kill
-KILL_WAIT=60
-
-#time we wait before checking, after running mysql_restart
-RESTART_WAIT=60
-
-
-#when we decide the master is gone, we try to fping it to see if the machine is
-#running. we try ATTEMPTS times, waiting ATTEMPTS_SLEEP between attempts. 
-ATTEMPTS=3
-ATTEMPTS_SLEEP=5
 
 CHK_PROG="mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $MASTER_NODE"
 
@@ -38,7 +15,7 @@ attempt_kill()
 {
 	log "about to run mysql_kill on $MASTER_NODE"
 	wrapper_safe_cmd.sh $SSH_PATIENCE ssh root@$MASTER_NODE /usr/mysql-ha/mysql_kill.sh || log "could not run mysql_kill.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
-	sleep $T_KILL
+	sleep $MYSQL_KILL_WAIT
 	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && return 0 || return 1
 }
 
@@ -47,7 +24,7 @@ attempt_restart()
 {
 	log "about to run mysql_restart on $MASTER_NODE"
 	wrapper_safe_cmd.sh $SSH_PATIENCE ssh root@$MASTER_NODE /usr/mysql-ha/mysql_restart.sh || log "could not run mysql_restart.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
-	sleep $T_RESTART
+	sleep $MYSQL_RESTART_WAIT
 	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && return 0 || return 1
 }
 
@@ -61,16 +38,17 @@ shouldrun()
 }
 
 
-#main()
+main()
+{
 shouldrun || log "shouldrun was unsuccessfull (ok)"
 
 
 CHK_PROG="mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $MASTER_NODE"
 
 wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && log "mysql responded (ok)" || {
-	sleep $CHK_THRESHOLD
+	sleep $MONITOR_CHK_THRESHOLD
 	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && "mysql responded within CHK_THRESHOLD (warning)" || {
-		fping -c$ATTEMPTS $MASTER_NODE && {
+		fping -c $FPING_ATTEMPTS $MASTER_NODE && {
 			attempt_kill && {
 				log "mysql.monitor was succesfull after kill (notify)"
 				exit 0
@@ -95,3 +73,9 @@ wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && log "mysql responded (ok)" ||
 	}
 }
 
+}
+
+while :; do
+	main
+	sleep $SLAVE_SLEEP_TIME
+done

@@ -90,16 +90,10 @@ export MASTER_NODE
 #parameters to a separate file
 prepare_environment()
 {
-export CLUSTER_IP=10.0.0.100
-export MYSQL_USER=replicator
-export MYSQL_PASSWORD=replicatorpwd
-export MYSQL_DATABASE=testdb
 export SAFE_CMD_DONE=143 # exit code from SAFE_CMD that means it was killed by it's child
 [ -x /etc/init.d/mysql ] && MYSQL_RC=/etc/init.d/mysql
 [ -x /etc/init.d/mysqld ] && MYSQL_RC=/etc/init.d/mysqld
 export MYSQL_RC
-export ARP_REFRESH_TIME=30
-export DEFAULT_MAC_ADDR
 }
 
 
@@ -115,3 +109,5 @@ prepare_environment
 [ -n "$N_MASTER" ] && state_defined=1
 
 [ -z "$state_defined" ] && die 'couldnt figure out if this is the slave or the master node' 1
+
+[ -n "$N_MASTER" ] && /usr/mysql-ha/master_routine.sh || /usr/mysql-ha/slave_routine.sh

@@ -7,7 +7,5 @@
 
 . /usr/mysql-ha/common.sh
 
-DB_USER=${1:-root}
-DB_PASSWORD=${2:-rootpwd}
 
 echo "slave stop" | mysql -u$DB_USER -p$DB_PASSWORD && log "slave thread stopped (ok)" || log "could not stop slave thread (error)"
