@@ -14,6 +14,8 @@ cat <<EOMSG
 	default values will be placed inside [] where available
 	you must specify a value for every variable that doesn't 
 	have a default
+	
+	
 EOMSG
 
 FIL=/etc/mysql-ha.conf
@@ -119,7 +121,7 @@ done
 echo "DB_USER=$DB_USER" >> $FIL
 
 while [ -z "$DB_PASSWORD" ]; do
-	echo -n "DB_PASSWORD: [rootpwd] "; read DB_PASSWORD; [ -z "$DB_PASSWORD" ] && DB_PASSWORD
+	echo -n "DB_PASSWORD: [rootpwd] "; read DB_PASSWORD; [ -z "$DB_PASSWORD" ] && export DB_PASSWORD=rootpwd
 done
 echo "DB_PASSWORD=$DB_PASSWORD" >> $FIL
 
