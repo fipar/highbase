@@ -10,6 +10,7 @@ sake of users' convenience (done)
 - verify both variable names and comments to see that everything is 
 in ENGLISH LANGUAGE.  (done)
 - rethink default values for most sleep times, timeouts, and patience
-thresholds, since the takeover was a bit slow for a real life situation (pending)
+thresholds, since the takeover was a bit slow for a real life situation (done)
 - write an installation script that gets a working installation from the tarball (if
 all dependencies are satisfied) (ultra-pending)
+- make an RPM release (ultra-pending)
