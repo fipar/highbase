@@ -6,8 +6,6 @@
 
 . /usr/mysql-ha/common.sh
 
-#cuando una comprobacion falla, se usa este valor para esperar antes de
-#realizar la siguiente y dar por muerto al nodo
 #when mysql.monitor fails, we wait this time (secs) until we check again
 #to see if the master is really gone
 CHK_THRESHOLD=300

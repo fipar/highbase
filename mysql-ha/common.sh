@@ -93,6 +93,7 @@ export CLUSTER_IP=10.0.0.100
 export MYSQL_USER=replicator
 export MYSQL_PASSWORD=replicatorpwd
 export MYSQL_DATABASE=testdb
+export SAFE_CMD_DONE=143 # exit code from SAFE_CMD that means it was killed by it's child
 }
 
 prepare_environment
@@ -106,4 +107,4 @@ prepare_environment
 
 [ -n "$N_MASTER" ] && state_defined=1
 
-[ -z "$state_defined" ] && die 'couldn't figure out if this is the slave or the master node' 1
+[ -z "$state_defined" ] && die 'couldnt figure out if this is the slave or the master node' 1
