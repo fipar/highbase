@@ -1,3 +1,7 @@
+05-28-2003
+* Added email capability to Log(), renamed mysqlhad.pl to mysql-had.pl, and
+  wrote a little more in mysql-had.pl as well. (mike dopheide)
+
 05-20-2003
 * added PingMaster() and Log().  Log() will need to be expanded later to deal
   with notification methods other than syslog (mike dopheide)

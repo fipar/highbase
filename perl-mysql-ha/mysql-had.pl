@@ -31,8 +31,6 @@ $localpass = $conf{'DB_PASSWORD'};
 ## or from mysql startup script (/etc/init.d/mysql or mysqld)
 $conf{'MASTER_HOST'} = &GetMasterHost;
 print "master host is $conf{'MASTER_HOST'}\n";
-$ping = &PingMaster($conf{'MASTER_HOST'});
-print "master ping $ping\n";
 
 ## can match against a list of slaves from the config file
 if($conf{'SLAVE'} =~ /$hostname/i){
@@ -51,11 +49,34 @@ if($conf{'SLAVE'} =~ /$hostname/i){
 	
 	if(!(MysqlMonitor($clusterip,$mode,$port,$repluser,$replpass,$testdb))){
 	    &Log("warning","failed to connect to master mysql daemon");
-	    print "master is down, do stuff\n";
+
+	    ## master appears to be down, double check
+	    sleep($conf{'MONITOR_RECHK'});
+	    if(!(MysqlMonitor($clusterip,$mode,$port,$repluser,$replpass,$testdb))){
+		## master mysqld definately isn't responding
+		if(&PingMaster($conf{'MASTER_HOST'})){
+		    print "Master mysqld down, machine up\n";
+		    ## connect via SSH::Perl
+		    # kill mysql
+		    # restart mysql
+		    # check again
+		    # if back, we're all good
+		    # if not, set the master to not restart mysql on reboot
+		    #         turn off it's public networking, etc
+		    # TakeOver() (which double checks local mysqld first)
+		    #    verify that it worked, exit mysql-had
+
+		}else{
+		    print "Master mysqld down, machine down\n";
+		    # 
+		    # TakeOver() (which double checks local mysqld first)
+		    #    verify that it worked, exit mysql-had
+		}
+	    }
 	}
-	
+
 	## change this later
-	sleep(5);	
+	sleep($conf{'MONITOR_CHK_THRESHOLD'});	
     }
 }
 
