@@ -26,6 +26,27 @@ CNF="/etc/my.cnf" #change this if the file has a different path on your system. 
 
 [ -n "$1" ] && [ "$1" == "master" ] && master="y"
 [ -n "$1" ] && [ "$1" == "slave" ] && master="n"
+[ -n "$1" ] && [ "$1" == "enable-slave" ] && enable_slave && exit 0
+
+#enables replication, works for MySQL 4.x or greater
+enable_slave()
+{
+echo "please enter mysql's root password for the master node">&2
+cat <<EOSCR|mysql -uroot -p
+GRANT REPLICATION CLIENT, REPLICATION SLAVE, SUPER, RELOAD ON *.* to $MYSQL_USER identified by "$MYSQL_PASSWORD";
+RESET MASTER;
+EOSCR
+echo "please enter the slave IP or host name">&2
+read slave
+echo "please enter mysql's root password for the slave node">&2
+cat <<EOSCR|mysql -uroot -h$slave -p
+SLAVE STOP;
+RESET SLAVE;
+LOAD DATA FROM MASTER;
+SLAVE START;
+EOSCR
+echo "replication should now be ready and running">&2
+}
 
 echo "I'm going to try to set up mysql to replicate, you'll need to answer a few questions" >&2
 [ -f $CNF ] || {
@@ -60,6 +81,9 @@ EOF
 		scp  $0 root@${slave}:/tmp/
 		ssh -t root@$slave "export TERM=linux;/tmp/setup_replication.sh slave"
 	}
+	echo "If replication is already set up on the slave, you can enable it now. Otherwise, rerun this script passing enable-slave as parameter. Enable now? (y/n)">&2
+	read enable_slave
+	[ "$enable_slave" == "y" ] && enable_slave
 } || {
 	[ -f $CNF ] && {
 	grep log-bin $CNF > /dev/null || {
