@@ -66,7 +66,7 @@ done
 log()
 {
 [ -z "$1" ] && echo "usage: log '<message>'">&2 && exit 1
-logger -i -s $*
+logger -i -s -t mysql-had $*
 [ $(echo $1|egrep -c 'warning|error|notify') -gt 0 ] && {
 	send_notification "$*"
 }
