@@ -1,0 +1,39 @@
+
+
+
+If you set up your failover to log-slave-updates, then this will
+maintain a fairly up to date copy of your binlogs.  There is a risk
+that if one update takes a very long time, then the master might 
+get a long way ahead while the slave replicates this query, but 
+generally as long as updates are short, this should provide a
+reasonably secure remote copy of the contents of your binlog.
+
+The next problem is that there is no way to synchronise the log
+position on the failover with that on the master.  What you can do 
+however, is periodically stop replication on the failover and 
+snapshot the two log positions, eg:
+
+        slave stop;
+        show slave status;   # for Pm
+        show master status;  # for Pf
+        slave start;
+
+The slave and master positions give you a reasonable chance of doing the
+arithmetic required to resync all your slaves to the failover if the 
+master fails.   Eg:
+
+        Psf = Psm + (Pf - Pm)
+
+where Psf is Position of slave relative to failover, 
+Psm is Position of slave relative to master, Pm is a recorded master
+position, and Pf is the corresponding slave position of the failover.
+
+The arithmetic gets a bit hairy around rotations of the binlogs,
+compounded by mysql sometimes inserting extra markers in the binlog
+when rotations occur, and sometimes not. So, the more often snapshots
+are made of the positions, the better.
+
+Anyhow, there's another 2 cents...
+
+==
+Martin

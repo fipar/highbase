@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>MySQL High Availability</title>
+      
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+</head>
+<body text="#ffffff" bgcolor="#000000" link="#33ff33" vlink="#006600"
+ alink="#3366ff">
+ 
+<table cellpadding="2" cellspacing="2" border="0" width="100%">
+   <tbody>
+     <tr>
+       <td valign="top"><img src="logo.png" alt="mysql-ha" border="0">       </td>
+       <td valign="top"><a href="http://sourceforge.net">       <img
+ align="right" alt="SourceForge.net Logo
+      go" border="0"
+ height="31" width="88"
+ src="http://sourceforge.net/sflogo.php?group_id=57844&amp;type=1">
+      </a>       </td>
+     </tr>
+   
+  </tbody> 
+</table>
+ 
+<hr width="100%" size="2"><br>
+MySQL is a popular (and great!) Free database, useful for many kinds of application,
+and with a very good level of robustness. It has<br>
+been in active development for many years, is considered the fastest database
+for web applications by many, and counts with<br>
+a large user base and excelent developers. You can find out more about it
+<a href="http://www.mysql.com">here</a>.<br>
+Some time ago, i was in need for transparent clustering support with MySQL,
+but couldn't find any application to do this job, so i decided to write my
+own. If you have a similar project feel free to contact <a
+ href="mailto:fipar@acm.org">me</a> so we can join forces.<br>
+ Use the same address to send feature requests (we're still pre-alpha so this
+ is the best time to do this!)
+&nbsp;<br>
+<br>
+news<br>
+<ul>
+  <li>
+  there's a working pre-alpha release for download!. a little bit before
+  scheduled time (Thu 08-01). we've placed a runnable pre-alpha release
+  on the download's page. go grab it <a
+  href="http://prdownloads.sourceforge.net/mysql-ha/mysql-ha-pre-alplha-2.tar.bz2?download">here</a>, 
+  start testing and sending in those bug reports!.
+  </li>
+  <li>we have the first release available for download, it is a cvs tarball
+  of the work we've done so far. it might run, but it probably won't, and it
+  doesn't have much documentation. the idea is that you can see what we're
+  doing, 
+  send in suggestions, etc. we will have better documentation in two weeks
+  and a tested alpha release by the end of the month
+  </li>
+  <li>i've tagged our code in cvs as PRE-ALPHA-1-UNTESTED today, meaning
+  that we have a complete and completely untested version available. we
+  haven't even run this once since we haven't been able to set up a
+  testing environment yet, expect a tested version in two weeks, and of course, 
+  minor code modifications almost everyday, as usual. (22-07-2002)
+  </li>
+  <li>we began discussing some implementation issues (ip takeover techniques)
+  today, if you're interested, keep an eye on the <a
+  href="http://sourceforge.net/mailarchive/forum.php?forum_id=10290">mysql-ha-devel
+  list</a> (19-07-2002)</li>
+  <li>first files available on cvs today. (19-07-2002)</li>
+  <li>project approval. (17-07-2002)</li>
+</ul>
+<br>
+this web site is mantained for informational purposes only, even though news
+will be updated as the project evolves, you are encouraged to check the project's
+<a href="http://sourceforge.net/projects/mysql-ha">sourceforge site</a> often.
+<br>
+<br>
+<br>
+highlights: <br>
+<ul>
+  <li>use of MySQL's builtin replication features to achieve data redundancy.</li>
+  <li>support for two nodes, a master and a slave (support for n-node clusters
+is in the TODO list, but only after a stable production release is achieved
+with this first version).</li>
+  <li>use of a cluster IP ('logic' or 'virtual' IP) to present a single server
+to the outside world.</li>
+  <li>has been in active development since Jun 2002, and expects to have
+a beta release by the end of July and a stable one by the end of August.&nbsp;</li>
+</ul>
+things i&acute;ll need in the future:
+<ul>
+  <li>testers</li>
+  <li>packagers</li>
+  <li>criticism &amp; good ideas are always welcome</li>
+</ul>
+<br>
+<br>
+ 
+</body>
+</html>

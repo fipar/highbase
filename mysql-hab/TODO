@@ -1,0 +1,32 @@
+parametrize EVERYTHING. 
+so far, this is what i can think of: 
+- mysql rc script (done)
+- mysql user (done)
+- cluster device (done)
+every variable that involves a sleep, a threshold, a 'patience' measure, 
+all of this should be exported from one place and properly named for the
+sake of users' convenience (done)
+- add licence information (GPL) to every file header. (done) 
+- verify both variable names and comments to see that everything is 
+in ENGLISH LANGUAGE.  (done)
+- rethink default values for most sleep times, timeouts, and patience
+thresholds, since the takeover was a bit slow for a real life situation (done)
+- write an installation script that gets a working installation from the tarball (if
+all dependencies are satisfied) (done, needs testing)
+- make an RPM release (ultra-pending)
+
+
+============
+feature TODO
+============
+
+this list includes things that i want from the cluster
+and things that other people have requested. if you have
+a suggestion/request, use the mysql-ha-devel list (prefered
+method) or contact me at fipar@users.sourceforge.net
+
+(feature / estimated release time)
+
+- automatic handling of a master restore situation (done for mysql 4, pending for mysql 3.x)
+- send out notifications to nagios/big brother/other monitoring software (feb 2003)
+- load balancing (jul 2003)

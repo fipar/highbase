@@ -1,0 +1,185 @@
+sections: 
+=========
+
+1.- instructions on installing the acompanying packages and configuring 
+ mysql-ha
+2.- instructions to configure ssh
+3.- brief instructions on setting up mysql replication
+
+
+1.- instructions on installing the acompanying packages and configuring mysql-ha
+================================================================================
+
+you should untar the release file (tar xjvf <file>) as root on your
+/usr directory. this is not configurable right now, so if you want
+to run the cluster on a different directory you'll have to modify
+the scritps yourself (it's in the todo, but with low priority). 
+
+1.1 - automatic installation script
+===================================
+
+starting with alpha-2, there's an installation script install.sh on the
+package root directory, which will perform the necesary verifications and
+then attempt to assist you with installation. even though it hasn't presented
+any bug yet, it might just do since it hasn't been tested heavily. if you come
+across any bug while running this, please report it to the mysql-ha-devel list
+on sourceforge. 
+
+1.2 - manual installation project
+=================================
+
+to run this beta version youll need: 
+
+- perl
+- perl : DBD : MySQL
+- gcc
+- gnu make
+- bash >=2
+- mysql with replication configured for one master and one slave (http://www.mysql.com/doc)
+
+as root: 
+
+untar the release at /usr and cd to the mysql-ha dir just
+created. 
+cd extern
+cd fping*
+./configure && make && make check && make install && make clean
+cd ../fake*
+make patch && make && make install
+cd ..
+cp mysql.monitor <some-dir-in-your-path>
+cd ..
+./configuration-menu.sh (some defaults are too big and will make the
+takeover last forever, i will fix this for the next release)
+./setup_fake.sh
+now you can run ./configurator.sh, interactively, to test it, 
+or nohup /usr/mysql-ha/configurator.sh
+
+! ! ! ! ! ! ! THIS SOFTWARE IS NOT YET INTENDED FOR PRODUCTION USE ! ! ! ! ! !
+if you do want to use it on a production environment, please test it on your
+development/testing environment and report any bug or ill behaviour you might
+find. if you want to modify some code and send in a patch, feel free to do so. 
+if a community builds around this project, it will evolve faster and we
+will have a producton-stable product soon. 
+
+
+2.- instructions to configure ssh
+=================================
+
+for mysql-ha to work, you must configure ssh to work in passwordless
+mode on both master and slave nodes, at least (and probably at most)
+between the two of them. 
+so far, the cluster uses the root account (this could change in the future), 
+so here are instructions on how to do this using public/private keys. 
+you can also change the code to use telnet and use the rhosts file, but
+i seriously discourage doing this.
+
+that said, you probably aren't running this on a production system anyway, so 
+you might aswell use telnet if you feel more comfortable with it. 
+
+on both nodes, run this as root: 
+ssh-keygen -t dsa
+when asked for a file, use the provided default
+when asked for a passphrase, leave empty
+
+append the generated /root/.ssh/id_dsa.pub file to the
+/root/.ssh/authorized_keys2 (might not exist yet) file on the
+other host. 
+
+you're ready to go now, try this by logging in as root from 
+each machine into the other one. do this at least one
+if you've set up a dedicated testing environment for this
+cluster, since you will be asked for a confirmation to add
+the other host public key to your ring the first time
+you use ssh. 
+
+after that, try this again and you should be on the other
+host with no password prompts at all. 
+
+
+
+3.- brief instructions on setting up mysql replication
+======================================================
+
+
+PLEASE, check out mysql's official site for more accurate information, 
+this section is intended only as a bref summary that might get you
+started if everything's fine with your installation. if you can't get
+mysql to replicate with the instructions provided here, please
+go to the official site. 
+
+the specific url for documentation on replication is: 
+http://www.mysql.com/doc/R/e/Replication.html
+
+
+now, to the quick reference: 
+
+i recommend having the same mysql version on both
+master and slave nodes. 
+
+on the master, you should have a /etc/my.cnf that
+looks something like this:  (things important for
+replication are marked with hash marks
+
+==== BEGIN EXAMPLE /etc/my.cnf FOR MASTER NODE ========
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+log-bin ######
+server-id=1 ######
+
+[mysql.server]
+user=mysql
+basedir=/var/lib
+
+[safe_mysqld]
+err-log=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+==== END EXAMPLE /etc/my.cnf FOR MASTER NODE ========
+
+
+
+==== BEGIN EXAMPLE /etc/my.cnf FOR SLAVE NODE ========
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+
+
+master-host=eliza ######
+master-user=repl ######
+master-password=replicate ######
+master-port=3306 ######
+server-id=2 ######
+
+replicate-do-db=dbname1 ###### put the name of the databases you want to 
+replicate-do-db=dbname2 ###### replicate here
+
+
+[mysql.server]
+user=mysql
+basedir=/var/lib
+
+[safe_mysqld]
+err-log=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+==== END EXAMPLE /etc/my.cnf FOR SLAVE NODE ========
+
+once you have these files, you should stop the
+server on both master and slave nodes, and make
+a tar.gz (or whatever package you might wanna do)
+of the databases you want to replicate. 
+unpack this on the slave, so you start from 
+the same point of both servers. 
+now start both servers and you should be
+going. 
+
+to check if everything's fine, in the
+slave, log in as root(mysql's root) and 
+do a SHOW SLAVE STATUS, the Column Running should
+have the value Yes. if you have a No, you have
+a problem. 
+DON'T WORRY, replication problems are usually small things
+that i haven't taken into consideration yet on this
+document, but are very well documented on the mysql
+manual, please check it if you have any problem. 
+

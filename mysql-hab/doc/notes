@@ -1,0 +1,88 @@
+architecture layout: 
+
+configurator.sh 
+	loads the system's configuration, exporting variables with values 
+	set by the user on a global configuration file. 
+	
+	should call common.sh after this and then execute either master_routine.sh 
+	or slave_routine.sh based on the node it is running on. 
+	
+common.sh
+	includes varialbes and routines global to all other scripts
+	all user-customizable parameters should be moved out of this
+	file and into configurator.sh. 
+	
+	
+slave.include
+master.include
+	files that should be added to the master/slave box 
+	global bashrc file
+	this should be done by the installer
+	
+failover.sh
+	this releases the cluster IP and either shuts down the
+	box or stops the mysql service, depending on the type of
+	failover set by the user (SOFT or HARD)
+	it is called remotely from the slave node when it detects
+	that the service is not being provided by the master but the
+	machine is still up.
+	
+start_slave_thread.sh
+stop_slave_thread.sh
+	shell wrappers to start/stop the mysql slave replication thread. 
+	
+mysql_kill.sh
+	performs a mysql kill (internal SQL command KILL) on every process
+	running on mysql except for the replication thread
+	
+restart_mysql.sh
+	restarts the mysql daemon using the proper rc script
+	
+
+safe_cmd.sh
+wrapper_safe_cmd.sh
+	runs a command with a given timeout. the wrapper provides 0 exit
+	code upon correct end of the executed command (safe_cmd.sh exits
+	with 143 code because the command kills it before finishing)
+	
+takeover.sh
+	takes over the cluster IP and starts providing the service. 
+	stops the replicating thread. 
+
+steal_master_ip.sh
+	uses gratuitious arp to take over the cluster IP if the master
+	is still running and using that IP. deprecated, we will use fake
+	instead. 
+	
+	
+	
+some random notes: 
+
+
+	it is important to note that the so called high availability is, so
+	far, one way. that means that if the master fails in any way, the slave
+	will take over the resources and start providing the service, therefore
+	producing only a small (how 'small' is configurable) service interruption 
+	to the end user. once the problem with the master is solved, going back
+	to slave mode is nor automatic neither straight, since it means 
+	that we have to propagate all the changes back to the master, and then
+	restart both services starting the replication thread on the slave. 
+	we will treat this problem in this way: 
+		release 0: do nothing (go-back-to-master is a manual task)
+		release 1: automatic, with role-swap (that means, once the
+		master is up again, it starts working as a slave, and the slave
+		node as a master until it fails and the roles swap again).
+		release 2: automatic, either with role-swap (As in release 1)
+		or mantaining the original roles (that is, control goes back
+		to the master and the slave begins replicating again). 
+		
+	this 'cluster' relies on the mysql replication mechanism. see the mysql
+	manual for information on replication related problems. the important thing is, 
+	we DO NOT GUARANTEE data correction, this system only attempts to provide
+	high availability asuming that the replication was correct all the time. 
+	
+	monitoring of the replication thread will probably be included in the
+	first release. 
+	
+	
+	

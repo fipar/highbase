@@ -1,0 +1,33 @@
+10-30-2002
+* installation should now work both for debian and redhat (thank you gianfranco)
+* hot slave integration for mysql 4.x (load data from master)
+* bugfixes in the instalation and configuration scripts (thanks again to gianfranco)
+
+
+09-24-2002
+* minor changes to eliminate redundant script sourcing (of common.sh) 
+* changed logger so syslog lines are tagged 'mysql-had'
+* fixed inconsistency in variable naming for mysql rc script (RC_SCRIPT vs MYSQL_RC)
+
+09-21-2002
+* fixed slave_routine so it performs the check against the cluster ip, and not
+against the master's actual ip. 
+* fixed configurator.sh so that it adds the cluster ip when the cluster is
+started.  
+* changed configurator.sh so if mysql's service isn't running when the cluster
+is started, it is automatically started
+
+09-20-2002 
+* fixed rc-script
+
+08-05-2002 
+*fixed configuration-menu.sh so it verifies that the global bashrc isn't already modified before changing it
+
+08-05-2002 
+* fixed failover invocation, added nohup to the shutdown invocation, this fixed the problem
+
+08-12-2002 
+* fixed send_notification syntax bug in eval invocation
+
+08-30-2002 
+* added instalation script and fixed some minor bugs in related code

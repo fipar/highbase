@@ -1,0 +1,6 @@
+#this file is part of the mysql-ha suite
+#Copyright (C) 2002 Fernando Ipar - fipar@acm.org / fipar@users.sourceforge.net
+#see the file COPYING for more info
+[ $(echo $PATH|grep -c "/usr/mysql-ha") -gt 0 ] || export PATH=$PATH:/usr/mysql-ha
+[ $(echo $PATH|grep -c "/usr/mysql-ha/extern") -gt 0 ] || export PATH=$PATH:/usr/mysql-ha/extern
+export N_MASTER=1
