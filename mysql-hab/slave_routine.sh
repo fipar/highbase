@@ -56,6 +56,13 @@ main()
 {
 shouldrun || log "shouldrun was unsuccessfull (ok)"
 
+SLAVE_STATUS=`echo "show slave status" | mysql -u$DB_USER -p$DB_PASSWORD |awk '{ print $7 }' |sed -n -e /Yes/p`
+
+[ "$SLAVE_STATUS" == "Yes" ] && MYSQL_REPL=1
+[ "$SLAVE_STATUS" != "Yes" -a "$MYSQL_REPL" == "1" ] && {
+        MYSQL_REPL=0
+        log "notify slave stopped"
+}
 
 CHK_PROG="/usr/mysql-ha/pwrap mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $MASTER_NODE"
 should_failover=0

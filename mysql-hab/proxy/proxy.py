@@ -42,6 +42,7 @@ s.bind((LISTEN_ADDR, LISTEN_PORT))
 s.listen(LISTEN_BACKLOG)
 servers = {}
 nextid = 0
+masterid = 0
 
 servers[0] = "192.168.0.10", 3306
 #servers[1] = "192.168.0.2", 3308
@@ -54,19 +55,29 @@ def process_client(sock, addr, ip, port):
 	cont = 1
 	asock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	asock.connect((ip,port))
-	#sock.setblocking(0)
-	#asock.setblocking(0)
-	#try and except below wer placed for the use of
-	#non-blocking sockets. this was just a test and should be removed
-	#from the final version. 
+	totalmsg = ""
 	while cont == 1:
 		if os.fork() != 0:
 			while cont == 1:
 				try:
 					msg = sock.recv(RECV_BUFF_SIZE)
+					totalmsg = totalmsg + msg
 					if msg == "":
 						cont = 0
-					asock.send(msg)
+					#the next if needs all updating queries, even DDL ones
+					if string.find(msg,"INSERT") >-1 or string.find(msg,"insert")>-1 or string.find(msg,"UPDATE")>-1 or string.find(msg,"update")>-1 or string.find(sub,"DELETE")>-1 or string.find(sub,"delete")>-1:
+						print "processing updating query"
+						mip, mport = servers[masterid]
+						msock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+						msock.connect((mip,mport))
+						msock.send(totalmsg)
+						idx = string.find(totalmsg,msg)
+						totalmsg = totalmsg[0:idx-1]
+						msg = msock.recv(RECV_BUFF_SIZE)
+						sock.send(msg)
+						msock.close()							
+					else:
+						asock.send(msg)
 				except:
 					cont = 1
 		else:

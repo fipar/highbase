@@ -50,6 +50,13 @@ for notification_mean in $NOTIFICATION_MEANS; do
 done
 }
 
+send_email()
+{
+
+HOST=`hostname`
+echo $* | /bin/mail -s "mysql-ha notice ($HOST)" $NOTIFY_EMAIL
+}
+
 send_stdout()
 {
 echo $*
