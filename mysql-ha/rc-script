@@ -44,9 +44,10 @@ start()
 	[ -f $pidf ] && echo "$progname already running (found pid file)">&2 && return 1
 	echo -n "starting $progname: ">&2
 	nohup $startedname >>$logf 2>&1 &
-	usleep 30
+	echo $! > $pidf
+	sleep 1
 	[ -f $pidf ] && {
-		[ -d $(cat $pidf) ] && echo "OK">&2 || {
+		[ -d /proc/$(cat $pidf) ] && echo "OK">&2 || {
 			echo "ERROR ($(cat $pidf) does not appear to be running)">&2			return 1
 		}
 	} || echo "ERROR ($pidf not found after nohup)">&2 && return 1
@@ -60,9 +61,10 @@ stop()
 		return 1
 	}
 	echo -n "stopping $progname: ">&2
-	kill $(cat $pidf)
+	ps -ef|awk "\$3 == $(cat $pidf) {print $2}" |xargs kill #kill the children
+	kill $(cat $pidf)	
 	sleep 1
-	[ -d $(cat $pidf) ] && {
+	[ -d /proc/$(cat $pidf) ] && {
 		kill -9 $(cat $pidf)
 		echo "OK (had to kill -9)"?&2
 	} || echo "OK">&2
@@ -94,7 +96,7 @@ case "$1" in
   stop)
   	stop
 	;;
-  restart)\]\
+  restart)
   	restart
 	;;
   status)
