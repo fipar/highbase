@@ -24,8 +24,9 @@
 
 ###############################################
 # this is a user wrapper for the safe_cmd script. 
-# among other things, i translates the 143 exit code into a 0
+# among other things, it translates the 143 exit code into a 0
 # exit code, so we can use the wrapper in && and || expressions
+# (generally speaking, use it in as argument for test or eval)
 ###############################################
 
 

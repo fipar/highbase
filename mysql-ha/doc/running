@@ -10,6 +10,10 @@ sections:
 1.- instructions on installing the acompanying packages and configuring mysql-ha
 ================================================================================
 
+there's now a install.sh file available, try to install the cluster with
+it and if it fails use the instructions that follow (but PLEASE report where
+it failed to the mysql-ha-devel list or fipar@users.sourceforge.net)
+
 to run this beta version youll need: 
 
 - perl
