@@ -43,7 +43,7 @@ send_notification()
 {
 [ -z "$1" ] && echo "usage: send_notification '<message>'">&2 && exit 1
 for notification_mean in $NOTIFICATION_MEANS; do
-	eval "$notification_mean $*"
+	eval "$notification_mean '$*'"
 done
 }
 
