@@ -180,12 +180,19 @@ echo "NOTIFY_EMAIL=$NOTIFY_EMAIL" >> $FIL;echo
 	echo done
 	exit 0
 }
+
+echo "adding $MYSQLHA_HOME/role.include to $BASHRC" >> $FIL;echo 
+grep "$MYSQLHA_HOME/role.include" $BASHRC >/dev/null || {
+	echo ". $MYSQLHA_HOME/role.include" >> $BASHRC
+	echo >> $BASHRC
+	}
+
 NODE=2
 echo
 while [ $NODE -ne 0 -a $NODE -ne 1 ] ; do
 	echo "almost done, now enter 0 if this node is the master, or 1 if it is the slave: "; read NODE
-	[ $NODE -eq 0 ] && cat $MYSQLHA_HOME/master.include >> $BASHRC
-	[ $NODE -eq 1 ] && cat $MYSQLHA_HOME/slave.include >> $BASHRC
+	[ $NODE -eq 0 ] && cp -f $MYSQLHA_HOME/master.include $MYSQLHA_HOME/role.include
+	[ $NODE -eq 1 ] && cp -f $MYSQLHA_HOME/slave.include $MYSQLHA_HOME/role.include
 done
 
 echo "done"

@@ -38,7 +38,9 @@
 #the ideal would be to write a function to send a notification to
 #a monitoring system such as nagios, big brother, etc, or even
 #snmp traps
-NOTIFICATION_MEANS='send_stdout send_netbios'
+
+#NOTIFICATION_MEANS='send_stdout send_netbios send_email'
+NOTIFICATION_MEANS='send_stdout'
 
 #send notifications by e-mail/sms/smbclient/whatever
 #right now i've only implemented a notification to stdout for debugging purposes

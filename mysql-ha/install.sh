@@ -82,7 +82,7 @@ echo 'almost done, now some interactive scripts...'>&2
 	cp -v rc-script $RC_DIR/mysql-had
 	chmod a+x $RC_DIR/mysql-had
 	pushd $RC_DIR
-	chkconfig --level 345 mysql-had on ##############################33
+	$CHK_CONFIG
 	popd
 } || {
 	echo "i couldn't find $RC_DIR, you should manually copy rc-script as mysql-had in your systems rc dir" >&2
@@ -209,7 +209,8 @@ read reply
 
 cat <<EOMSG>&2
 now you can run ./configurator.sh, interactively, to test it, 
-or nohup $MYSQLHA_HOME/configurator.sh
+or nohup $MYSQLHA_HOME/configurator.sh 
+you can also use the rc script, if it was propery installed for your system
 
 please report any bugs to the mysql-ha-devel list (see 
 our site at http://sourceforge.net/projects/mysql-ha for
