@@ -1,0 +1,13 @@
+Source: fake
+Section: admin
+Priority: optional
+Maintainer: Horms <horms@vergenet.net>
+Standards-Version: 3.1.1
+
+Package: fake
+Architecture: any
+Depends: ${shlibs:Depends}, bash
+Description: IP address takeover tool
+ Fake is a utility that enables the IP address be taken over by bringing up
+ a second interface on the host machine and using gratuitous arp. Designed
+ to switch in backup servers on a LAN.
