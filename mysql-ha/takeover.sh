@@ -24,12 +24,13 @@ mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQ
 #stop replicating
 echo "slave stop" | mysql -u${DB_USER} -p${DB_PASSWORD}
 
-#start listening
-ifconfig eth0 add $IP_CLUSTER
 
 fping -c$ATTEMPTS $CLUSTER_IP && {
 	log "takeover with master node still holding cluster ip, going to gratuitious ARP mode (error)"
-	nohup /usr/mysql-ha/steal_master_ip.sh &
+	nohup fake $CLUSTER_IP &
+} || {
+	#start listening
+	ifconfig eth0 add $IP_CLUSTER
 }
 
 log "takeover complete (notify)"
