@@ -28,8 +28,9 @@ SOFT_FAIL=1
 
 [ -z "$SOFT_FAIL" ] && SOFT_FAIL=1
 
-ifconfig $CLUSTER_DEVICE down
-ifconfig $CLUSTER_DEVICE del $CLUSTER_IP
+ifconfig -a | grep Link | awk '{print $1}' | while read ifname; do
+        [ "$(ifconfig $ifname | grep inet|awk '{print $2}'|awk -F: '{print $2}')" == "$CLUSTER_IP" ] && ifconfig $ifname del $CLUSTER_IP
+done
 
 [ $SOFT_FAIL -eq 0 ] && {
 	sync #this is potentially dangerous in case the service is down due to a disk error, 
