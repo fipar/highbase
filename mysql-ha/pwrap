@@ -28,6 +28,9 @@
 # program. 
 # pwrap does a kill -SIGTERM on PPID if retval is 0, or
 # -SIGKILL if otherwise
+# we need to do different kills to let wrapper_safe_cmd know
+# if the command finished successfuly or not. see that 
+# script's code for more info
 
 eval $*
 [ $? -ne 0 ] && kill -9 $PPID || kill $PPID
