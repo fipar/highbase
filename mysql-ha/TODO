@@ -27,6 +27,6 @@ method) or contact me at fipar@users.sourceforge.net
 
 (feature / estimated release time)
 
-- automatic handling of a master restore situation (dec 2002)
+- automatic handling of a master restore situation (done for mysql 4, pending for mysql 3.x)
 - send out notifications to nagios/big brother/other monitoring software (feb 2003)
 - load balancing (jul 2003)

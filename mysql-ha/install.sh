@@ -19,7 +19,29 @@
 #Software Foundation, Inc., 59 Temple Place, Suite 330,
 #Boston, MA 02111-1307 USA
 
-RC_DIR=/etc/rc.d/init.d
+#
+# GLOBAL VARIABLES
+# here's what you should try modifying if this installation doesn't work
+# for your system. 
+
+
+RC_DIR=/etc/init.d
+
+[ -n "$MYSQLHA_HOME" ] || export MYSQLHA_HOME="/usr/mysql-ha" #you can either set this here or in the environment
+
+##
+## END of global variables, you shouldn't need to modify anything below this
+##
+
+. $MYSQLHA_HOME/compat.sh
+
+[ -d $RC_DIR ] || {
+	#see if we're in an older version of redhat
+	[ -d /etc/rc.d/init.d ] && ln -s /etc/rc.d/init.d $RC_DIR || {
+		echo "i can't find $RC_DIR or a similar directory, please set the variable manually on $0">&2
+		exit 1
+	}
+}
 
 #
 # installation script
@@ -31,10 +53,10 @@ RC_DIR=/etc/rc.d/init.d
 }
 
 #first see if we have everything we need
-/usr/mysql-ha/pre-install.sh || exit 1
+$MYSQLHA_HOME/pre-install.sh || exit 1
 
 #now build aux packages and create config files
-cd /usr/mysql-ha/extern/fping-2.2b2/
+cd $MYSQLHA_HOME/extern/fping-2.2b2/
 ./configure && make && make check && make install && make clean || {
 	echo "couldnt build fping">&2
 	exit 1
@@ -60,10 +82,10 @@ echo 'almost done, now some interactive scripts...'>&2
 	cp -v rc-script $RC_DIR/mysql-had
 	chmod a+x $RC_DIR/mysql-had
 	pushd $RC_DIR
-	chkconfig --level 345 mysql-had on
+	chkconfig --level 345 mysql-had on ##############################33
 	popd
 } || {
-	echo "i couldn't find $RC_DIR, you should copy rc-script as mysql-had in your systems rc dir" >&2
+	echo "i couldn't find $RC_DIR, you should manually copy rc-script as mysql-had in your systems rc dir" >&2
 }
 
 cat <<EOMSG>&2
@@ -73,7 +95,7 @@ otherwise just type enter and i'll try to set it up for you
 (you might be asked the root password for the slave/master nodes)
 EOMSG
 read option
-[ $option = "c" ] || {
+[ "$option" = "c" ] || {
 	echo "enter the name/ip for the other node (i.e., if this is the master, enter the slave's name/ip">&2
 	read OTHERBOX
 	echo "when asked for a file, use the provided default, when asked for a passphrase, type enter">&2
@@ -131,7 +153,7 @@ pid-file=/var/run/mysqld/mysqld.pid
 [mysqld]
 datadir=/var/lib/mysql
 socket=/var/lib/mysql/mysql.sock
-
+log-bin #### this prepares the slave to become a master in the event of a failover
 
 master-host=eliza ######
 master-user=repl ######
@@ -175,18 +197,19 @@ EOMSG
 
 
 cat <<EOMSG>&2
-you should reload /etc/bashrc for some changes to take effect. 
+you should reload /etc/bashrc (or the equivalent for your system, such as 
+/etc/bash.bashrc for debian) for some changes to take effect. 
 (you MUST do this before starting the cluster) 
 type 'n' to reload it now
 
 EOMSG
 read reply
-[ "$reply" = "n" ] && . /etc/bashrc
+[ "$reply" = "n" ] && . $BASHRC
 
 
 cat <<EOMSG>&2
 now you can run ./configurator.sh, interactively, to test it, 
-or nohup /usr/mysql-ha/configurator.sh
+or nohup $MYSQLHA_HOME/configurator.sh
 
 please report any bugs to the mysql-ha-devel list (see 
 our site at http://sourceforge.net/projects/mysql-ha for

@@ -10,7 +10,11 @@
 #
 
 clear
-. /etc/bashrc
+
+[ -n "$MYSQLHA_HOME" ] || export MYSQLHA_HOME="/usr/mysql-ha" #you can either set this here or in the environment
+. $MYSQLHA_HOME/compat.sh
+
+. $BASHRC
 
 
 cat <<EOMSG
@@ -143,7 +147,7 @@ echo "FPING_ATTEMPTS=$FPING_ATTEMPTS" >> $FIL;echo
 
 echo "SLAVE is the hostname/ip of the slave host"
 while [ -z "$SLAVE" ]; do
-	echo -n "SLAVE: [msqyl-slave] "; read SLAVE; [ -z "$SLAVE" ] && SLAVE=mysql-slave
+	echo -n "SLAVE: [mysql-slave] "; read SLAVE; [ -z "$SLAVE" ] && SLAVE=mysql-slave
 done
 echo "SLAVE=$SLAVE" >> $FIL;echo
 
@@ -173,8 +177,8 @@ NODE=2
 echo
 while [ $NODE -ne 0 -a $NODE -ne 1 ] ; do
 	echo "almost done, now enter 0 if this node is the master, or 1 if it is the slave: "; read NODE
-	[ $NODE -eq 0 ] && cat /usr/mysql-ha/master.include >> /etc/bashrc
-	[ $NODE -eq 1 ] && cat /usr/mysql-ha/slave.include >> /etc/bashrc
+	[ $NODE -eq 0 ] && cat $MYSQLHA_HOME/master.include >> $BASHRC
+	[ $NODE -eq 1 ] && cat $MYSQLHA_HOME/slave.include >> $BASHRC
 done
 
 echo "done"

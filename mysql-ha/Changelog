@@ -1,3 +1,9 @@
+10-30-2002
+* installation should now work both for debian and redhat (thank you gianfranco)
+* hot slave integration for mysql 4.x (load data from master)
+* bugfixes in the instalation and configuration scripts (thanks again to gianfranco)
+
+
 09-24-2002
 * minor changes to eliminate redundant script sourcing (of common.sh) 
 * changed logger so syslog lines are tagged 'mysql-had'

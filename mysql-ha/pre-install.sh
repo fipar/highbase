@@ -54,9 +54,9 @@
 	exit 1
 }
 
-#check for gcc and gmake
-[ -n "$(type -a gmake)" -a -n "$(type -a gcc)" ] || {
-	echo "i need gmake and gcc">&2
+#check for gcc and make
+[ -n "$(type -a make)" -a -n "$(type -a gcc)" ] || {
+	echo "i need make and gcc">&2
 	exit 1
 }
 
