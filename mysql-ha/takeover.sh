@@ -21,11 +21,7 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 
-DB_USER=root
-DB_PASSWORD=rootpwd
-
 . /usr/mysql-ha/common.sh
-
 
 ATTEMPTS=3
 #this line has two reasons: 
@@ -40,18 +36,18 @@ mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQ
 #stop replicating
 echo "slave stop" | mysql -u${DB_USER} -p${DB_PASSWORD}
 
-
 fping -c$ATTEMPTS $CLUSTER_IP && {
 	log "takeover with master node still holding cluster ip, going to gratuitious ARP mode (error)"
 	nohup fake $CLUSTER_IP &
+	sleep $ARP_DELAY
 } || {
 	log "takeover with master node down, doing simple ifconfig"
 	#start listening
-	ifconfig $CLUSTER_DEVICE add $CLUSTER_IP
+	ifconfig $CLUSTER_DEVICE $CLUSTER_IP
 }
 
 #just to be paranoid, this code should never run
-[ $(ifconfig $CLUSTER_DEVICE|grep -c $CLUSTER_IP) -eq 0 ] && ifconfig $CLUSTER_DEVICE add $CLUSTER_IP && echo "manually added $CLUSTER_IP to $CLUSTER_DEVICE"
+[ $(ifconfig $CLUSTER_DEVICE|grep -c $CLUSTER_IP) -eq 0 ] && ifconfig $CLUSTER_DEVICE $CLUSTER_IP && echo "manually added $CLUSTER_IP to $CLUSTER_DEVICE"
 
 log "takeover complete (notify)"
 exit 0

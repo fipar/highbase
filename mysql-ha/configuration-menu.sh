@@ -169,6 +169,13 @@ while [ -z "$DB_PASSWORD" ]; do
 done
 echo "DB_PASSWORD=$DB_PASSWORD" >> $FIL;echo
 
+echo "NOTIFY_EMAIL is the email address to be used during error notification"
+while [ -z "$NOTIFY_EMAIL" ]; do
+	echo -n "NOTIFY_EMAIL: [root@localhost] "; read NOTIFY_EMAIL; [ -z "$NOTIFY_EMAIL" ] && export NOTIFY_EMAIL=root@localhost
+done
+echo "NOTIFY_EMAIL=$NOTIFY_EMAIL" >> $FIL;echo
+
+
 [ -n "$N_SLAVE" -o -n "$N_MASTER" ] && {
 	echo done
 	exit 0

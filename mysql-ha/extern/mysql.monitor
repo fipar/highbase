@@ -86,7 +86,7 @@ for $host( @ARGV ) {
 		push( @failures, "Could not connect to $mode server $host: " . $DBI::errstr );
 		next;
 	}
-	@tables = $dbh->func( '_ListTables' );
+	@tables = $dbh->tables();
 	if( $#tables < 0 ) {
 		push( @failures, "No tables found for database $options{database} on server $host" );
 	}
