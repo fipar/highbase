@@ -25,4 +25,10 @@ done
 
 . /usr/mysql-ha/common.sh
 
-[ -n "$N_MASTER" ] && /usr/mysql-ha/master_routine.sh || /usr/mysql-ha/slave_routine.sh
+
+[ -n "$N_MASTER" ] && NODEOK=0 && /usr/mysql-ha/master_routine.sh
+[ -n "$N_SLAVE" ] && NODEOK=0 && /usr/mysql-ha/slave_routine.sh
+[ -z "$NODEOK" ] && {
+	echo "i couldn't figure out if i'm master or slave, aborting">&2
+	exit 1
+}

@@ -49,7 +49,7 @@ FAKEINSTANCEDIR=/etc/fake/instance_config
 FAKEFILEN=$FAKEINSTANCEDIR/$CLUSTER_IP.cfg
 
 [ -f $FAKEFILEN ] && echo -n "$FAKEFILEN exists, should i regenerate it? (Y/n)">&2 && read option
-[ $option = "n" -o $option = "N" ] && echo ok && exit 0
+[ "$option" = "n" -o "$option" = "N" ] && echo ok && exit 0
 
 
 
