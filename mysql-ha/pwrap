@@ -30,5 +30,4 @@
 # -SIGKILL if otherwise
 
 eval $*
-retval=$?
-[ $retval -ne 0 ] && kill -9 $PPID || kill $PPID
+[ $? -ne 0 ] && kill -9 $PPID || kill $PPID
