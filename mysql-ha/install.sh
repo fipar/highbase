@@ -111,6 +111,9 @@ read option
 	echo "you'll be asked to save your peer's public key, say yes">&2
 }
 
+echo "automatic setup of replication in mysql is still under heavy testing. do you want to try it? (y/n)">&2
+read autosetup
+[ "$autosetup" == "y" ] && "./setup_replication.sh" || {
 
 less <<EOMSG>&2
 now you will see instructions on setting up replication in mysql. 
@@ -194,7 +197,7 @@ document, but are very well documented on the mysql
 manual, please check it if you have any problem. 
 
 EOMSG
-
+}
 
 cat <<EOMSG>&2
 you should reload /etc/bashrc (or the equivalent for your system, such as 
@@ -213,8 +216,8 @@ or nohup $MYSQLHA_HOME/configurator.sh
 you can also use the rc script, if it was propery installed for your system
 
 please report any bugs to the mysql-ha-devel list (see 
-our site at http://sourceforge.net/projects/mysql-ha for
-info on this) or otherwise to fipar@users.sourceforge.net
+our site at http://mysql-ha.sf.net for info on this) 
+or otherwise to fipar@users.sourceforge.net
 
 have fun!
 
