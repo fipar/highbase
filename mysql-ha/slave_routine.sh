@@ -84,12 +84,16 @@ wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && log "mysql responded (ok)" ||
 			#problems like a loop on the scsi driver, it has happened to me!. in this case, linux is running ok, 
 			#but it can't access the filesystem so nothing that depends on files can run (including mysql, but
 			#also including remote shells, or anything that uses files/sockets). 
-			wrapper_safe_cmd.sh $SSH_PATIENCE ssh root@$MASTER_NODE /usr/mysql-ha/failover.sh || log "could not failover.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
+			FAILOVER_OK=0
+			wrapper_safe_cmd.sh $SSH_PATIENCE ssh root@$MASTER_NODE /usr/mysql-ha/failover.sh || {
+				log "could not failover.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
+				FAILOVER_OK=1
+				}
 
 		} || {
 			log "mysql.monitor failed but $MASTER_NODE was dead (error)"
 		}
-			/usr/mysql-ha/takeover.sh
+			/usr/mysql-ha/takeover.sh $FAILOVER_OK
 	}
 }
 

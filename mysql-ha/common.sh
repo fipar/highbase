@@ -80,6 +80,7 @@ set_master_node()
 {
 MASTER_NODE=$(cat /etc/my.cnf |grep master-host|awk -F= '{print $2}')
 [ -n "$MASTER_NODE" ] && export MASTER_NODE || die "could not get master-host from /etc/my.cnf" 1
+export MASTER_NODE
 }
 
 #prepare the environment for execution
@@ -94,6 +95,9 @@ export MYSQL_USER=replicator
 export MYSQL_PASSWORD=replicatorpwd
 export MYSQL_DATABASE=testdb
 export SAFE_CMD_DONE=143 # exit code from SAFE_CMD that means it was killed by it's child
+[ -x /etc/init.d/mysql ] && MYSQL_RC=/etc/init.d/mysql
+[ -x /etc/init.d/mysqld ] && MYSQL_RC=/etc/init.d/mysqld
+export MYSQL_RC
 }
 
 prepare_environment
