@@ -1,0 +1,34 @@
+to run this beta version youll need: 
+
+- perl
+- perl : DBD : MySQL
+- gcc
+- gnu make
+- bash >=2
+- mysql with replication configured for one master and one slave (http://www.mysql.com/doc)
+
+as root: 
+
+untar the release at /usr and cd to the mysql-ha dir just
+created. 
+cd extern
+cd fping*
+./configure && make && make check && make install && make clean
+cd ../fake*
+make patch && make && make install
+cd ..
+cp mysql.monitor <some-dir-in-your-path>
+cd ..
+./configuration-menu.sh (some defaults are too big and will make the
+takeover last forever, i will fix this for the next release)
+./setup_fake.sh
+now you can run ./configurator.sh, interactively, to test it, 
+or nohup /usr/mysql-ha/configurator.sh
+
+! ! ! ! ! ! ! THIS SOFTWARE IS NOT YET INTENDED FOR PRODUCTION USE ! ! ! ! ! !
+if you do want to use it on a production environment, please test it on your
+development/testing environment and report any bug or ill behaviour you might
+find. if you want to modify some code and send in a patch, feel free to do so. 
+if a community builds around this project, it will evolve faster and we
+will have a producton-stable product soon. 
+

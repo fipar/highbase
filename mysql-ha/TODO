@@ -6,6 +6,10 @@ so far, this is what i can think of:
 every variable that involves a sleep, a threshold, a 'patience' measure, 
 all of this should be exported from one place and properly named for the
 sake of users' convenience (done)
-- add licence information (GPL) to every file header. (pending) 
+- add licence information (GPL) to every file header. (done) 
 - verify both variable names and comments to see that everything is 
-in ENGLISH LANGUAGE.  (pending)
+in ENGLISH LANGUAGE.  (done)
+- rethink default values for most sleep times, timeouts, and patience
+thresholds, since the takeover was a bit slow for a real life situation (pending)
+- write an installation script that gets a working installation from the tarball (if
+all dependencies are satisfied) (ultra-pending)
