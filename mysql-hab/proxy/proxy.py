@@ -11,6 +11,7 @@ import sys
 import socket
 import string
 import syslog
+import signal
 
 # ******************************************************
 # ### here's what you can modify to alter the behaviour
@@ -23,13 +24,20 @@ PIPE_PREFIX="/tmp/proxy_pipe"
 #mysql proxy server config
 LISTEN_ADDR = "0.0.0.0"
 LISTEN_BACKLOG = 512
-LISTEN_PORT = 3306
+LISTEN_PORT = 3308
 
 #admin server config
 ADMIN_LISTEN_ADDR = "0.0.0.0"
 ADMIN_LISTEN_BACKLOG = 16
 ADMIN_LISTEN_PORT = 8888
 ADMIN_ALLOWED_ADDR = "127.0.0.1", "192.168.0.1"
+
+#servers
+servers = {}
+servers[0] = "192.168.0.10", 3308
+#servers[1] = "192.168.0.2", 3308
+#servers[2] = "192.168.0.3", 3308
+
 
 # ******************************************************
 # ### you shouldn't need to modify anything from now on
@@ -39,13 +47,10 @@ ADMIN_ALLOWED_ADDR = "127.0.0.1", "192.168.0.1"
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((LISTEN_ADDR, LISTEN_PORT))
 s.listen(LISTEN_BACKLOG)
-servers = {}
 nextid = 0
 
-servers[0] = "192.168.0.1", 3308
-servers[1] = "192.168.0.2", 3308
-servers[2] = "192.168.0.3", 3308
-
+def schandler(sig, frame):
+	syslog.syslog("mysql-proxy: child exited")
 
 def process_client(sock, addr, ip, port):
 	cont = 1
@@ -80,6 +85,7 @@ while 1:
 	con = s.accept()
 	sock, addr = con
 	peer, ignore =  addr
+	signal.signal(signal.SIGCHLD, schandler)
 	if nextid == (len(servers) - 1):
 		currid = nextid
 		nextid = 0

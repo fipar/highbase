@@ -90,7 +90,7 @@ void daemon_init(const char *pname, int facility)
 void sig_quit(int signo)
 {
 	app_quit(signo);
-	printf("Receive signal %d\n",signo);
+	printf("Received signal %d\n",signo);
 	unlink(LOCK_FILE);
 	exit(1);
 }

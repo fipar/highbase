@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 
 	if( access(LOCK_FILE,R_OK)==0 )
 	{
-		printf("Existing a copy of this daemon!\n");
+		printf("Existing copy of this daemon!\n");
 		printf("Please remove %s.\n", LOCK_FILE);
 		exit(1);
 	}

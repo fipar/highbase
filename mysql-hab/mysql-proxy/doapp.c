@@ -64,7 +64,7 @@ int DoApp(int argc, char *argv[])
 
 	/* 不在root权限下运行 */
 	/* change run id */
-	err_msg("Change Run Id from Root to Normal ... ");
+	err_msg("Change Run Id from Root to Unprivileged ... ");
 	setuid(getuid());
 	setgid(getgid());
 	err_msg("Ok\n");
@@ -260,7 +260,7 @@ void ParseCmd(int connfd)
 
 				sysinfo.nRealServer++;
 
-				snprintf(buf,4095,"Info: Add Successed, please enable it\n");
+				snprintf(buf,4095,"Info: Add Successful, please enable it\n");
 				write(connfd, buf, strlen(buf));
 			}
 		}
@@ -336,7 +336,7 @@ void ParseCmd(int connfd)
 
 			if( sysinfo.nRealServer==0 )
 			{
-				snprintf(buf,4095,"No one RealServer was added.\nHELP - List All Node or one Node\n\tL <[ID]>\n");
+				snprintf(buf,4095,"No RealServer was added.\nHELP - List All Node or one Node\n\tL <[ID]>\n");
 				write(connfd, buf, strlen(buf));
 				continue;
 			}
@@ -360,7 +360,7 @@ void ParseCmd(int connfd)
 			{
 				p=&sysinfo.RSInfo[i];
 				buf[0]='\0';
-				sprintf( &buf[strlen(buf)], "Id: %2d \t Connect: %d \t Actived: %1d Disabled: %1d Load: %4d \t %s:%u\n",
+				sprintf( &buf[strlen(buf)], "Id: %2d \t Connections: %d \t Active: %1d Disabled: %1d Load: %4d \t %s:%u\n",
 					i, p->connects, p->active, p->disable, p->load, p->ip, p->port );
 				write(connfd, buf, strlen(buf));
 			}
@@ -393,7 +393,7 @@ void ParseCmd(int connfd)
 
 			p->load=0;
 
-			snprintf(buf,4095,"Info: Modify Successed, please enable it\n");
+			snprintf(buf,4095,"Info: Modify Successful, please enable it\n");
 			write(connfd, buf, strlen(buf));
 		}
 		else if( buf[0] == 'S' || buf[0]=='s' )	/* set auth server */
@@ -551,7 +551,7 @@ void InitSystem()
         err_msg("Enter InitSystem()\n");
 
         /* 初始化sysinfo */
-        sysinfo.nPort=3308;
+        sysinfo.nPort=3306;
 	sysinfo.nCmdPort=8888;
 	sysinfo.nLoadPort=8889;
 	sysinfo.nRealServer=0;

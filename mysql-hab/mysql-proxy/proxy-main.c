@@ -87,11 +87,11 @@ void proxy(PTHREAD_INFO *pi)
 	{	/* 有效Node连接数为零 */
 		i=0;	p = (char *)&i;
 		p[0] = pi->ErrBuf[5];	p[1] = pi->ErrBuf[6];
-		err_msg("Warning: All Node was died?!\n");
+		err_msg("Warning: All nodes where dead?!\n");
 		buf[3]='\0';
 		buf[4]='\xff';			/* Error Flag = 0xFF */
 		buf[5]='\xff';	buf[6]='\x07';	/* Errno = 0x07FF */
-		sprintf(&buf[7],"All Node was died?! LastDeadNode Errno = %d", i);
+		sprintf(&buf[7],"All nodes where dead?! LastDeadNode Errno = %d", i);
 		i = strlen(&buf[7])+3;
 		int3str(i, buf);
 		Send(pi->cli_conn, buf, i+4); /* +4 Head */
@@ -146,11 +146,11 @@ void proxy(PTHREAD_INFO *pi)
 		/* bug 不能发送Node的错误信息到client */
 		i=0;	p = (char *)&i;
 		p[0] = pi->ErrBuf[5];	p[1] = pi->ErrBuf[6];
-		err_msg("Warning: All Node was died?! LastDeadNode Errno = %d\n", i);
+		err_msg("Warning: All nodes where dead?! LastDeadNode Errno = %d\n", i);
 		buf[3]='\0';
 		buf[4]='\xff';			/* Error Flag = 0xFF */
 		buf[5]='\xff';	buf[6]='\x07';	/* Errno = 0x07FF */
-		sprintf(&buf[7],"All Node was died?! Connect to RealServer without password mode error! LastDeadNode Errno = %d", i);
+		sprintf(&buf[7],"All nodes where dead?! Connect to RealServer without password mode error! LastDeadNode Errno = %d", i);
 		i = strlen(&buf[7])+3;
 		int3str(i, buf);
 		Send(pi->cli_conn, buf, i+4); /* +4 Head */
@@ -180,11 +180,11 @@ void proxy(PTHREAD_INFO *pi)
 		{	/* 有效Node连接数为零 */
 			i=0;	p = (char *)&i;
 			p[0] = pi->ErrBuf[5];	p[1] = pi->ErrBuf[6];
-			err_msg("Warning: All Node was died?!\n");
+			err_msg("Warning: All nodes where dead?!\n");
 			buf[3]='\0';
 			buf[4]='\xff';			/* Error Flag = 0xFF */
 			buf[5]='\xff';	buf[6]='\x07';	/* Errno = 0x07FF */
-			sprintf(&buf[7],"All Node was died?! LastDeadNode Errno = %d", i);
+			sprintf(&buf[7],"All nodes where dead?! LastDeadNode Errno = %d", i);
 			i = strlen(&buf[7])+3;
 			int3str(i, buf);
 			Send(pi->cli_conn, buf, i+4); /* +4 Head */
