@@ -27,7 +27,7 @@
 # user on the mysql-ha.conf file
 #
 
-. /usr/mysql-ha/common.sh
+. /usr/common.sh
 
 FAKEDIR=/etc/fake/
 FAKEINSTANCEDIR=/etc/fake/instance_config

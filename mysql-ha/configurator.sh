@@ -13,9 +13,11 @@
 #
 
 
-CONF_FILE=/etc/mysql-ha/mysql-ha.conf
+. /etc/bashrc
 
-variables=$(awk -F= '{print $1}' < $CONF_FILE)
+CONF_FILE=/etc/mysql-ha.conf
+
+variables=$(grep '=' $CONF_FILE|awk -F= '{print $1}')
 . $CONF_FILE
 for variable in $variables; do
 	eval "export $variable"
