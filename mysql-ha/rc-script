@@ -61,7 +61,7 @@ stop()
 		return 1
 	}
 	echo -n "stopping $progname: ">&2
-	ps -ef|awk "\$3 == $(cat $pidf) {print $2}" |xargs kill #kill the children
+	ps -ef|awk "\$3 == $(cat $pidf) {print \$2}" |xargs kill #2>/dev/null#kill the children
 	kill $(cat $pidf)	
 	sleep 1
 	[ -d /proc/$(cat $pidf) ] && {
