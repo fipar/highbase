@@ -29,7 +29,7 @@ LISTEN_PORT = 3306
 ADMIN_LISTEN_ADDR = "0.0.0.0"
 ADMIN_LISTEN_BACKLOG = 16
 ADMIN_LISTEN_PORT = 8888
-ADMIN_ALLOWED_ADDR = "127.0.0.1", "192.114.70.12"
+ADMIN_ALLOWED_ADDR = "127.0.0.1", "192.168.0.1"
 
 # ******************************************************
 # ### you shouldn't need to modify anything from now on
@@ -42,9 +42,9 @@ s.listen(LISTEN_BACKLOG)
 servers = {}
 nextid = 0
 
-servers[0] = "192.114.70.12", 3308
-servers[1] = "192.114.70.22", 3308
-servers[2] = "192.114.70.23", 3306
+servers[0] = "192.168.0.1", 3308
+servers[1] = "192.168.0.2", 3308
+servers[2] = "192.168.0.3", 3308
 
 
 def process_client(sock, addr, ip, port):
@@ -90,7 +90,8 @@ while 1:
 		sock.close()
 	else:
 		ip, port = servers[currid]
-		syslog("processing client "+peer":"+ignore+" with server "+currid+" ("+ip+":"+port+")")
+		syslog.syslog("mysql-proxy: processing client "+peer+":"+str(ignore)+" with server "+str(currid)+" ("+ip+":"+str(port)+")")
 		process_client(sock, addr, ip, port)
 		sock.close()
 		sys.exit(0)
+		
