@@ -1,3 +1,7 @@
+05-29-2003
+* Fixed bug in MysqlMonitor(), made @failures a local array (mike dopheide)
+* Started writing shell of TakeOver() (mike dopheide)
+
 05-28-2003
 * Added email capability to Log(), renamed mysqlhad.pl to mysql-had.pl, and
   wrote a little more in mysql-had.pl as well. (mike dopheide)

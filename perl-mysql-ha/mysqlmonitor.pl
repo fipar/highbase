@@ -36,7 +36,7 @@ use DBI;
 
 sub MysqlMonitor($host,$mode,$port,$username,$password,$database){
     local(@options) = @_;
-    local($host,$mode,$port,$username,$password,$database);
+    local($host,$mode,$port,$username,$password,$database,@failures);
     if($#options != 5){
 	print "Invalid number of options for MysqlMonitor()\n";
 	return 0;
