@@ -11,10 +11,15 @@
 
 #this value is still under consideration, we need to know
 #how often linux updates it's ARP table
-ARP_LOOP_TIME=60 
+
+set +e
+
 MAC_ADDR=$(ifconfig $CLUSTER_DEVICE|grep HWaddr|awk -F HWaddr '{print $2}')
+[ -z "$MAC_ADDR" ] && MAC_ADDR=$DEFAULT_MAC_ADDR
+[ -z "$MAC_ADDR" ] && log "could not get MAC_ADDR, i'm not doing the ip takeover (error)"
 
 while :; do
 	#this line needs revition
 	/usr/mysql-ha/extern/send_arp $CLUSTER_IP $MAC_ADDR $CLUSTER_IP ffffffff
+	sleep $ARP_REFRESH_TIME
 done

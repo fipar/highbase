@@ -98,7 +98,10 @@ export SAFE_CMD_DONE=143 # exit code from SAFE_CMD that means it was killed by i
 [ -x /etc/init.d/mysql ] && MYSQL_RC=/etc/init.d/mysql
 [ -x /etc/init.d/mysqld ] && MYSQL_RC=/etc/init.d/mysqld
 export MYSQL_RC
+export ARP_REFRESH_TIME=30
+export DEFAULT_MAC_ADDR
 }
+
 
 prepare_environment
 
