@@ -36,4 +36,6 @@ CMDLINE=$2
 shift 2
 safe_cmd.sh $TIMEOUT $CMDLINE $*
 retcod=$?
-[ $retcod -eq 143 ] && exit 0 || exit $retcod
+[ $retcod -eq 143 ] && exit 0 #kill means ok
+[ $retcod -eq 137 ] && exit 1 #kill -9 means error
+exit $retcod  #whatever this might mean...

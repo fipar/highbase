@@ -46,8 +46,11 @@ fping -c$ATTEMPTS $CLUSTER_IP && {
 	nohup fake $CLUSTER_IP &
 } || {
 	#start listening
-	ifconfig eth0 add $IP_CLUSTER
+	ifconfig $CLUSTER_DEVICE add $CLUSTER_IP
 }
+
+#just to be paranoid, this code should never run
+[ $(ifconfig $CLUSTER_DEVICE|grep -c $CLUSTER_IP) -eq 0 ] && ifconfig $CLUSTER_DEVICE add $CLUSTER_IP && echo "manually added $CLUSTER_IP to $CLUSTER_DEVICE"
 
 log "takeover complete (notify)"
 exit 0

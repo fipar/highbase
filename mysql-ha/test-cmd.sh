@@ -3,6 +3,6 @@
 
 echo "hello, world"
 sleep 4 
-kill $PPID
+kill -9 $PPID
 echo "just killed dad, world, now i'll be going"
 
