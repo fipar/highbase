@@ -11,6 +11,7 @@ use Net::Ping;
 use Sys::Syslog;
 use Mail::Send;
 use Net::Ifconfig::Wrapper;
+use Net::SSH "ssh_cmd";
 
 # read configuration info
 %conf = &ReadConf;
@@ -72,7 +73,7 @@ if(($master != 1) && ($conf{'SLAVE'} =~ /$hostname/i)){
 		## master mysqld definately isn't responding
 		if(&PingMaster($conf{'MASTER_HOST'})){
 		    print "Master mysqld down, machine up\n";
-		    ## connect via SSH::Perl
+		    ## connect via Net::SSH
 		    # kill mysql
 		    # restart mysql
 		    # check again
