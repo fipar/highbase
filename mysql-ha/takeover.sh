@@ -10,6 +10,7 @@ DB_PASSWORD=rootpwd
 
 . /usr/mysql-ha/common.sh
 
+
 ATTEMPTS=3
 #this line has two reasons: 
 #1) it should be impossible but might just happen that we try and go for a takeover while the master has started to
