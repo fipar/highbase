@@ -36,7 +36,7 @@ if($conf{'SLAVE'} =~ /$hostname/i){
 	    $mysqlrepl = 1;
 	}
 	if(($slavestatus ne "Yes") && ($mysqlrepl == 1)){
-	    $msyqlrepl = 0;
+	    $mysqlrepl = 0;
 	    print "Notify that the slave thread stopped\n";
 	}
 	
