@@ -1,0 +1,65 @@
+#!/bin/bash
+#
+# chkconfig: 99 01
+# description: MySQL Proxy Server
+
+. /etc/init.d/functions
+
+RC_USER=mproxy
+RC_DIR='/usr/local/mysql-proxy'
+STDERR='/var/log/mysql-proxy.err'
+PIDF='/var/run/mysql-proxy.pid'
+
+
+case "$1" in
+	start)
+		[ -f $PIDF ] && echo "already running" && exit 1
+		echo "start attempt" >> $STDERR
+		nohup su - $RC_USER -c "$RC_DIR/proxy.py" >>$STDERR 2>&1 &
+		echo $! > $PIDF
+		usleep 300
+		[ -d /proc/$(cat $PIDF) ] && {
+			action $'Starting mysql-proxy' /bin/true
+			exit 0
+		} || {
+			action $'Starting mysql-proxy' /bin/false
+			rm -f $PIDF
+			exit 0
+		}
+		;;
+	stop)
+		[ ! -f $PIDF ] && echo "not running" && exit 1
+		kill $(cat $PIDF)
+		usleep 300
+		[ -d /proc/$(cat $PIDF) ] && kill -9 $(cat $PIDF) && {
+			[ -d /proc/$(cat $PIDF) ] && {
+				action $'Stoping mysql-proxy' /bin/false
+				exit 1
+			} || {
+				rm -f $PIDF
+				action $'Stoping mysql-proxy' /bin/true
+				exit 0
+			}
+		}
+		rm -f $PIDF
+		action $'Stoping mysql-proxy' /bin/true
+		;;
+	restart)
+		$0 stop
+		$0 start
+		;;
+	status)
+		[ -f $PIDF ] || {
+			echo "mysql-proxy is not running (no pidfile)"
+			exit 1
+		}
+		[ -d /proc/$(cat $PIDF) ] && {
+			echo "mysql-proxy is running ($(cat $PIDF))" 
+			exit 0
+		}|| {
+			echo "msqyl-proxy is not running (no process matching pid, clearing pidfile)"
+			rm -f $PIDF
+			exit 1
+		}
+		;;
+esac
