@@ -1,3 +1,9 @@
+
+--
+
+12-27-2002
+* fixed ifconfig cluster ip release bug (report and fix idea provided by gianfranco)
+
 12-09-2002
 * added e-mail notification to common.sh (Mike Dopheide)
 * added slave thread verification to slave_routine.sh (Mike Dopheide)
