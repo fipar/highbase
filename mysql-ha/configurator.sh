@@ -21,4 +21,6 @@ for variable in $variables; do
 	eval "export $variable"
 done
 
-#call proper routine with nohup here. this means common.sh needs serious revision!
+. /usr/mysql-ha/common.sh
+
+[ -n "$N_MASTER" ] && /usr/mysql-ha/master_routine.sh || /usr/mysql-ha/slave_routine.sh

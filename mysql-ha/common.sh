@@ -115,4 +115,4 @@ prepare_environment
 
 [ -z "$state_defined" ] && die 'couldnt figure out if this is the slave or the master node' 1
 
-[ -n "$N_MASTER" ] && /usr/mysql-ha/master_routine.sh || /usr/mysql-ha/slave_routine.sh
+

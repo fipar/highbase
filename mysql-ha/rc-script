@@ -1,0 +1,92 @@
+#! /bin/bash
+#
+# mysql-had
+# this file is part of the mysql-ha suite (named rc-script on the cvs tree)
+# Copyright (C) 2002 - Fernando Ipar. see the file COPYING for more
+# info
+#
+# chkconfig: 2345 98 88
+# description: mysql-ha is a high availability clustering system for use \
+# with the mysql database server. it uses mysql's builtin replication \
+# features to achieve data redundance, fake to migrate a unique cluster IP \
+# from master to slave in the event of a failure, and is highly customizable \
+# and in active development
+# processname: mysql-had
+# config: /etc/mysql-ha.conf
+# pidfile: /var/run/mysql-ha.pid
+
+
+progname=mysql-had
+pidf="/var/run/mysql-ha.pid"
+logf="/var/log/mysql-ha.log"
+startedname="/usr/mysql-ha/configurator.sh"
+
+
+start()
+{
+	[ -f $pidf ] && echo "$progname already running (found pid file)">&2 && return 1
+	echo -n "starting $progname: ">&2
+	nohup $startedname >>$logf 2>&1 &
+	usleep 30
+	[ -f $pidf ] && {
+		[ -d $(cat $pidf) ] && echo "OK">&2 || {
+			echo "ERROR ($(cat $pidf) does not appear to be running)">&2
+			return 1
+		}
+	} || echo "ERROR ($pidf not found after nohup)">&2 && return 1
+	return 0
+}
+
+stop()
+{
+	[ -f $pidf ] || {
+		echo "$progname does not appear to be running (pid fil not found)">&2
+		return 1
+	}
+	echo -n "stopping $progname: ">&2
+	kill $(cat $pidf)
+	sleep 1
+	[ -d $(cat $pidf) ] && {
+		kill -9 $(cat $pidf)
+		echo "OK (had to kill -9)"?&2
+	} || echo "OK">&2
+	rm -f $pidf
+	return 0
+}
+
+
+restart() 
+{
+  	stop
+	start
+}	
+
+
+status()
+{
+	[ -f $pidf ] && {
+		echo "$progname is running ($(cat $pidf))">&2
+	} || {
+		echo "$progname is not running (no pidfile)">&2
+	}
+}
+
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
+	;;
+  restart)
+  	restart
+	;;
+  status)
+  	status
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|status}"
+	exit 1
+esac
+
+exit $?
