@@ -32,3 +32,35 @@ find. if you want to modify some code and send in a patch, feel free to do so.
 if a community builds around this project, it will evolve faster and we
 will have a producton-stable product soon. 
 
+___ SSH CONFIGURATION __ (IMPORTANT)
+
+for mysql-ha to work, you must configure ssh to work in passwordless
+mode on both master and slave nodes, at least (and probably at most)
+between the two of them. 
+so far, the cluster uses the root account (this could change in the future), 
+so here are instructions on how to do this using public/private keys. 
+you can also change the code to use telnet and use the rhosts file, but
+i seriously discourage doing this.
+
+that said, you probably aren't running this on a production system anyway, so 
+you might aswell use telnet if you feel more comfortable with it. 
+
+on both nodes, run this as root: 
+ssh-keygen -t dsa
+when asked for a file, use the provided default
+when asked for a passphrase, leave empty
+
+append the generated /root/.ssh/id_dsa.pub file to the
+/root/.ssh/authorized_keys2 (might not exist yet) file on the
+other host. 
+
+you're ready to go now, try this by logging in as root from 
+each machine into the other one. do this at least one
+if you've set up a dedicated testing environment for this
+cluster, since you will be asked for a confirmation to add
+the other host public key to your ring the first time
+you use ssh. 
+
+after that, try this again and you should be on the other
+host with no password prompts at all. 
+
