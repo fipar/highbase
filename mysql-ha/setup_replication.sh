@@ -21,6 +21,13 @@
 
 #this script attempts to set up replication for two mysql servers
 
+############ TESTING ONLY ###################
+# ENABLE THE NEXT LINES IF YOU'RE TESTING setup_replication.sh
+# WITHOUT THE WHOLE mysql-ha PACKAGE
+export MYSQL_USER="repl"
+export MYSQL_PASSWORD="replpass"
+############################################
+
 CNF="/etc/my.cnf" #change this if the file has a different path on your system. notice that the file might not exist, so you might have to read
 #the documentation for mysql to find out the proper pathname
 
@@ -34,17 +41,15 @@ enable_slave()
 echo "please enter mysql's root password for the master node">&2
 cat <<EOSCR|mysql -uroot -p
 GRANT REPLICATION CLIENT, REPLICATION SLAVE, SUPER, RELOAD ON *.* to $MYSQL_USER identified by "$MYSQL_PASSWORD";
+FLUSH PRIVILEGES;
 RESET MASTER;
 EOSCR
 echo "please enter the slave IP or host name">&2
 read slave
 echo "please enter mysql's root password for the slave node">&2
-cat <<EOSCR|mysql -uroot -h$slave -p
-SLAVE STOP;
-RESET SLAVE;
-LOAD DATA FROM MASTER;
-SLAVE START;
-EOSCR
+read -s password
+#ok, so the next line is _really_ ugly, but I kept having problems if I tried to pipe all commands in just one echo
+ssh root@slave "echo SLAVE STOP|mysql -uroot -p$password; echo LOAD DATA FROM MASTER|mysql -uroot -p$password; echo RESET SLAVE|mysql -uroot -p$password; echo SLAVE START|mysql -uroot -p$password"
 echo "replication should now be ready and running">&2
 }
 
@@ -78,8 +83,8 @@ EOF
 	[ "$setup_slave" == "y" ] && {
 		echo "Enter the IP or host name for the slave: ">&2
 		read slave
-		scp  $0 root@${slave}:/tmp/
-		ssh -t root@$slave "export TERM=linux;/tmp/setup_replication.sh slave"
+		scp $0 root@${slave}:/tmp/
+		ssh -t root@$slave "export TERM=linux;/tmp/setup_replication.sh slave; rm -f /tmp/setup_replication.sh"
 	}
 	echo "If replication is already set up on the slave, you can enable it now. Otherwise, rerun this script passing enable-slave as parameter. Enable now? (y/n)">&2
 	read enable_slave
@@ -87,9 +92,10 @@ EOF
 } || {
 	[ -f $CNF ] && {
 	grep log-bin $CNF > /dev/null || {
-		master_info="master-host= ### IP or host name for the master node ###\nmaster-user=$MYSQL_USER\nmaster-password=$MYSQL_PASSWORD\nmaster-port=3302\n"
+		master_info="master-host= ### IP or host name for the master node ###\n"
+		user_info="master-user=${MYSQL_USER}\nmaster-password=${MYSQL_PASSWORD}\nmysql-port=3302\n"
 		db_info="replicate-do-db= ### name of the database to replicate, create as many of these lines as you need ###\n"
-		sed "s/\[mysqld\]/\[mysqld\]\n#modified by setup_replication.sh (mysql-ha)\nlog-bin\nserver-id=2\n$master_info$db_info/g" < $CNF > $$ && mv -f $$ $CNF
+		sed "s/\[mysqld\]/\[mysqld\]\n#modified by setup_replication.sh (mysql-ha)\nlog-bin\nserver-id=2\n$user_info$master_info$db_info/g" < $CNF > $$ && mv -f $$ $CNF
 	}
 	} || {
 		cat<<EOF>$CNF
