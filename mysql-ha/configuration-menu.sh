@@ -75,6 +75,22 @@ done
 echo "MYSQL_USER=$MYSQL_USER" >> $FIL;echo
 
 echo "MYSQL_PASSWORD is the password associated with the user provided above"
+cat <<EOMSG
+/-------------------------------------------\
+
+     SECURITY WARNING
+
+  This password will be stored in cleartext
+  in $FIL. You should make sure that this
+  file is only readable by the appropiate
+  users and groups. You should also make
+  sure that this user has only the necessary
+  privileges on the mysql server (SELECT on 
+  the database you choose to verify, only
+  from the master/slave node)
+
+\-------------------------------------------/
+EOMSG
 while [ -z "$MYSQL_PASSWORD" ]; do
 	echo -n "MYSQL_PASSWORD: [replicatorpwd] "; read MYSQL_PASSWORD; [ -z "$MYSQL_PASSWORD" ] && MYSQL_PASSWORD=replicatorpwd
 done
@@ -164,6 +180,21 @@ done
 echo "DB_USER=$DB_USER" >> $FIL;echo
 
 echo "DB_PASSWORD is the password for the user provided above"
+cat <<EOMSG
+/-------------------------------------------\
+
+     SECURITY WARNING
+
+  This password will be stored in cleartext
+  in $FIL. You should make sure that this
+  file is only readable by the appropiate
+  users and groups. You should also make
+  sure that this user has only the necessary
+  privileges on the mysql server (SHUTDOWN,
+  SUPER, only from the master/slave node)
+
+\-------------------------------------------/
+EOMSG
 while [ -z "$DB_PASSWORD" ]; do
 	echo -n "DB_PASSWORD: [rootpwd] "; read DB_PASSWORD; [ -z "$DB_PASSWORD" ] && export DB_PASSWORD=rootpwd
 done

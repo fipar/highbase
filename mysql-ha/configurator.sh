@@ -7,10 +7,12 @@
 #
 # simple configuration parser, it basically reads the variable names from the
 # configuration file, sources the file, and exports the variables
-# it should be run before anything on the cluster, in fact, configurator should
-# run and then itself call either master_routine.sh or slave_routine.sh depending
-# on which node we are in
 #
+# configurator is the only thing that needs to be run in order to start
+# the cluster (once it's properly installed and configured)
+# it is this script that starts either master_routine.sh or slave_routine.sh
+# depending on which node we are in
+
 
 [ -n "$MYSQLHA_HOME" ] || export MYSQLHA_HOME="/usr/mysql-ha" #you can either set this here or in the environment
 . $MYSQLHA_HOME/compat.sh

@@ -93,6 +93,31 @@ if you have ssh properly configured for passwordless login from
 master to slave and the other way around, type c to continue, 
 otherwise just type enter and i'll try to set it up for you
 (you might be asked the root password for the slave/master nodes)
+
+/-----------------------------------------------------------\
+
+  SECURITY WARNING
+ 
+  mysql-ha uses passwordless ssh, by authenticating using
+  private/public key, and by storing the private key with
+  an empty passphrase. this means that anyone with read
+  access to the private key file can then connect to the
+  other server (master or slave) with the cluster user. 
+  
+  SUGGESTIONS
+  - set up the private key file with 700 permissions (ssh
+  should refuse to run otherwise, but still, I haven't
+  tried this on all distributions)
+  - create a dedicated account for mysql-ha, and give it
+  only the necessary privileges (the ability to run, 
+  through sudo, the mysql_kill/mysql_restart/failover
+  scripts)
+  - grant access to the private key from the specific
+  host where it should be used (master or slave). you
+  can do this by changing the line in authorized_keys2, 
+  including the from="<host>" string before ssh-dsa
+
+\-------------------------------------------------------------/
 EOMSG
 read option
 [ "$option" = "c" ] || {

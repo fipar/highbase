@@ -24,8 +24,8 @@
 ############ TESTING ONLY ###################
 # ENABLE THE NEXT LINES IF YOU'RE TESTING setup_replication.sh
 # WITHOUT THE WHOLE mysql-ha PACKAGE
-export MYSQL_USER="repl"
-export MYSQL_PASSWORD="replpass"
+#export MYSQL_USER="repl"
+#export MYSQL_PASSWORD="replpass"
 ############################################
 
 CNF="/etc/my.cnf" #change this if the file has a different path on your system. notice that the file might not exist, so you might have to read
@@ -47,6 +47,7 @@ EOSCR
 echo "please enter the slave IP or host name">&2
 read slave
 echo "please enter mysql's root password for the slave node">&2
+echo "(this password won't be stored, it's just passed as an argument to mysql)">&2
 read -s password
 #ok, so the next line is _really_ ugly, but I kept having problems if I tried to pipe all commands in just one echo
 ssh root@slave "echo SLAVE STOP|mysql -uroot -p$password; echo LOAD DATA FROM MASTER|mysql -uroot -p$password; echo RESET SLAVE|mysql -uroot -p$password; echo SLAVE START|mysql -uroot -p$password"
