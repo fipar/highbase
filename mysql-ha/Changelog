@@ -1,8 +1,9 @@
 --
 
 05-08-2003
-* modified slave thread verification to compensate for differences between
+* Modified slave thread verification to compensate for differences between
 MySQL 3.x and MySQL 4.x
+* Added blank lines to the top of slave.include and master.include.  I encountered a bug where the last line of my /etc/bashrc didn't have a newline.
 
 --
 
