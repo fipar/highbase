@@ -1,3 +1,7 @@
+10-13-2003
+* Submitting log.pl, killmysql.pl, and restartmysql.pl.  All are the basic
+starting blocks for the server side of things.
+
 07-14-2003
 * Finally have time to work on this again.  Decided to use Net::SSH for awhile
   instead of Net::SSH::Perl which required lots of other modules that failed

@@ -6,6 +6,7 @@
 # include subroutines
 require 'mysqlmonitor.pl';
 require 'readconf.pl';
+require 'ssh.pl';
 use DBI;
 use Net::Ping;
 use Sys::Syslog;
@@ -74,6 +75,8 @@ if(($master != 1) && ($conf{'SLAVE'} =~ /$hostname/i)){
 		if(&PingMaster($conf{'MASTER_HOST'})){
 		    print "Master mysqld down, machine up\n";
 		    ## connect via Net::SSH
+		    &MasterCmd("root",$conf{'MASTER_HOST'},"/usr/mysql-ha-perl/restartmysql.pl");
+		    print "done with remote restart\n";
 		    # kill mysql
 		    # restart mysql
 		    # check again
