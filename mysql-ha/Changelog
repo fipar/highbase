@@ -1,3 +1,8 @@
+--
+
+05-08-2003
+* modified slave thread verification to compensate for differences between
+MySQL 3.x and MySQL 4.x
 
 --
 

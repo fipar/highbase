@@ -56,13 +56,27 @@ main()
 {
 shouldrun || log "shouldrun was unsuccessfull (ok)"
 
-SLAVE_STATUS=`echo "show slave status" | mysql -u$DB_USER -p$DB_PASSWORD |awk '{ print $7 }' |sed -n -e /Yes/p`
+MYSQL_VER=`mysql --version |awk '{ print $5 }' |awk -F. '{ print $1 }'`
+
+[ "$MYSQL_VER" == "3" ] && {
+    SLAVE_STATUS=`echo "show slave status" | mysql -u$DB_USER -p$DB_PASSWORD |awk '{ print $7 }' |sed -n -e /Yes/p`
+}
+
+## In MySQL version 4.x the replication thread has two parts, for now we'll
+#  assume that SLAVE_STATUS is "Yes" only if both parts are active
+[ "$MYSQL_VER" != "3" ] && {
+    SLAVE_STATUS=`echo "show slave status" | mysql -u$DB_USER -p$DB_PASSWORD |awk '{ print $10 $11 }' |sed -n -e /No/p`
+    ## this could be YesNo, NoYes, NoNo, or blank
+    [ "$SLAVE_STATUS" == "" ] && SLAVE_STATUS="Yes"
+}
+
 
 [ "$SLAVE_STATUS" == "Yes" ] && MYSQL_REPL=1
 [ "$SLAVE_STATUS" != "Yes" -a "$MYSQL_REPL" == "1" ] && {
         MYSQL_REPL=0
         log "notify slave stopped"
 }
+
 
 CHK_PROG="/usr/mysql-ha/pwrap mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $MASTER_NODE"
 should_failover=0
