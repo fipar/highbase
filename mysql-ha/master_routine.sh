@@ -18,7 +18,7 @@ shouldrun()
 
 #main()
 
-debo_correr || log "shouldrun returned false (ok)"
+shouldrun || log "shouldrun returned false (ok)"
 
 #this is untidy
 SLAVE="slave_node"
