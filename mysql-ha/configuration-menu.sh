@@ -163,4 +163,12 @@ while [ -z "$DB_PASSWORD" ]; do
 done
 echo "DB_PASSWORD=$DB_PASSWORD" >> $FIL;echo
 
+NODE=2
+echo
+while [ $NODE -ne 0 -a $NODE -ne 1 ] ; do
+	echo "almost done, now enter 0 if this node is the master, or 1 if it is the slave: "; read NODE
+	[ $NODE -eq 0 ] && cat /usr/mysql-ha/master.include >> /etc/bashrc
+	[ $NODE -eq 1 ] && cat /usr/mysql-ha/slave.include >> /etc/bashrc
+done
+
 echo "done"
