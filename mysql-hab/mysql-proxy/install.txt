@@ -1,0 +1,43 @@
+Mysql HA Cluster 测试版本(V0.0.5)，安装使用说明
+
+!!!!!!系统目前没有经过完全的测试阶段，请应用之前，自行测试，确认可以接受，才可使用。
+!!!!!!我不对系统问题造成的损失提供任何的责任。
+!!!!!!如果有技术问题可以联系：computer_xu@sina.com，谢谢！
+
+系统准备以及系统安装
+
+1、准备3台机器，一台做HA，另外两台做数据库。
+2、在三台机器上安装想同班本的mysql系统，建议3.23.49版本，HA上的mysql的侦听端口设置成3307
+3、在HA执行 make 编译proxy。
+4、在另外的两台数据库服务器上安装getload，执行make进行编译，并且将mysql设置成主从同步方式
+5、我们这里假设：HA的外部地址为：10.0.0.1 内部地址为 192.168.0.1，mysql(master)的地址为192.168.0.2，mysql(slave)的地址为192.168.0.3
+6、启动三台机器上的mysql
+7、启动proxy: ./proxy
+8、在HA上执行：telnet 127.0.0.1 8888 然后输入指令：
+	A 192.168.0.2 3306 root		---> 增加一个RealServer
+	A 192.168.0.3 3306 root 	---> 增加一个RealServer
+	S 127.0.0.1 3307		---> 指定Auth Server（系统默认127.0.0.1 3307）
+	E 0				---> Enable RealServer 0
+	E 1				---> Enable RealServer 0
+	L				---> RealServer List
+	Q				---> 退出
+9、在192.168.0.2 192.168.0.3上面分别执行./getload 192.168.0.1 8889 (可以不执行，如果不执行HA将不能探测AvgLoad)
+
+设置系统登陆账户
+1、连接HA上的mysql，
+	use mysql
+	insert into user (Host,User,Password) values ("127.0.0.1","<username>",PASSWORD("<password>"));
+	insert into user (Host,User,Password) values ("localhost","<username>",PASSWORD("<password>"));
+	flush privileges;
+2、连接192.168.0.2上的mysql（注意：192.168.0.3一定要与192.168.0.2同步）
+	建立数据库 create database <database name>
+	执行授权指令：grant all on <database name>.* to <username>@192.168.0.1 identified by "";
+3、连接192.168.0.3上的mysql
+	执行授权指令：grant all on <database name>.* to <username>@192.168.0.1 identified by "";
+4、登陆到HA上，使用刚刚设置的用户名登陆mysql进行测试：
+	mysql -h 127.0.0.1 --port=3307 -u <username> -p<password>
+	mysql -h 192.168.0.2 -u <username>
+	mysql -h 192.168.0.3 -u <username>
+5、如果全部没有错误，新用户增加完成
+
+现在你可以连接 10.0.0.1 的 3306 端口的 mysql 数据库服务器了。
