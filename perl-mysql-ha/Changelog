@@ -1,0 +1,3 @@
+05-15-2003
+* added mysqlmonitor.pl and basic mysqlhad.pl to show how to use MysqlMonitor()
+  (mike dopheide)
