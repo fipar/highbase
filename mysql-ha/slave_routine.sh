@@ -25,7 +25,7 @@
 
 
 
-CHK_PROG="mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $MASTER_NODE"
+CHK_PROG="/usr/mysql-ha/pwrap mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $MASTER_NODE"
 
 
 attempt_kill()
