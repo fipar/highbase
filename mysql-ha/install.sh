@@ -61,7 +61,7 @@ cd $MYSQLHA_HOME/extern/fping-2.2b2/
 	echo "couldnt build fping">&2
 	exit 1
 }
-cd ..
+cd $MYSQLHA_HOME/extern
 tar xzvf fake*gz && rm -f fake*gz
 cd fake*
 make patch && make && make install || {

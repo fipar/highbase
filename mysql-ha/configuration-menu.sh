@@ -206,6 +206,9 @@ while [ -z "$NOTIFY_EMAIL" ]; do
 done
 echo "NOTIFY_EMAIL=$NOTIFY_EMAIL" >> $FIL;echo
 
+chown -v root.root $FIL
+chmod -v 600 $FIL
+
 
 [ -n "$N_SLAVE" -o -n "$N_MASTER" ] && {
 	echo done
