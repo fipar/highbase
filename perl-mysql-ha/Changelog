@@ -1,3 +1,7 @@
+05-20-2003
+* added PingMaster() and Log().  Log() will need to be expanded later to deal
+  with notification methods other than syslog (mike dopheide)
+
 05-19-2003
 * fixed spelling mistake in mysqlhad.pl during slave thread monitoring
   (mike dopheide)

@@ -7,6 +7,8 @@
 require 'mysqlmonitor.pl';
 require 'readconf.pl';
 use DBI;
+use Net::Ping;
+use Sys::Syslog;
 
 # read configuration info
 %conf = &ReadConf;
@@ -28,7 +30,8 @@ $localpass = $conf{'DB_PASSWORD'};
 ## or from mysql startup script (/etc/init.d/mysql or mysqld)
 $conf{'MASTER_HOST'} = &GetMasterHost;
 print "master host is $conf{'MASTER_HOST'}\n";
-
+$ping = &PingMaster($conf{'MASTER_HOST'});
+print "master ping $ping\n";
 
 ## can match against a list of slaves from the config file
 if($conf{'SLAVE'} =~ /$hostname/i){
@@ -45,15 +48,13 @@ if($conf{'SLAVE'} =~ /$hostname/i){
 	    print "Notify that the slave thread stopped\n";
 	}
 	
-	if(MysqlMonitor($clusterip,$mode,$port,$repluser,$replpass,$testdb)){
-	    print "master is up\n";
-	}else{
-	    print "master is down\n";
+	if(!(MysqlMonitor($clusterip,$mode,$port,$repluser,$replpass,$testdb))){
+	    &Log("warning","failed to connect to master mysql daemon");
+	    print "master is down, do stuff\n";
 	}
 	
 	## change this later
-	sleep(5);
-	
+	sleep(5);	
     }
 }
 
@@ -149,4 +150,25 @@ sub GetMasterHost(){
     }
 
     return $master;
+}
+
+sub PingMaster($masterhost){
+    local($masterhost) = @_;
+    local($p,$result);
+    $p = Net::Ping->new();
+    $result = $p->ping($masterhost);
+    $p->close();
+
+    return $result;
+}
+
+
+### later we can expand Log() to send email or other forms of notification
+#   based on $level   ($level must be a valid syslog level)
+
+sub Log($level,$message){
+    local($level,$message) = @_;
+    openlog("mysql-had", 'pid', 'user');
+    syslog($level,$message);
+    closelog();
 }
