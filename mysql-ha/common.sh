@@ -83,6 +83,11 @@ MASTER_NODE=$(cat /etc/my.cnf |grep master-host|awk -F= '{print $2}')
 export MASTER_NODE
 }
 
+setup_fake()
+{
+
+}
+
 #prepare the environment for execution
 #you should set these with proper values
 #to facilitate automatic configuration of the 
