@@ -36,7 +36,7 @@
 progname=$(basename $0)
 pidf="/var/run/mysql-ha.pid"
 logf="/var/log/mysql-ha.log"
-startedname="/usr/mysql-ha/configurator.sh"
+startedname="$MYSQHA_HOME/configurator.sh"
 
 
 start()

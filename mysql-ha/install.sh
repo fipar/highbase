@@ -111,7 +111,7 @@ read option
 	echo "you'll be asked to save your peer's public key, say yes">&2
 }
 
-echo "automatic setup of replication in mysql is still under heavy testing. do you want to try it? (y/n)">&2
+echo "automatic setup of replication in mysql is still under heavy testing, and working only for mysql versions 4.X or greater. do you want to try it? (y/n)">&2
 read autosetup
 [ "$autosetup" == "y" ] && "./setup_replication.sh" || {
 
@@ -213,7 +213,7 @@ read reply
 cat <<EOMSG>&2
 now you can run ./configurator.sh, interactively, to test it, 
 or nohup $MYSQLHA_HOME/configurator.sh 
-you can also use the rc script, if it was propery installed for your system
+you can also use the rc script, if it was properly installed for your system
 
 please report any bugs to the mysql-ha-devel list (see 
 our site at http://mysql-ha.sf.net for info on this) 

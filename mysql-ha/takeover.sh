@@ -21,7 +21,7 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 
-. /usr/mysql-ha/common.sh
+. $MYSQLHA_HOME/common.sh
 
 ATTEMPTS=3
 #this line has two reasons: 
@@ -43,11 +43,11 @@ fping -c$ATTEMPTS $CLUSTER_IP && {
 } || {
 	log "takeover with master node down, doing simple ifconfig"
 	#start listening
-	ifconfig $CLUSTER_DEVICE $CLUSTER_IP
+	ifconfig $CLUSTER_DEVICE add $CLUSTER_IP
 }
 
 #just to be paranoid, this code should never run
-[ $(ifconfig $CLUSTER_DEVICE|grep -c $CLUSTER_IP) -eq 0 ] && ifconfig $CLUSTER_DEVICE $CLUSTER_IP && echo "manually added $CLUSTER_IP to $CLUSTER_DEVICE"
+[ $(ifconfig $CLUSTER_DEVICE|grep -c $CLUSTER_IP) -eq 0 ] && ifconfig $CLUSTER_DEVICE add $CLUSTER_IP && echo "manually added $CLUSTER_IP to $CLUSTER_DEVICE"
 
 log "takeover complete (notify)"
 exit 0

@@ -27,7 +27,7 @@
 # user on the mysql-ha.conf file
 #
 
-. /usr/mysql-ha/common.sh
+. $MYSQLHA_HOME/common.sh
 
 CONF_FILE=/etc/mysql-ha.conf
 

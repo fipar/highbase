@@ -21,7 +21,7 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 
-. /usr/mysql-ha/common.sh
+. $MYSQLHA_HOME/common.sh
 
 
 echo "slave start" | mysql -u$DB_USER -p$DB_PASSWORD && log "slave thread started (ok)" || log "could not start slave thread (error)"

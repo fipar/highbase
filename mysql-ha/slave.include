@@ -2,6 +2,7 @@
 #this file is part of the mysql-ha suite
 #Copyright (C) 2002 Fernando Ipar - fipar@acm.org / fipar@users.sourceforge.net
 #see the file COPYING for more info
-[ $(echo $PATH|grep -c "/usr/mysql-ha") -gt 0 ] || export PATH=$PATH:/usr/mysql-ha
-[ $(echo $PATH|grep -c "/usr/mysql-ha/extern") -gt 0 ] || export PATH=$PATH:/usr/mysql-ha/extern
+export MYSQLHA_HOME=/usr/mysql-ha
+[ $(echo $PATH|grep -c "$MYSQLHA_HOME") -gt 0 ] || export PATH=$PATH:$MYSQLHA_HOME
+[ $(echo $PATH|grep -c "$MYSQLHA_HOME/extern") -gt 0 ] || export PATH=$PATH:$MYSQLHA_HOME/extern
 export N_SLAVE=1

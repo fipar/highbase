@@ -22,13 +22,13 @@
 # Boston, MA 02111-1307 USA
 
 
-CHK_PROG="/usr/mysql-ha/pwrap mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $CLUSTER_IP"
+CHK_PROG="$MYSQLHA_HOME/pwrap mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $CLUSTER_IP"
 
 
 attempt_kill()
 {
-	log "about to run mysql_kill on $MASTER_NODE"
-	wrapper_safe_cmd.sh $SSH_PATIENCE /usr/mysql-ha/pwrap ssh root@$MASTER_NODE /usr/mysql-ha/mysql_kill.sh || log "could not run mysql_kill.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
+	log "about to run mysql_kill on $MASTER_NODE (warning)"
+	wrapper_safe_cmd.sh $SSH_PATIENCE $MYSQLHA_HOME/pwrap ssh root@$MASTER_NODE $MYSQLHA_HOME/mysql_kill.sh || log "could not run mysql_kill.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
 	sleep $MYSQL_KILL_WAIT
 	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && return 0 || return 1
 }
@@ -36,8 +36,8 @@ attempt_kill()
 
 attempt_restart()
 {
-	log "about to run mysql_restart on $MASTER_NODE"
-	wrapper_safe_cmd.sh $SSH_PATIENCE /usr/mysql-ha/pwrap ssh root@$MASTER_NODE /usr/mysql-ha/restart_mysql.sh || log "could not run mysql_restart.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
+	log "about to run mysql_restart on $MASTER_NODE (warning)"
+	wrapper_safe_cmd.sh $SSH_PATIENCE $MYSQLHA_HOME/pwrap ssh root@$MASTER_NODE $MYSQLHA_HOME/restart_mysql.sh || log "could not run mysql_restart.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
 	sleep $MYSQL_RESTART_WAIT
 	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && return 0 || return 1
 }
@@ -74,11 +74,11 @@ MYSQL_VER=`mysql --version |awk '{ print $5 }' |awk -F. '{ print $1 }'`
 [ "$SLAVE_STATUS" == "Yes" ] && MYSQL_REPL=1
 [ "$SLAVE_STATUS" != "Yes" -a "$MYSQL_REPL" == "1" ] && {
         MYSQL_REPL=0
-        log "notify slave stopped"
+        log "slave stopped (notify)"
 }
 
 
-CHK_PROG="/usr/mysql-ha/pwrap mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $MASTER_NODE"
+CHK_PROG="$MYSQLHA_HOME/pwrap mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $MASTER_NODE"
 should_failover=0
 
 wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && log "mysql responded (ok)" || {
@@ -101,10 +101,10 @@ wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && log "mysql responded (ok)" ||
 		} || {
 			log "mysql.monitor failed but $MASTER_NODE was dead (error)"
 		}
-			/usr/mysql-ha/takeover.sh
+			$MYSQLHA_HOME/takeover.sh
 			[ $should_failover -eq 1 ] && {
 				log "mysql.monitor failed but $MASTER_NODE is running, going for the failover (error)"
-				wrapper_safe_cmd.sh $SSH_PATIENCE /usr/mysql-ha/pwrap ssh root@$MASTER_NODE /usr/mysql-ha/failover.sh || {
+				wrapper_safe_cmd.sh $SSH_PATIENCE $MYSQLHA_HOME/pwrap ssh root@$MASTER_NODE $MYSQLHA_HOME/failover.sh || {
 					log "could not failover.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
 					}
 			}

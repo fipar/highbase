@@ -21,7 +21,7 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 
-. /usr/mysql-ha/common.sh
+. $MYSQLHA_HOME/common.sh
 OF=/tmp/restart_mysql.$$
 
 $RC_SCRIPT stop >$OF 2>&1

@@ -11,7 +11,7 @@
 # tried
 
 
-. /usr/mysql-ha/common.sh
+. $MYSQLHA_HOME/common.sh
 
 
 
