@@ -50,8 +50,5 @@ check_pid_name $COMMAND $childpid && {
 	kill $childpid
 	usleep ${RANDOM}00 #give it a chance to exit gracefully
 	check_pid_name $COMMAND $childpid && kill -9 $childpid && log "had to kill -9 $COMMAND with $childpid" || log "had to kill $COMMAND with $childpid"
-	echo gone
 	exit 1
 }
-
-echo gone too
