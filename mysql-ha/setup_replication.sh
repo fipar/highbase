@@ -67,7 +67,7 @@ echo "Please enter the datadir for the slave node ([/var/lib/mysql])">&2
 read slavedatadir
 [ -z "$slavedatadir" ] && slavedatadir=/var/lib/mysql
 echo "You might be asked for the slave's node root password">&2
-ssh root@$slavenode "service mysqld stop; cd $slavedatadir; rm -f master.info; tar xjvf /tmp/mysql-snapshot.tar.bz2; rm -f /tmp/mysql-snapshot.tar.bz2; service mysqld start; echo STOP SLAVE| mysql -uroot -p$slavepw -vv ; echo RESET SLAVE |mysql -uroot -p$slavepw -vv |echo START SLAVE| mysql -uroot -p$slavepw -vv"
+ssh root@$slavenode "service mysqld stop; cd $slavedatadir; rm -f master.info; tar xjvf /tmp/mysql-snapshot.tar.bz2; rm -f /tmp/mysql-snapshot.tar.bz2; service mysqld start; echo 'STOP SLAVE;RESET SLAVE;START SLAVE'| mysql -uroot -p$slavepw -vv"
 rm -f /tmp/repl.data
 echo "replication should now be ready and running">&2
 }
@@ -164,7 +164,7 @@ EOF
 	[ -f $CNF ] && {
 	grep log-bin $CNF > /dev/null || {
 		master_info="master-host=$masternode ### IP or host name for the master node ###\n"
-		user_info="master-user=${MYSQL_USER}\nmaster-password=${MYSQL_PASSWORD}\nmaster-port=3302\n"
+		user_info="master-user=${MYSQL_USER}\nmaster-password=${MYSQL_PASSWORD}\nmaster-port=3306\n"
 		cat /tmp/replicate.do.db | tr -t '\n' '|' | sed 's/|/\\n/g' > $$ && mv -f $$ /tmp/replicate.do.db
 		db_info=$(cat /tmp/replicate.do.db)
 		echo "debug ::: db_info = $db_info"
