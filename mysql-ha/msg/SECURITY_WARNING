@@ -1,0 +1,11 @@
+
+     SECURITY WARNING
+
+  All passwords will be stored in cleartext
+  in /etc/mysql-ha. You should make sure that this
+  file is only readable by the appropiate
+  users and groups. You should also make
+  sure that this user has only the necessary
+  privileges on the mysql server (SELECT on 
+  the database you choose to verify, only
+  from the master/slave node)

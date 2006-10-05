@@ -1,0 +1,6 @@
+
+	This is the configuration script for mysql-ha.
+	Default values will be placed inside [] where available.
+	You must specify a value for every variable that doesn't 
+	have a default.
+

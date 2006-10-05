@@ -1,0 +1,1 @@
+MYSQL_KILL_WAIT is the ammount of seconds we sleep after doing a remote mysql_kill, before performing a verification

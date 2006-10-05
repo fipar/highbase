@@ -1,0 +1,1 @@
+MONITOR_CHK_THRESHOLD is the ammount of seconds we sleep after we get a negative service verification, before performing a second one

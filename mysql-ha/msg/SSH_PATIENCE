@@ -1,0 +1,1 @@
+SSH_PATIENCE specifies the ammount of seconds we wait before we decide that an remote command cannot be executed due to timeout

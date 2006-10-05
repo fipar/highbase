@@ -1,0 +1,1 @@
+ARP_DELAY goes straight to the .fakerc file, and it is the ammount of seconds that we wait between each gratuitious ARP packet

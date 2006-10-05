@@ -1,0 +1,1 @@
+MONITOR_PATIENCE is the ammount of seconds we wait before we decide the service verification has timed out

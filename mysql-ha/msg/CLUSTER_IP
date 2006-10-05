@@ -1,0 +1,1 @@
+CLUSTER_IP is the public IP that is shared between master and slave nodes, it is the unique service IP provided to the outside world
