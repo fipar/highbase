@@ -70,7 +70,7 @@ echo "CLUSTER_DEVICE=$CLUSTER_DEVICE" >> $FIL;echo
 
 echo "MYSQL_USER is the mysql database user used for service verification"
 while [ -z "$MYSQL_USER" ]; do
-	echo -n "MYSQL_USER: [replicator] "; read MYSQL_USER; [ -z "$MYSQL_USER" ] && MYSQL_USER=replicator
+	echo -n "MYSQL_USER: [ANONYMOUS] "; read MYSQL_USER; [ -z "$MYSQL_USER" ] && MYSQL_USER=ANONYMOUS
 done
 echo "MYSQL_USER=$MYSQL_USER" >> $FIL;echo
 
@@ -92,9 +92,38 @@ cat <<EOMSG
 \-------------------------------------------/
 EOMSG
 while [ -z "$MYSQL_PASSWORD" ]; do
-	echo -n "MYSQL_PASSWORD: [replicatorpwd] "; read MYSQL_PASSWORD; [ -z "$MYSQL_PASSWORD" ] && MYSQL_PASSWORD=replicatorpwd
+	echo -n "MYSQL_PASSWORD: [] "; read MYSQL_PASSWORD; [ -z "$MYSQL_PASSWORD" ] && MYSQL_PASSWORD=
 done
 echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> $FIL;echo
+
+
+echo "REPLICATION_USER is the mysql database user used for replication"
+while [ -z "$REPLICATION_USER" ]; do
+	echo -n "REPLICATION_USER: [replicator] "; read REPLICATION_USER; [ -z "$REPLICATION_USER" ] && REPLICATION_USER=replicator
+done
+echo "REPLICATION_USER=$REPLICATION_USER" >> $FIL;echo
+
+echo "REPLICATION_PASSWORD is the password associated with the user provided above"
+cat <<EOMSG
+/-------------------------------------------\
+
+     SECURITY WARNING
+
+  This password will be stored in cleartext
+  in $FIL. You should make sure that this
+  file is only readable by the appropiate
+  users and groups. You should also make
+  sure that this user has only the necessary
+  privileges on the mysql server (SELECT on 
+  the database you choose to verify, only
+  from the master/slave node)
+
+\-------------------------------------------/
+EOMSG
+while [ -z "$REPLICATION_PASSWORD" ]; do
+	echo -n "REPLICATION_PASSWORD: [replicatorpwd] "; read REPLICATION_PASSWORD; [ -z "$REPLICATION_PASSWORD" ] && REPLICATION_PASSWORD=replicatorpwd
+done
+echo "REPLICATION_PASSWORD=$REPLICATION_PASSWORD" >> $FIL;echo
 
 echo "MYSQL_DATABASE is the mysql database to verify"
 while [ -z "$MYSQL_DATABASE" ]; do

@@ -24,9 +24,9 @@
 ############ TESTING ONLY ###################
 # Set these variables to proper values IF YOU'RE TESTING setup_replication.sh
 # and not the whole mysql-ha package 
-[ -z "$MYSQL_USER" ] && {
-	export MYSQL_USER="repl"
-	export MYSQL_PASSWORD="replpass"
+[ -z "$REPLICATION_USER" ] && {
+	export REPLICATION_USER="repl"
+	export REPLICATION_PASSWORD="replpass"
 }
 ############################################
 
@@ -58,7 +58,7 @@ read slavenode
 enable_slave()
 {
 cat <<EOSCR |mysql -uroot -p$masterpw -vv
-GRANT REPLICATION SLAVE ON *.* to $MYSQL_USER identified by "$MYSQL_PASSWORD";
+GRANT REPLICATION SLAVE ON *.* to $REPLICATION_USER identified by "$REPLICATION_PASSWORD";
 FLUSH PRIVILEGES;
 RESET MASTER;
 EOSCR
@@ -143,8 +143,8 @@ EOF
 		echo "masternode=$masternode" >> /tmp/repl.data
 		echo "slavepw=$slavepw" >> /tmp/repl.data
 		echo "slavenode=$slavenode" >> /tmp/repl.data
-		echo "MYSQL_USER=$MYSQL_USER" >> /tmp/repl.data
-		echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> /tmp/repl.data
+		echo "REPLICATION_USER=$REPLICATION_USER" >> /tmp/repl.data
+		echo "REPLICATION_PASSWORD=$REPLICATION_PASSWORD" >> /tmp/repl.data
 		
 		dbs=$(mysql -B -uroot -ptesting -e 'show databases'|egrep -v '^Database$|^information_schema$|^mysql$')
 		echo > /tmp/replicate.do.db
@@ -164,7 +164,7 @@ EOF
 	[ -f $CNF ] && {
 	grep log-bin $CNF > /dev/null || {
 		master_info="master-host=$masternode ### IP or host name for the master node ###\n"
-		user_info="master-user=${MYSQL_USER}\nmaster-password=${MYSQL_PASSWORD}\nmaster-port=3306\n"
+		user_info="master-user=${REPLICATION_USER}\nmaster-password=${REPLICATION_PASSWORD}\nmaster-port=3306\n"
 		cat /tmp/replicate.do.db | tr -t '\n' '|' | sed 's/|/\\n/g' > $$ && mv -f $$ /tmp/replicate.do.db
 		db_info=$(cat /tmp/replicate.do.db)
 		echo "debug ::: db_info = $db_info"
@@ -177,8 +177,8 @@ EOF
 [mysqld]
 log-bin
 master-host=$masternode ### IP or host name for the master node ###
-master-user=$MYSQL_USER
-master-password=$MYSQL_PASSWORD 
+master-user=$REPLICATION_USER
+master-password=$REPLICATION_PASSWORD 
 master-port=3306
 server-id=2
 
