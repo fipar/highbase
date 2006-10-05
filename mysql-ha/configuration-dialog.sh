@@ -25,7 +25,6 @@ inputbox()
 dialog  --inputbox "$1" 20 40 "$2" 2> output.$$
 }
 
-
 msgbox "$(cat welcome.msg)"
 
 FIL=/etc/mysql-ha.conf
@@ -124,11 +123,11 @@ chmod -v 600 $FIL
 
 
 [ -n "$N_SLAVE" -o -n "$N_MASTER" ] && {
-	echo done
+	msgbox "The system is configured!"
 	exit 0
 }
 
-echo "adding $MYSQLHA_HOME/role.include to $BASHRC" >> $FIL;echo 
+echo "adding $MYSQLHA_HOME/role.include to $BASHRC" 
 grep "$MYSQLHA_HOME/role.include" $BASHRC >/dev/null || {
 	echo ". $MYSQLHA_HOME/role.include" >> $BASHRC
 	echo >> $BASHRC
@@ -137,9 +136,10 @@ grep "$MYSQLHA_HOME/role.include" $BASHRC >/dev/null || {
 NODE=2
 echo
 while [ $NODE -ne 0 -a $NODE -ne 1 ] ; do
-	echo "almost done, now enter 0 if this node is the master, or 1 if it is the slave: "; read NODE
+	dialog --menu 'Almost done, now enter the role of this master' 16 22 10 '0' 'Master' '1' 'Slave' >output.$$
+	NODE=$(cat output.$$)
 	[ $NODE -eq 0 ] && cp -f $MYSQLHA_HOME/master.include $MYSQLHA_HOME/role.include
 	[ $NODE -eq 1 ] && cp -f $MYSQLHA_HOME/slave.include $MYSQLHA_HOME/role.include
 done
 
-echo "done"
+msgbox "The system is configured!"
