@@ -11,12 +11,13 @@
 
 clear
 
+
 . $MYSQLHA_HOME/compat.sh
 
 . $BASHRC
 
 
-cat msg/welcome
+cat msg/$lang/welcome
 
 FIL=/etc/mysql-ha.conf
 
@@ -33,38 +34,38 @@ cat <<EONOTICE>$FIL
 
 EONOTICE
 
-cat msg/CLUSTER_IP
+cat msg/$lang/CLUSTER_IP
 while [ -z "$CLUSTER_IP" ]; do
 	echo -n "CLUSTER_IP: "; read CLUSTER_IP
 done
 echo "CLUSTER_IP=$CLUSTER_IP" >>$FIL;echo
 
-cat msg/CLUSTER_NETMASK
+cat msg/$lang/CLUSTER_NETMASK
 while [ -z "$CLUSTER_NETMASK" ]; do
 	echo -n "CLUSTER_NETMASK: "; read CLUSTER_NETMASK
 done
 echo "CLUSTER_NETMASK=$CLUSTER_NETMASK" >> $FIL;echo
 
-cat msg/CLUSTER_BROADCAST
+cat msg/$lang/CLUSTER_BROADCAST
 while [ -z "$CLUSTER_BROADCAST" ]; do
 	echo -n "CLUSTER_BROADCAST: "; read CLUSTER_BROADCAST
 done
 echo "CLUSTER_BROADCAST=$CLUSTER_BROADCAST" >> $FIL;echo
 
-cat msg/CLUSTER_DEVICE
+cat msg/$lang/CLUSTER_DEVICE
 while [ -z "$CLUSTER_DEVICE" ]; do
 	echo -n "CLUSTER_DEVICE: [eth0] "; read CLUSTER_DEVICE; [ -z "$CLUSTER_DEVICE" ] && CLUSTER_DEVICE=eth0
 done
 echo "CLUSTER_DEVICE=$CLUSTER_DEVICE" >> $FIL;echo
 
-cat msg/MYSQL_USER
+cat msg/$lang/MYSQL_USER
 while [ -z "$MYSQL_USER" ]; do
 	echo -n "MYSQL_USER: [ANONYMOUS] "; read MYSQL_USER; [ -z "$MYSQL_USER" ] && MYSQL_USER=ANONYMOUS
 done
 echo "MYSQL_USER=$MYSQL_USER" >> $FIL;echo
 
-cat msg/MYSQL_PASSWORD
-cat msg/SECURITY_WARNING
+cat msg/$lang/MYSQL_PASSWORD
+cat msg/$lang/SECURITY_WARNING
 
 while [ -z "$MYSQL_PASSWORD" ]; do
 	echo -n "MYSQL_PASSWORD: [] "; read MYSQL_PASSWORD; [ -z "$MYSQL_PASSWORD" ] && MYSQL_PASSWORD=
@@ -72,27 +73,27 @@ done
 echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> $FIL;echo
 
 
-cat msg/REPLICATION_USER
+cat msg/$lang/REPLICATION_USER
 while [ -z "$REPLICATION_USER" ]; do
 	echo -n "REPLICATION_USER: [replicator] "; read REPLICATION_USER; [ -z "$REPLICATION_USER" ] && REPLICATION_USER=replicator
 done
 echo "REPLICATION_USER=$REPLICATION_USER" >> $FIL;echo
 
-cat msg/REPLICATION_PASSWORD
-cat msg/SECURITY_WARNING
+cat msg/$lang/REPLICATION_PASSWORD
+cat msg/$lang/SECURITY_WARNING
 
 while [ -z "$REPLICATION_PASSWORD" ]; do
 	echo -n "REPLICATION_PASSWORD: [replicatorpwd] "; read REPLICATION_PASSWORD; [ -z "$REPLICATION_PASSWORD" ] && REPLICATION_PASSWORD=replicatorpwd
 done
 echo "REPLICATION_PASSWORD=$REPLICATION_PASSWORD" >> $FIL;echo
 
-cat msg/MYSQL_DATABASE
+cat msg/$lang/MYSQL_DATABASE
 while [ -z "$MYSQL_DATABASE" ]; do
 	echo -n "MYSQL_DATABASE: [testdb] "; read MYSQL_DATABASE; [ -z "$MYSQL_DATABASE" ] && MYSQL_DATABASE=testdb
 done
 echo "MYSQL_DATABASE=$MYSQL_DATABASE" >> $FIL;echo
 
-cat msg/ARP_DELAY
+cat msg/$lang/ARP_DELAY
 while [ -z "$ARP_DELAY" ]; do
 	echo -n "ARP_DELAY: [5] "; read ARP_DELAY; [ -z "$ARP_DELAY" ] && ARP_DELAY=5
 done
@@ -103,81 +104,81 @@ echo "ARP_DELAY=$ARP_DELAY" >> $FIL;echo
 #done
 #echo "DEFAULT_MAC_ADDR=$DEFAULT_MAC_ADDR" >> $FIL
 
-cat msg/MASTER_SLEEP_TIME
+cat msg/$lang/MASTER_SLEEP_TIME
 while [ -z "$MASTER_SLEEP_TIME" ]; do
 	echo -n "MASTER_SLEEP_TIME: [60] "; read MASTER_SLEEP_TIME; [ -z "$MASTER_SLEEP_TIME" ] && MASTER_SLEEP_TIME=60
 done
 echo "MASTER_SLEEP_TIME=$MASTER_SLEEP_TIME" >> $FIL;echo
 
-cat msg/SLAVE_SLEEP_TIME
+cat msg/$lang/SLAVE_SLEEP_TIME
 while [ -z "$SLAVE_SLEEP_TIME" ]; do
 	echo -n "SLAVE_SLEEP_TIME: [60] "; read SLAVE_SLEEP_TIME; [ -z "$SLAVE_SLEEP_TIME" ] && SLAVE_SLEEP_TIME=60
 done
 echo "SLAVE_SLEEP_TIME=$SLAVE_SLEEP_TIME" >> $FIL;echo
 
-cat msg/SSH_PATIENC
+cat msg/$lang/SSH_PATIENC
 while [ -z "$SSH_PATIENCE" ]; do
 	echo -n "SSH_PATIENCE: [20] "; read SSH_PATIENCE; [ -z "$SSH_PATIENCE" ] && SSH_PATIENCE=20
 done
 echo "SSH_PATIENCE=$SSH_PATIENCE" >> $FIL;echo
 
-cat msg/MONITOR_PATIENCE
+cat msg/$lang/MONITOR_PATIENCE
 while [ -z "$MONITOR_PATIENCE" ]; do
 	echo -n "MONITOR_PATIENCE: [10] "; read MONITOR_PATIENCE; [ -z "$MONITOR_PATIENCE" ] && MONITOR_PATIENCE=10
 done
 echo "MONITOR_PATIENCE=$MONITOR_PATIENCE" >> $FIL;echo
 
-cat msg/MONITOR_CHK_THRESHOLD
+cat msg/$lang/MONITOR_CHK_THRESHOLD
 while [ -z "$MONITOR_CHK_THRESHOLD" ]; do
 	echo -n "MONITOR_CHK_THRESHOLD: [20] "; read MONITOR_CHK_THRESHOLD; [ -z "$MONITOR_CHK_THRESHOLD" ] && MONITOR_CHK_THRESHOLD=20
 done
 echo "MONITOR_CHK_THRESHOLD=$MONITOR_CHK_THRESHOLD" >> $FIL;echo
 
-cat msg/MYSQL_KILL_WAIT
+cat msg/$lang/MYSQL_KILL_WAIT
 while [ -z "$MYSQL_KILL_WAIT" ]; do
 	echo -n "MYSQL_KILL_WAIT: [5] "; read MYSQL_KILL_WAIT; [ -z "$MYSQL_KILL_WAIT" ] && MYSQL_KILL_WAIT=5
 done
 echo "MYSQL_KILL_WAIT=$MYSQL_KILL_WAIT" >> $FIL;echo
 
-cat msg/MYSQL_RESTART_WAIT
+cat msg/$lang/MYSQL_RESTART_WAIT
 while [ -z "$MYSQL_RESTART_WAIT" ]; do
 	echo -n "MYSQL_RESTART_WAIT: [5] "; read MYSQL_RESTART_WAIT; [ -z "$MYSQL_RESTART_WAIT" ] && MYSQL_RESTART_WAIT=5
 done
 echo "MYSQL_RESTART_WAIT=$MYSQL_RESTART_WAIT" >> $FIL;echo
 
-cat msg/FPING/ATTEMPTS
+cat msg/$lang/FPING/ATTEMPTS
 while [ -z "$FPING_ATTEMPTS" ]; do
 	echo -n "FPING_ATTEMPTS: [3] "; read FPING_ATTEMPTS; [ -z "$FPING_ATTEMPTS" ] && FPING_ATTEMPTS=3
 done
 echo "FPING_ATTEMPTS=$FPING_ATTEMPTS" >> $FIL;echo
 
-cat msg/SLAVE
+cat msg/$lang/SLAVE
 while [ -z "$SLAVE" ]; do
 	echo -n "SLAVE: [mysql-slave] "; read SLAVE; [ -z "$SLAVE" ] && SLAVE=mysql-slave
 done
 echo "SLAVE=$SLAVE" >> $FIL;echo
 
-cat msg/SIG_KILL_WAIT
+cat msg/$lang/SIG_KILL_WAIT
 while [ -z "$SIG_KILL_WAIT" ]; do
 	echo -n "SIG_KILL_WAIT: [5] "; read SIG_KILL_WAIT; [ -z "$SIG_KILL_WAIT" ] && SIG_KILL_WAIT=5
 done
 echo "SIG_KILL_WAIT=$SIG_KILL_WAIT" >> $FIL;echo
 
-cat msg/DB_USER
+cat msg/$lang/DB_USER
 while [ -z "$DB_USER" ]; do
 	echo -n "DB_USER: [root] "; read DB_USER; [ -z "$DB_USER" ] && DB_USER=root
 done
 echo "DB_USER=$DB_USER" >> $FIL;echo
 
-cat msg/DB_PASSWORD
-cat msg/SECURITY_WARNING
+cat msg/$lang/DB_PASSWORD
+cat msg/$lang/SECURITY_WARNING
 
 while [ -z "$DB_PASSWORD" ]; do
 	echo -n "DB_PASSWORD: [rootpwd] "; read DB_PASSWORD; [ -z "$DB_PASSWORD" ] && export DB_PASSWORD=rootpwd
 done
 echo "DB_PASSWORD=$DB_PASSWORD" >> $FIL;echo
 
-cat msg/NOTIFY_EMAIL
+cat msg/$lang/NOTIFY_EMAIL
 while [ -z "$NOTIFY_EMAIL" ]; do
 	echo -n "NOTIFY_EMAIL: [root@localhost] "; read NOTIFY_EMAIL; [ -z "$NOTIFY_EMAIL" ] && export NOTIFY_EMAIL=root@localhost
 done

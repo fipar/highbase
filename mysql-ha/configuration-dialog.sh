@@ -11,6 +11,7 @@
 
 clear
 
+
 . $MYSQLHA_HOME/compat.sh
 
 . $BASHRC
@@ -25,7 +26,7 @@ inputbox()
 dialog  --inputbox "$1" 20 40 "$2" 2> output.$$
 }
 
-msgbox "$(cat welcome.msg)"
+msgbox "$(cat msg/$lang/welcome)"
 
 FIL=/etc/mysql-ha.conf
 
@@ -42,36 +43,36 @@ cat <<EONOTICE >$FIL
 
 EONOTICE
 
-inputbox "$(cat msg/CLUSTER_IP)"
+inputbox "$(cat msg/$lang/CLUSTER_IP)"
 echo "CLUSTER_IP=$(cat output.$$)" >>$FIL;echo
 
-inputbox "$(cat msg/CLUSTER_NETMASK)"
+inputbox "$(cat msg/$lang/CLUSTER_NETMASK)"
 echo "CLUSTER_NETMASK=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/CLUSTER_BROADCAST)"
+inputbox "$(cat msg/$lang/CLUSTER_BROADCAST)"
 echo "CLUSTER_BROADCAST=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/CLUSTER_DEVICE)"
+inputbox "$(cat msg/$lang/CLUSTER_DEVICE)"
 echo "CLUSTER_DEVICE=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/MYSQL_USER)" "ANONYMOUS"
+inputbox "$(cat msg/$lang/MYSQL_USER)" "ANONYMOUS"
 echo "MYSQL_USER=$(cat output.$$)" >> $FIL;echo
 
-msgbox "$(cat msg/SECURITY_WARNING)"
+msgbox "$(cat msg/$lang/SECURITY_WARNING)"
 
-inputbox "$(cat msg/MYSQL_PASSWORD)"
+inputbox "$(cat msg/$lang/MYSQL_PASSWORD)"
 echo "MYSQL_PASSWORD=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/REPLICATION_USER)" "replicator"
+inputbox "$(cat msg/$lang/REPLICATION_USER)" "replicator"
 echo "REPLICATION_USER=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/REPLICATION_PASSWORD)" "replicatorpwd"
+inputbox "$(cat msg/$lang/REPLICATION_PASSWORD)" "replicatorpwd"
 echo "REPLICATION_PASSWORD=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/MYSQL_DATABASE)" "test"
+inputbox "$(cat msg/$lang/MYSQL_DATABASE)" "test"
 echo "MYSQL_DATABASE=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/ARP_DELAY)" 5
+inputbox "$(cat msg/$lang/ARP_DELAY)" 5
 echo "ARP_DELAY=$(cat output.$$)" >> $FIL;echo
 
 #while [ -z "$DEFAULT_MAC_ADDR" ]; do
@@ -79,43 +80,43 @@ echo "ARP_DELAY=$(cat output.$$)" >> $FIL;echo
 #done
 #echo "DEFAULT_MAC_ADDR=$DEFAULT_MAC_ADDR" >> $FIL
 
-inputbox "$(cat msg/MASTER_SLEEP_TIME)" 60
+inputbox "$(cat msg/$lang/MASTER_SLEEP_TIME)" 60
 echo "MASTER_SLEEP_TIME=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/SLAVE_SLEEP_TIME)" 60
+inputbox "$(cat msg/$lang/SLAVE_SLEEP_TIME)" 60
 echo "SLAVE_SLEEP_TIME=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/SSH_PATIENCE)" 20
+inputbox "$(cat msg/$lang/SSH_PATIENCE)" 20
 echo "SSH_PATIENCE=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/MONITOR_PATIENCE)" 10
+inputbox "$(cat msg/$lang/MONITOR_PATIENCE)" 10
 echo "MONITOR_PATIENCE=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/MONITOR_CHK_THRESHOLD)" 20
+inputbox "$(cat msg/$lang/MONITOR_CHK_THRESHOLD)" 20
 echo "MONITOR_CHK_THRESHOLD=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/MYSQL_KILL_WAIT)" 5
+inputbox "$(cat msg/$lang/MYSQL_KILL_WAIT)" 5
 echo "MYSQL_KILL_WAIT=$(output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/MYSQL_RESTART_WAIT)" 5
+inputbox "$(cat msg/$lang/MYSQL_RESTART_WAIT)" 5
 echo "MYSQL_RESTART_WAIT=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/FPING_ATTEMPTS)" 3
+inputbox "$(cat msg/$lang/FPING_ATTEMPTS)" 3
 echo "FPING_ATTEMPTS=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/SLAVE)"
+inputbox "$(cat msg/$lang/SLAVE)"
 echo "SLAVE=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/SIG_KILL_WAIT)" 5
+inputbox "$(cat msg/$lang/SIG_KILL_WAIT)" 5
 echo "SIG_KILL_WAIT=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/DB_USER)" root
+inputbox "$(cat msg/$lang/DB_USER)" root
 echo "DB_USER=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/DB_PASSWORD)" rootpwd
+inputbox "$(cat msg/$lang/DB_PASSWORD)" rootpwd
 echo "DB_PASSWORD=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/NOTIFY_EMAIL)" root@localhost
+inputbox "$(cat msg/$lang/NOTIFY_EMAIL)" root@localhost
 echo "NOTIFY_EMAIL=$(cat output.$$)" >> $FIL;echo
 
 chown -v root.root $FIL
