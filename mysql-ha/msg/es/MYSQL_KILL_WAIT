@@ -1,0 +1,1 @@
+MYSQL_KILL_WAIT es la cantidad de segundos que esperamos luego de hacer un mysql_kill remoto, antes de reverificar 

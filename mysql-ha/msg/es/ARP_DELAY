@@ -1,0 +1,1 @@
+ARP_DELAY es la cantidad de segundos que esperamos entre cada paquete de ARP spoofing. Se incluye directamente en el archivo .fakerc

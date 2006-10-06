@@ -1,0 +1,1 @@
+MONITOR_CHK_THRESHOLD es la cantidad de segundos que dormimos luego de obtener una verificacion de servicio negativa, antes de repetirla 

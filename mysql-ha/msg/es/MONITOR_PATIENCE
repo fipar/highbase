@@ -1,0 +1,1 @@
+MONITOR_PATIENCE es la cantidad de segundos que esperamos para decidir que una verificacion de servicio debe ser cancelada por expiracion del tiempo de espera 

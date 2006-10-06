@@ -1,0 +1,1 @@
+SIG_KILL_WAIT. Luego de realizar un kill de cada proceso mysql durante un failover, esta es la cantidad de segundos que esperamos antes de intentar un kill -9

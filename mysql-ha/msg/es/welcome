@@ -1,0 +1,7 @@
+
+	Este es el script de configuración para mysql-ha. 
+	Cuando existan valores por omisión disponibles, se colocarán
+	dentro de []. 
+	Ud debe especificar un valor para cada variable que no tenga
+	uno por omisión. 
+

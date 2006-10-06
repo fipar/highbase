@@ -1,0 +1,2 @@
+MYSQL_RESTART_WAIT es analogo al parametro anterior, aplicado a un restart_mysql remoto 
+MYSQL_RESTART_WAIT is the same as above, applied to a remote restart_mysql

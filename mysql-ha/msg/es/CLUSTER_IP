@@ -1,0 +1,1 @@
+CLUSTER_IP es la direccion IP publica compartida entre los nodos maestro y esclavo. Es una IP de servicio unica provista al mundo exterior

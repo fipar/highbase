@@ -1,0 +1,1 @@
+SSH_PATIENCE es la cantidad de segundos que esperamos para decidir que un comando remoto se debe cancelar por exceso de tiempo de espera 
