@@ -16,7 +16,11 @@ clear
 # note that this is not LANG because we don't use real locales
 [ -n "$lang" ] || export lang=en
 
-# hopefully, we will have an X configurator one day too, at least using xmessage...
+# check for python and run the corresponding configurator (wxpython is verified from in there)
+[ -n "$(type -a python)" ] && {
+	$MYSQLHA_HOME/configuration-wxpython.py
+	exit
+}
 
 # check for dialog backend and run the corresponding configurator
 [ -n "$(type -a dialog)" ] && {

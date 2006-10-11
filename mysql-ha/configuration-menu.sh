@@ -146,7 +146,7 @@ while [ -z "$MYSQL_RESTART_WAIT" ]; do
 done
 echo "MYSQL_RESTART_WAIT=$MYSQL_RESTART_WAIT" >> $FIL;echo
 
-cat msg/$lang/FPING/ATTEMPTS
+cat msg/$lang/FPING_ATTEMPTS
 while [ -z "$FPING_ATTEMPTS" ]; do
 	echo -n "FPING_ATTEMPTS: [3] "; read FPING_ATTEMPTS; [ -z "$FPING_ATTEMPTS" ] && FPING_ATTEMPTS=3
 done
