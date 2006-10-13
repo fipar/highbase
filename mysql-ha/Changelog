@@ -1,3 +1,7 @@
+10-13-2006
+* Finished up the X configurator, using wxpython. I've added the wxGlade project to the doc directory (couldn't think of a better location
+for it!). 
+
 09-10-2006
 * I forgot to update the Changelog :) I'll update it from svn log in alpha-7
 
