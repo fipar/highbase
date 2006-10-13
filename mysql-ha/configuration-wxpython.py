@@ -269,12 +269,17 @@ class ConfiguratorFrame(wx.Frame):
 	configuration.write("DB_USER = "+self.TextCtrl_DB_USER.GetLineText(0)+"\n")
 	configuration.write("DB_PASSWORD = "+self.TextCtrl_DB_PASSWORD.GetLineText(0)+"\n")
 	configuration.write("NOTIFY_EMAIL = "+self.TextCtrl_NOTIFY_EMAIL.GetLineText(0)+"\n")
-
+	
+	if self.isMaster.GetValue():
+		os.system("./configuration-post.sh master")
+	else:
+		os.system("./configuration-post.sh slave")
 
 	configuration.close()
 	self.Close()
 
     def CancelEvent(self, event): # wxGlade: ConfiguratorFrame.<event_handler>
+	print self.isMaster.GetValue()
 	self.Close()
 
 # end of class ConfiguratorFrame
