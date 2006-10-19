@@ -17,7 +17,7 @@ clear
 [ -n "$lang" ] || export lang=en
 
 # check for python and run the corresponding configurator (wxpython is verified from in there)
-[ -n "$(type -a python)" ] [ -z "$($MYSQLHA_HOME/check-wxpython.py)" ] && {
+[ -n "$(type -a python)" -a -z "$($MYSQLHA_HOME/check-wxpython.py)" ] && {
 	$MYSQLHA_HOME/configuration-wxpython.py
 	exit
 }
