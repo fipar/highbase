@@ -7,5 +7,5 @@ import os
 try:
 	import wx
 except:
- 	print error	
+ 	print "error"
 
