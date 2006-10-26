@@ -60,7 +60,7 @@ echo "CLUSTER_DEVICE=$CLUSTER_DEVICE" >> $FIL;echo
 
 cat msg/$lang/MYSQL_USER
 while [ -z "$MYSQL_USER" ]; do
-	echo -n "MYSQL_USER: [ANONYMOUS] "; read MYSQL_USER; [ -z "$MYSQL_USER" ] && MYSQL_USER=ANONYMOUS
+	echo -n "MYSQL_USER: [selector] "; read MYSQL_USER; [ -z "$MYSQL_USER" ] && MYSQL_USER=selector
 done
 echo "MYSQL_USER=$MYSQL_USER" >> $FIL;echo
 
@@ -68,7 +68,7 @@ cat msg/$lang/MYSQL_PASSWORD
 cat msg/$lang/SECURITY_WARNING
 
 while [ -z "$MYSQL_PASSWORD" ]; do
-	echo -n "MYSQL_PASSWORD: [] "; read MYSQL_PASSWORD; [ -z "$MYSQL_PASSWORD" ] && MYSQL_PASSWORD=
+	echo -n "MYSQL_PASSWORD: [selector] "; read MYSQL_PASSWORD; [ -z "$MYSQL_PASSWORD" ] && MYSQL_PASSWORD=selector
 done
 echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> $FIL;echo
 
@@ -89,7 +89,7 @@ echo "REPLICATION_PASSWORD=$REPLICATION_PASSWORD" >> $FIL;echo
 
 cat msg/$lang/MYSQL_DATABASE
 while [ -z "$MYSQL_DATABASE" ]; do
-	echo -n "MYSQL_DATABASE: [testdb] "; read MYSQL_DATABASE; [ -z "$MYSQL_DATABASE" ] && MYSQL_DATABASE=testdb
+	echo -n "MYSQL_DATABASE: [test] "; read MYSQL_DATABASE; [ -z "$MYSQL_DATABASE" ] && MYSQL_DATABASE=test
 done
 echo "MYSQL_DATABASE=$MYSQL_DATABASE" >> $FIL;echo
 
@@ -116,7 +116,7 @@ while [ -z "$SLAVE_SLEEP_TIME" ]; do
 done
 echo "SLAVE_SLEEP_TIME=$SLAVE_SLEEP_TIME" >> $FIL;echo
 
-cat msg/$lang/SSH_PATIENC
+cat msg/$lang/SSH_PATIENCE
 while [ -z "$SSH_PATIENCE" ]; do
 	echo -n "SSH_PATIENCE: [20] "; read SSH_PATIENCE; [ -z "$SSH_PATIENCE" ] && SSH_PATIENCE=20
 done
@@ -193,7 +193,7 @@ chmod -v 600 $FIL
 	exit 0
 }
 
-echo "adding $MYSQLHA_HOME/role.include to $BASHRC" >> $FIL;echo 
+echo "adding $MYSQLHA_HOME/role.include to $BASHRC";echo 
 grep "$MYSQLHA_HOME/role.include" $BASHRC >/dev/null || {
 	echo ". $MYSQLHA_HOME/role.include" >> $BASHRC
 	echo >> $BASHRC

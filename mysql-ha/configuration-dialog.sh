@@ -55,12 +55,12 @@ echo "CLUSTER_BROADCAST=$(cat output.$$)" >> $FIL;echo
 inputbox "$(cat msg/$lang/CLUSTER_DEVICE)"
 echo "CLUSTER_DEVICE=$(cat output.$$)" >> $FIL;echo
 
-inputbox "$(cat msg/$lang/MYSQL_USER)" "ANONYMOUS"
+inputbox "$(cat msg/$lang/MYSQL_USER)" "selector"
 echo "MYSQL_USER=$(cat output.$$)" >> $FIL;echo
 
 msgbox "$(cat msg/$lang/SECURITY_WARNING)"
 
-inputbox "$(cat msg/$lang/MYSQL_PASSWORD)"
+inputbox "$(cat msg/$lang/MYSQL_PASSWORD)" "selector"
 echo "MYSQL_PASSWORD=$(cat output.$$)" >> $FIL;echo
 
 inputbox "$(cat msg/$lang/REPLICATION_USER)" "replicator"

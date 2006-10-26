@@ -88,11 +88,14 @@ echo 'almost done, now some interactive scripts...'>&2
 	echo "i couldn't find $RC_DIR, you should manually copy rc-script as mysql-had in your systems rc dir" >&2
 }
 
-cat <<EOMSG>&2
-if you have ssh properly configured for passwordless login from
-master to slave and the other way around, type c to continue, 
-otherwise just type enter and i'll try to set it up for you
-(you might be asked the root password for the slave/master nodes)
+cat <<EOMSG >&2
+
+mysql-ha needs passwordless ssh properly configured for the root
+user from master to slave and the other way around. 
+If you want me to try and set it up for you type 'y' (you will
+be asked the root password for the slave/master nodes). 
+
+Otherwise just type enter. 
 
 /-----------------------------------------------------------\
 
@@ -120,13 +123,13 @@ otherwise just type enter and i'll try to set it up for you
 \-------------------------------------------------------------/
 EOMSG
 read option
-[ "$option" = "c" ] || {
+[ "$option" = "y" -o "$option" == "Y" ] && {
 	echo "enter the name/ip for the other node (i.e., if this is the master, enter the slave's name/ip">&2
 	read OTHERBOX
 	echo "when asked for a file, use the provided default, when asked for a passphrase, type enter">&2
 	ssh-keygen -t dsa
 	scp /root/.ssh/id_dsa.pub $OTHERBOX:/root/id_peer
-	ssh $OTHERBOX "cat /root/id_peer >> /root/.ssh/authorized_keys2"
+	ssh $OTHERBOX "mkdir /root/.ssh/ 2>/dev/null; cat /root/id_peer >> /root/.ssh/authorized_keys2"
 	ssh $OTHERBOX "ssh-keygen -t dsa"
 	scp $OTHERBOX:/root/.ssh/id_dsa.pub /root/id_peer
 	cat id_peer >> /root/.ssh/authorized_keys2
@@ -142,7 +145,6 @@ read autosetup
 
 less <<EOMSG>&2
 now you will see instructions on setting up replication in mysql. 
-we haven't automated this yet. 
 type q to exit
 
 PLEASE, check out mysql's official site for more accurate information, 
