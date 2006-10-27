@@ -132,7 +132,7 @@ read option
 	ssh $OTHERBOX "mkdir /root/.ssh/ 2>/dev/null; cat /root/id_peer >> /root/.ssh/authorized_keys2"
 	ssh $OTHERBOX "ssh-keygen -t dsa"
 	scp $OTHERBOX:/root/.ssh/id_dsa.pub /root/id_peer
-	cat id_peer >> /root/.ssh/authorized_keys2
+	cat /root/id_peer >> /root/.ssh/authorized_keys2
 	chmod -R 700 /root/.ssh/
 	ssh $OTHERBOX "chmod -R 700 /root/.ssh/"
 	echo "it should be done now, try logging in from one machine into the other, if you've never done this">&2
@@ -143,9 +143,8 @@ echo "automatic setup of replication in mysql is still under heavy testing, and 
 read autosetup
 [ "$autosetup" == "y" ] && "./setup_replication.sh" || {
 
-less <<EOMSG>&2
+less <<EOMSG >&2
 now you will see instructions on setting up replication in mysql. 
-type q to exit
 
 PLEASE, check out mysql's official site for more accurate information, 
 this section is intended only as a bref summary that might get you
@@ -226,7 +225,7 @@ manual, please check it if you have any problem.
 EOMSG
 }
 
-cat <<EOMSG>&2
+cat <<EOMSG >&2
 you should reload /etc/bashrc (or the equivalent for your system, such as 
 /etc/bash.bashrc for debian) for some changes to take effect. 
 (you MUST do this before starting the cluster) 
@@ -237,7 +236,7 @@ read reply
 [ "$reply" = "n" ] && . $BASHRC
 
 
-cat <<EOMSG>&2
+cat <<EOMSG >&2
 now you can run ./configurator.sh, interactively, to test it, 
 or nohup $MYSQLHA_HOME/configurator.sh 
 you can also use the rc script, if it was properly installed for your system

@@ -22,7 +22,7 @@
 # Boston, MA 02111-1307 USA
 
 
-CHK_PROG="$MYSQLHA_HOME/pwrap mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $CLUSTER_IP"
+CHK_PROG="mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $CLUSTER_IP"
 
 
 attempt_kill()
@@ -78,7 +78,7 @@ MYSQL_VER=`mysql --version |awk '{ print $5 }' |awk -F. '{ print $1 }'`
 }
 
 
-CHK_PROG="$MYSQLHA_HOME/pwrap mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $MASTER_NODE"
+CHK_PROG="mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $MASTER_NODE"
 should_failover=0
 
 wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && log "mysql responded (ok)" || {

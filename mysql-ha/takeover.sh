@@ -39,7 +39,7 @@ echo "slave stop" | mysql -u${DB_USER} -p${DB_PASSWORD}
 fping -c$ATTEMPTS $CLUSTER_IP && {
 	log "takeover with master node still holding cluster ip, going to gratuitious ARP mode (error)"
 	nohup fake $CLUSTER_IP &
-	sleep $ARP_DELAY
+	## sleep $ARP_DELAY ## I don't think we need this here. I don't know how this ended up here! - 20061026 - fipar
 } || {
 	log "takeover with master node down, doing simple ifconfig"
 	#start listening
