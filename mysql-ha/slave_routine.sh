@@ -57,6 +57,7 @@ main()
 {
 shouldrun || { 
 	log "shouldrun was unsuccessfull (ok)"
+	sleep $SLAVE_SLEEP_TIME
 	continue
 }
 

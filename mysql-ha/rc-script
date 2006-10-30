@@ -32,9 +32,10 @@
 # config: /etc/mysql-ha.conf
 # pidfile: /var/run/mysql-ha.pid
 
-MYSQLHA_HOME=/usr/mysql-ha
+export MYSQLHA_HOME=/usr/mysql-ha
 #FIXME: figure out a way to get this out of the installation process
 
+. /etc/profile # so we get the path
 
 progname=$(basename $0)
 pidf="/var/run/mysql-ha.pid"
