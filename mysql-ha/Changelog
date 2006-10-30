@@ -1,5 +1,6 @@
 10-30-2006
-* Fixed a bug in the rc-script
+* Fixed a bug in the nocluster flag handling code
+* Fixed a bug in the rc-script: it now starts properly, and stops properly unless the system does a takeover
 * Fixed a bug in the ifconfig based takeover
 * Fixed the passwordless ssh setup
 
