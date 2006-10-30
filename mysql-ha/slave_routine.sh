@@ -24,7 +24,9 @@
 
 CHK_PROG="mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $CLUSTER_IP"
 
-
+#
+# we try to kill every mysql process on the master node, except for the replication thread, just in case the node isn't responding
+# becaused it's choked by a bad client, a deadlock, etc.
 attempt_kill()
 {
 	log "about to run mysql_kill on $MASTER_NODE (warning)"
@@ -32,7 +34,6 @@ attempt_kill()
 	sleep $MYSQL_KILL_WAIT
 	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && return 0 || return 1
 }
-
 
 attempt_restart()
 {
@@ -54,7 +55,10 @@ shouldrun()
 
 main()
 {
-shouldrun || log "shouldrun was unsuccessfull (ok)"
+shouldrun || { 
+	log "shouldrun was unsuccessfull (ok)"
+	continue
+}
 
 MYSQL_VER=`mysql --version |awk '{ print $5 }' |awk -F. '{ print $1 }'`
 
