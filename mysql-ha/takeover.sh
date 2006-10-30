@@ -43,14 +43,14 @@ fping -c$ATTEMPTS $CLUSTER_IP && {
 } || {
 	log "takeover with master node down, doing simple ifconfig"
 	#start listening
-	$currip=$(ifconfig $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
+	currip=$(ifconfig $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
 	ifconfig $CLUSTER_DEVICE $CLUSTER_IP
 	ifconfig $CLUSTER_DEVICE add $currip
 }
 
-#just to be paranoid, this code should never run (i believe they call this a sanity check)
+#just to be paranoid, this code should never run
 [ $(ifconfig $CLUSTER_DEVICE|grep -c $CLUSTER_IP) -eq 0 ] && {
-	$currip=$(ifconfig $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
+	currip=$(ifconfig $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
 	ifconfig $CLUSTER_DEVICE $CLUSTER_IP
 	ifconfig $CLUSTER_DEVICE add $currip
 } && echo "manually added $CLUSTER_IP to $CLUSTER_DEVICE"

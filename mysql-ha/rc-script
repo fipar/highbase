@@ -32,11 +32,14 @@
 # config: /etc/mysql-ha.conf
 # pidfile: /var/run/mysql-ha.pid
 
+MYSQLHA_HOME=/usr/mysql-ha
+#FIXME: figure out a way to get this out of the installation process
+
 
 progname=$(basename $0)
 pidf="/var/run/mysql-ha.pid"
 logf="/var/log/mysql-ha.log"
-startedname="$MYSQHA_HOME/configurator.sh"
+startedname="$MYSQLHA_HOME/configurator.sh"
 
 
 start()

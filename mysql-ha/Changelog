@@ -1,4 +1,6 @@
 10-30-2006
+* Fixed a bug in the rc-script
+* Fixed a bug in the ifconfig based takeover
 * Fixed the passwordless ssh setup
 
 10-13-2006
