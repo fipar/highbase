@@ -44,7 +44,7 @@ done
 	log "failover finished, soft mode (notify)"
 	exit 0
 } || {
-	sync
+	sync; sync
 	log "starting failover, hard mode, shutting down box (notify)"
 	nohup /sbin/shutdown -h now &
 }

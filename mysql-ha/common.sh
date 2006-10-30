@@ -107,7 +107,7 @@ exit $2
 #routine to obtain the name of the master node
 set_master_node()
 {
-MASTER_NODE=$(cat /etc/my.cnf |grep master-host|awk -F= '{print $2}')
+MASTER_NODE=$(cat /etc/my.cnf |grep master-host|awk -F= '{print $2}'|awk '{print $1}')
 [ -n "$MASTER_NODE" ] && export MASTER_NODE || die "could not get master-host from /etc/my.cnf" 1
 export MASTER_NODE
 }
