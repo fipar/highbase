@@ -66,7 +66,7 @@
 }
 
 #check for smbclient, only warn if not found
-[ -n "$(type -a smbclient)" ] || {
+[ -n "$(type -a smbclient 2>/dev/null)" ] || {
 	echo "i coudn't find smblient in your path, netbios notification will be unavailable">&2
 	sleep 2
 }
