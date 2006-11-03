@@ -18,6 +18,7 @@ clear
 
 grep "$MYSQLHA_HOME/role.include" $BASHRC >/dev/null || {
 	echo ". $MYSQLHA_HOME/role.include" >> $BASHRC
+	echo "export MYSQLHA_HOME=$MYSQLHA_HOME" >> $BASHRC
 	echo >> $BASHRC
 	}
 

@@ -1,3 +1,7 @@
+11-02-2006
+* Changed takeover to remove the mysql-ha.pid file, so the rc-script now works properly in all scenarios
+* Improved handling of MYSQLHA_HOME
+
 10-30-2006
 * Fixed a bug in the nocluster flag handling code
 * Fixed a bug in the rc-script: it now starts properly, and stops properly unless the system does a takeover

@@ -56,4 +56,5 @@ fping -c$ATTEMPTS $CLUSTER_IP && {
 } && echo "manually added $CLUSTER_IP to $CLUSTER_DEVICE"
 
 log "takeover complete (notify)"
+rm -f /var/run/mysql-ha.pid #so the rc-script works ok
 exit 0
