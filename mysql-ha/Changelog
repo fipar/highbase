@@ -1,3 +1,9 @@
+11-06-2006
+* Fixed setup_replication.sh: 
+	* replicate.do.db wasn't being generated properly due to a hardcoded mysql password
+	* replication slave privileged didn't always work due to the hostname not being used in the grant sentence
+
+
 11-02-2006
 * Changed takeover to remove the mysql-ha.pid file, so the rc-script now works properly in all scenarios
 * Improved handling of MYSQLHA_HOME
