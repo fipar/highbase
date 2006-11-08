@@ -126,7 +126,14 @@ read option
 [ "$option" = "y" -o "$option" == "Y" ] && {
 	echo "enter the name/ip for the other node (i.e., if this is the master, enter the slave's name/ip">&2
 	read OTHERBOX
-	echo "when asked for a file, use the provided default, when asked for a passphrase, type enter">&2
+	cat <<EOMSG >&2
+when asked for a file, used the provided default. 
+when asked for a passphrase: 
+- type <enter> if you don't want to use the ssh-agent (anyone will be able to ssh between both nodes as root with
+no password, PROVIDED THEY'RE ALREADY ROOT ON ONE NODE)
+- enter a passphrase if you want to use the ssh-agent (you'll need to enter this passphrase on each node every time the cluster
+starts)
+EOMSG
 	ssh-keygen -t dsa
 	scp /root/.ssh/id_dsa.pub $OTHERBOX:/root/id_peer
 	ssh $OTHERBOX "mkdir /root/.ssh/ 2>/dev/null; cat /root/id_peer >> /root/.ssh/authorized_keys2"

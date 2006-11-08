@@ -29,6 +29,9 @@ done
 
 . $MYSQLHA_HOME/common.sh
 
+ssh-agent # TODO: we start the ssh-agent, but we don't stop it
+ssh-add
+
 #start mysqld if it's stopped
 [ $($RC_SCRIPT status |grep -c stop) -eq 0 ] || $RC_SCRIPT start
 

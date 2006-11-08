@@ -1,3 +1,12 @@
+11-08-2006
+* We now start the ssh-agent with configurator and run ssh-add afterwards (even if it's not necessary..). We give the user the option to use a passphrase while creating the public/private key pair
+
+11-07-2006
+* Fixed the way CLUSTER_IP is configured in the master node. We now do this in a way that's consistent with the takeover script, and in a way that
+the CLUSTER_IP is the primary IP on the master node, and it's 'real' IP is left as an alias 
+
+** alpha-0.6.4
+
 11-06-2006
 * Fixed setup_replication.sh: 
 	* replicate.do.db wasn't being generated properly due to a hardcoded mysql password
