@@ -29,7 +29,20 @@ done
 
 . $MYSQLHA_HOME/common.sh
 
-ssh-agent # TODO: we start the ssh-agent, but we don't stop it
+AGENT_SOCK=/tmp/mysql-ha-ssh-agent.sock
+
+[ -n "$(fuser $AGENT_SOCK)" ] && {
+	echo "killing old ssh-agent"
+	kill $(fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
+	for i in $(seq 10); do
+		usleep 20
+		echo -n "."
+	done
+	kill -9 $(fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
+}
+
+ssh-agent -a $AGENT_SOCK # TODO: we start the ssh-agent, but we don't stop it
+export SSH_AUTH_SOCK=$AGENT_SOCK
 ssh-add
 
 #start mysqld if it's stopped
