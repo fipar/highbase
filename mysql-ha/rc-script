@@ -64,6 +64,15 @@ stop()
 		echo "$progname does not appear to be running (pid fil not found)">&2
 		return 1
 	}
+
+AGENT_SOCK=/tmp/mysql-ha-ssh-agent.sock
+
+[ -n "$(fuser $AGENT_SOCK)" ] && {
+	kill $(fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
+	usleep 200
+	kill -9 $(fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
+}
+
 	echo -n "stopping $progname: ">&2
 	ps -ef|awk "\$3 == $(cat $pidf) {print \$2}" |xargs kill #2>/dev/null#kill the children
 	kill $(cat $pidf)	
