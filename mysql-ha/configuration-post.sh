@@ -25,4 +25,4 @@ grep "$MYSQLHA_HOME/role.include" $BASHRC >/dev/null || {
 [ $1 == "master" ] && cp -f $MYSQLHA_HOME/master.include $MYSQLHA_HOME/role.include
 [ $1 == "slave" ] && cp -f $MYSQLHA_HOME/slave.include $MYSQLHA_HOME/role.include
 
-
+chmod 640 /etc/mysql-ha.conf

@@ -75,6 +75,7 @@
 [ -n "$(type -a sudo 2>/dev/null)" ] && {
 	echo "creating sudo based installation">&2
 	useradd -d $MYSQLHA_HOME mysqlha
+	groupadd mysqlha 2>/dev/null #on red hat we have the private user group scheme, so this will fail
 	# populating path
 	[ -x /etc/init.d/mysql ] && RC_SCRIPT=/etc/init.d/mysql || RC_SCRIPT=/etc/init.d/mysqld
 	PS=/bin/ps
