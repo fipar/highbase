@@ -55,6 +55,10 @@ RC_DIR=/etc/init.d
 #first see if we have everything we need
 $MYSQLHA_HOME/pre-install.sh || exit 1
 
+SSH_USER=$(cat $MYSQLHA_HOME/ssh_user)
+HOME=/root
+[ "$SSH_USER" == "mysqlha" ] && HOME=$MYSQLHA_HOME
+
 #now build aux packages and create config files
 cd $MYSQLHA_HOME/extern/fping-2.2b2/
 ./configure && make && make check && make install && make clean || {
@@ -91,7 +95,7 @@ echo 'almost done, now some interactive scripts...'>&2
 cat <<EOMSG >&2
 
 mysql-ha needs passwordless ssh properly configured for the root
-user from master to slave and the other way around. 
+or mysqlha user from master to slave and the other way around. 
 If you want me to try and set it up for you type 'y' (you will
 be asked the root password for the slave/master nodes). 
 
@@ -134,14 +138,14 @@ no password, PROVIDED THEY'RE ALREADY ROOT ON ONE NODE)
 - enter a passphrase if you want to use the ssh-agent (you'll need to enter this passphrase on each node every time the cluster
 starts)
 EOMSG
-	ssh-keygen -t dsa
-	scp /root/.ssh/id_dsa.pub $OTHERBOX:/root/id_peer
-	ssh $OTHERBOX "mkdir /root/.ssh/ 2>/dev/null; cat /root/id_peer >> /root/.ssh/authorized_keys2"
-	ssh $OTHERBOX "ssh-keygen -t dsa"
-	scp $OTHERBOX:/root/.ssh/id_dsa.pub /root/id_peer
-	cat /root/id_peer >> /root/.ssh/authorized_keys2
-	chmod -R 700 /root/.ssh/
-	ssh $OTHERBOX "chmod -R 700 /root/.ssh/"
+	su - $SSH_USER -c "ssh-keygen -t dsa"
+	scp $HOME/.ssh/id_dsa.pub $OTHERBOX:$HOME/id_peer
+	ssh $SSH_USER@$OTHERBOX "mkdir $HOME/.ssh/ 2>/dev/null; cat $HOME/id_peer >> $HOME/.ssh/authorized_keys2"
+	ssh $SSH_USER@$OTHERBOX "ssh-keygen -t dsa"
+	scp $SSH_USER@$OTHERBOX:$HOME/.ssh/id_dsa.pub $HOME/id_peer
+	cat $HOME/id_peer >> $HOME/.ssh/authorized_keys2
+	chmod -R 700 $HOME/.ssh/
+	ssh $SSH_USER@$OTHERBOX "chmod -R 700 $HOME/.ssh/"
 	echo "it should be done now, try logging in from one machine into the other, if you've never done this">&2
 	echo "you'll be asked to save your peer's public key, say yes">&2
 }

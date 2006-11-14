@@ -29,6 +29,8 @@ done
 
 . $MYSQLHA_HOME/common.sh
 
+SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
+
 AGENT_SOCK=/tmp/mysql-ha-ssh-agent.sock
 
 [ -n "$(fuser $AGENT_SOCK)" ] && {
@@ -49,10 +51,10 @@ ssh-add
 [ $($RC_SCRIPT status |grep -c stop) -eq 0 ] || $RC_SCRIPT start
 
 [ -n "$N_MASTER" ] && NODEOK=0 && {
-	ifconfig $CLUSTER_DEVICE |grep $CLUSTER_IP >/dev/null || { 
-		currip=$(ifconfig $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
-		ifconfig $CLUSTER_DEVICE $CLUSTER_IP
-		ifconfig $CLUSTER_DEVICE add $currip
+	${SUDO}ifconfig $CLUSTER_DEVICE |grep $CLUSTER_IP >/dev/null || { 
+		currip=$(${SUDO}ifconfig $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
+		${SUDO}ifconfig $CLUSTER_DEVICE $CLUSTER_IP
+		${SUDO}ifconfig $CLUSTER_DEVICE add $currip
 	}
 	. $MYSQLHA_HOME/master_routine.sh
 }

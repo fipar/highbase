@@ -1,3 +1,8 @@
+11-13-2006
+* Added changes to support sudo
+
+** alpha-0.6.4-1
+
 11-08-2006
 * We now start the ssh-agent with configurator and run ssh-add afterwards (even if it's not necessary..). We give the user the option to use a passphrase while creating the public/private key pair
 
