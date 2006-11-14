@@ -75,7 +75,14 @@
 [ -n "$(type -a sudo 2>/dev/null)" ] && {
 	echo "creating sudo based installation">&2
 	useradd -d $MYSQLHA_HOME mysqlha
-	echo "mysqlha	ALL=NOPASSWD:$MYSQLHA_HOME/restart_mysql.sh, $MYSQLHA_HOME/mysql_kill.sh, $MYSQLHA_HOME/failover.sh, $MYSQLHA_HOME/takover.sh, /sbin/ifconfig, /usr/bin/fake" >> /etc/sudoers
+	# populating path
+	[ -x /etc/init.d/mysql ] && RC_SCRIPT=/etc/init.d/mysql || RC_SCRIPT=/etc/init.d/mysqld
+	PS=/bin/ps
+	KILL=/bin/kill # not the builtin, i _don't know_ how to use that with sudo
+	SHUTDOWN=/sbin/shutdown
+	FAKE=/usr/bin/fake
+	IFCONFIG=/sbin/ifconfig
+	echo "mysqlha	ALL=NOPASSWD:$PS, $KILL, $RC_SCRIPT, $SHUTDOWN, $FAKE, $IFCONFIG" >> /etc/sudoers
 	echo -n '/usr/bin/sudo ' > $MYSQLHA_HOME/sudo_prefix
 	echo -n 'mysqlha' > $MYSQLHA_HOME/ssh_user
 } || {

@@ -22,9 +22,11 @@
 # Boston, MA 02111-1307 USA
 
 . $MYSQLHA_HOME/common.sh
+SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
+
 OF=/tmp/restart_mysql.$$
 
-$RC_SCRIPT stop >$OF 2>&1
-$RC_SCRIPT start >>$OF 2>&1 || log "$RC_SCRIPT could not restart properly (error) $(cat $OF)"
+${SUDO}$RC_SCRIPT stop >$OF 2>&1
+${SUDO}$RC_SCRIPT start >>$OF 2>&1 || log "$RC_SCRIPT could not restart properly (error) $(cat $OF)"
 rm -f $OF
 

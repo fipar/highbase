@@ -13,6 +13,7 @@
 
 . $MYSQLHA_HOME/common.sh
 
+SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
 
 
 #this is a boolean variable. if it is 0, then a soft failover
@@ -28,8 +29,8 @@ SOFT_FAIL=1
 
 [ -z "$SOFT_FAIL" ] && SOFT_FAIL=1
 
-ifconfig -a | grep Link | awk '{print $1}' | while read ifname; do
-        [ "$(ifconfig $ifname | grep inet|awk '{print $2}'|awk -F: '{print $2}')" == "$CLUSTER_IP" ] && ifconfig $ifname del $CLUSTER_IP
+${SUDO}ifconfig -a | grep Link | awk '{print $1}' | while read ifname; do
+        [ "$(${SUDO}ifconfig $ifname | grep inet|awk '{print $2}'|awk -F: '{print $2}')" == "$CLUSTER_IP" ] && ${SUDO}ifconfig $ifname del $CLUSTER_IP
 done
 
 [ $SOFT_FAIL -eq 0 ] && {
@@ -37,14 +38,14 @@ done
 	     #since this call may wait forever. still, if this was the case, ssh wouldn't probably
 	     #work either so this script would never be executed (gratuitious ARP would have
 	     #to do the job)
-	$RC_SCRIPT stop
-	ps -fu mysql |awk '{print $2}'|xargs kill
+	${SUDO}$RC_SCRIPT stop
+	${SUDO}ps -fu mysql |awk '{print $2}'|xargs ${SUDO}kill
 	sleep $SIG_KILL_WAIT 
-	ps -fu mysql |awk '{print $2}'|xargs kill -9
+	${SUDO}ps -fu mysql |awk '{print $2}'|xargs ${SUDO}kill -9
 	log "failover finished, soft mode (notify)"
 	exit 0
 } || {
 	sync; sync
 	log "starting failover, hard mode, shutting down box (notify)"
-	nohup /sbin/shutdown -h now &
+	nohup ${SUDO}/sbin/shutdown -h now &
 }

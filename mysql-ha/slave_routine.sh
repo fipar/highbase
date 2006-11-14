@@ -24,7 +24,6 @@
 
 CHK_PROG="mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $CLUSTER_IP"
 
-SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
 SSH_USER=$(cat $MYSQLHA_HOME/ssh_user)
 
 #
@@ -33,7 +32,7 @@ SSH_USER=$(cat $MYSQLHA_HOME/ssh_user)
 attempt_kill()
 {
 	log "about to run mysql_kill on $MASTER_NODE (warning)"
-	wrapper_safe_cmd.sh $SSH_PATIENCE $MYSQLHA_HOME/pwrap ssh ${SSH_USER}@$MASTER_NODE ${SUDO}$MYSQLHA_HOME/mysql_kill.sh || log "could not run mysql_kill.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
+	wrapper_safe_cmd.sh $SSH_PATIENCE $MYSQLHA_HOME/pwrap ssh ${SSH_USER}@$MASTER_NODE $MYSQLHA_HOME/mysql_kill.sh || log "could not run mysql_kill.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
 	sleep $MYSQL_KILL_WAIT
 	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && return 0 || return 1
 }
@@ -41,7 +40,7 @@ attempt_kill()
 attempt_restart()
 {
 	log "about to run mysql_restart on $MASTER_NODE (warning)"
-	wrapper_safe_cmd.sh $SSH_PATIENCE $MYSQLHA_HOME/pwrap ssh ${SSH_USER}@$MASTER_NODE ${SUDO}$MYSQLHA_HOME/restart_mysql.sh || log "could not run mysql_restart.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
+	wrapper_safe_cmd.sh $SSH_PATIENCE $MYSQLHA_HOME/pwrap ssh ${SSH_USER}@$MASTER_NODE $MYSQLHA_HOME/restart_mysql.sh || log "could not run mysql_restart.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
 	sleep $MYSQL_RESTART_WAIT
 	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && return 0 || return 1
 }
@@ -109,10 +108,10 @@ wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && log "mysql responded (ok)" ||
 		} || {
 			log "mysql.monitor failed but $MASTER_NODE was dead (error)"
 		}
-			${SUDO}$MYSQLHA_HOME/takeover.sh
+			$MYSQLHA_HOME/takeover.sh
 			[ $should_failover -eq 1 ] && {
 				log "mysql.monitor failed but $MASTER_NODE is running, going for the failover (error)"
-				wrapper_safe_cmd.sh $SSH_PATIENCE $MYSQLHA_HOME/pwrap ssh ${SSH_USER}@$MASTER_NODE ${SUDO}$MYSQLHA_HOME/failover.sh || {
+				wrapper_safe_cmd.sh $SSH_PATIENCE $MYSQLHA_HOME/pwrap ssh ${SSH_USER}@$MASTER_NODE $MYSQLHA_HOME/failover.sh || {
 					log "could not failover.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
 					}
 			}

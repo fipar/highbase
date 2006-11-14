@@ -22,6 +22,7 @@
 # Boston, MA 02111-1307 USA
 
 . $MYSQLHA_HOME/common.sh
+SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
 
 ATTEMPTS=3
 #this line has two reasons: 
@@ -38,21 +39,20 @@ echo "slave stop" | mysql -u${DB_USER} -p${DB_PASSWORD}
 
 fping -c$ATTEMPTS $CLUSTER_IP && {
 	log "takeover with master node still holding cluster ip, going to gratuitious ARP mode (error)"
-	nohup fake $CLUSTER_IP &
-	## sleep $ARP_DELAY ## I don't think we need this here. I don't know how this ended up here! - 20061026 - fipar
+	nohup ${SUDO}fake $CLUSTER_IP &
 } || {
 	log "takeover with master node down, doing simple ifconfig"
 	#start listening
-	currip=$(ifconfig $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
-	ifconfig $CLUSTER_DEVICE $CLUSTER_IP
-	ifconfig $CLUSTER_DEVICE add $currip
+	currip=$(${SUDO}ifconfig $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
+	${SUDO}ifconfig $CLUSTER_DEVICE $CLUSTER_IP
+	${SUDO}ifconfig $CLUSTER_DEVICE add $currip
 }
 
 #just to be paranoid, this code should never run
-[ $(ifconfig $CLUSTER_DEVICE|grep -c $CLUSTER_IP) -eq 0 ] && {
-	currip=$(ifconfig $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
-	ifconfig $CLUSTER_DEVICE $CLUSTER_IP
-	ifconfig $CLUSTER_DEVICE add $currip
+[ $(${SUDO}ifconfig $CLUSTER_DEVICE|grep -c $CLUSTER_IP) -eq 0 ] && {
+	currip=$(${SUDO}ifconfig $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
+	${SUDO}ifconfig $CLUSTER_DEVICE $CLUSTER_IP
+	${SUDO}ifconfig $CLUSTER_DEVICE add $currip
 } && echo "manually added $CLUSTER_IP to $CLUSTER_DEVICE"
 
 log "takeover complete (notify)"
