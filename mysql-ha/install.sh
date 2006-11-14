@@ -139,6 +139,17 @@ no password, PROVIDED THEY'RE ALREADY ROOT ON ONE NODE)
 starts)
 EOMSG
 	su - $SSH_USER -c "ssh-keygen -t dsa"
+	# test or create environment in peer
+	cat << EOSCR > prepareEnvironment.tmp.sh
+#!/bin/bash
+test -d $HOME || mkdir $HOME
+useradd -d $HOME mysqlha 2>/dev/null
+groupadd mysqlha 2>/dev/null
+usermod -G mysqlha mysqlha 2>/dev/null 
+rm -f /tmp/prepareEnvironment.tmp.sh
+EOSCR
+	scp prepareEnvironment.tmp.sh root@$OTHERBOX:/tmp
+	ssh root@$OTHERBOX "/tmp/prepareEnvironment.tmp.sh"
 	scp $HOME/.ssh/id_dsa.pub $OTHERBOX:$HOME/id_peer
 	ssh $SSH_USER@$OTHERBOX "mkdir $HOME/.ssh/ 2>/dev/null; cat $HOME/id_peer >> $HOME/.ssh/authorized_keys2"
 	ssh $SSH_USER@$OTHERBOX "ssh-keygen -t dsa"
