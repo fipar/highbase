@@ -75,7 +75,7 @@
 [ -n "$(type -a sudo 2>/dev/null)" ] && {
 	echo "creating sudo based installation">&2
 	useradd -d $MYSQLHA_HOME mysqlha
-	echo 'mysqlha	ALL=NOPASSWD:$MYSQLHA_HOME/restart_mysql.sh, $MYSQLHA_HOME/mysql_kill.sh, $MYSQLHA_HOME/failover.sh, $MYSQLHA_HOME/takover.sh, /sbin/ifconfig, /usr/bin/fake' >> /etc/sudoers
+	echo "mysqlha	ALL=NOPASSWD:$MYSQLHA_HOME/restart_mysql.sh, $MYSQLHA_HOME/mysql_kill.sh, $MYSQLHA_HOME/failover.sh, $MYSQLHA_HOME/takover.sh, /sbin/ifconfig, /usr/bin/fake" >> /etc/sudoers
 	echo -n '/usr/bin/sudo ' > $MYSQLHA_HOME/sudo_prefix
 	echo -n 'mysqlha' > $MYSQLHA_HOME/ssh_user
 } || {
