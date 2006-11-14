@@ -145,18 +145,20 @@ EOMSG
 test -d $HOME || mkdir $HOME
 useradd -d $HOME mysqlha 2>/dev/null
 groupadd mysqlha 2>/dev/null
-usermod -G mysqlha mysqlha 2>/dev/null 
+usermod -G mysqlha mysqlha 2>/dev/null
 rm -f /tmp/prepareEnvironment.tmp.sh
 EOSCR
+	chmod 700 prepareEnvironment.tmp.sh
 	scp prepareEnvironment.tmp.sh root@$OTHERBOX:/tmp
 	ssh root@$OTHERBOX "/tmp/prepareEnvironment.tmp.sh"
 	scp $HOME/.ssh/id_dsa.pub $OTHERBOX:$HOME/id_peer
-	ssh $SSH_USER@$OTHERBOX "mkdir $HOME/.ssh/ 2>/dev/null; cat $HOME/id_peer >> $HOME/.ssh/authorized_keys2"
-	ssh $SSH_USER@$OTHERBOX "ssh-keygen -t dsa"
-	scp $SSH_USER@$OTHERBOX:$HOME/.ssh/id_dsa.pub $HOME/id_peer
+	ssh root@$OTHERBOX "mkdir $HOME/.ssh/ 2>/dev/null; cat $HOME/id_peer >> $HOME/.ssh/authorized_keys2; chown -R $SSH_USER.$SSH_USER $HOME/.ssh; chmod -R 700 $HOME/.ssh"
+	ssh root@$OTHERBOX "su - $SSH_USER -c 'ssh-keygen -t dsa'"
+	scp root@$OTHERBOX:$HOME/.ssh/id_dsa.pub $HOME/id_peer
 	cat $HOME/id_peer >> $HOME/.ssh/authorized_keys2
+	chown -R $SSH_USER.$SSH_USER $HOME/.ssh
 	chmod -R 700 $HOME/.ssh/
-	ssh $SSH_USER@$OTHERBOX "chmod -R 700 $HOME/.ssh/"
+	ssh root@$OTHERBOX "chmod -R 700 $HOME/.ssh/"
 	echo "it should be done now, try logging in from one machine into the other, if you've never done this">&2
 	echo "you'll be asked to save your peer's public key, say yes">&2
 }
