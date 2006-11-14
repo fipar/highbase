@@ -33,14 +33,14 @@ SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
 
 AGENT_SOCK=/tmp/mysql-ha-ssh-agent.sock
 
-[ -n "$(fuser $AGENT_SOCK)" ] && {
+[ -n "$(${SUDO}/sbin/fuser $AGENT_SOCK)" ] && {
 	echo "killing old ssh-agent"
-	kill $(fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
+	${SUDO}/bin/kill $(${SUDO}/sbin/fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
 	for i in $(seq 10); do
 		usleep 20
 		echo -n "."
 	done
-	kill -9 $(fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
+	${SUDO}/bin/kill -9 $(${SUDO}/sbin/fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
 }
 
 ssh-agent -a $AGENT_SOCK # TODO: we start the ssh-agent, but we don't stop it
@@ -51,10 +51,10 @@ ssh-add
 [ $($RC_SCRIPT status |grep -c stop) -eq 0 ] || $RC_SCRIPT start
 
 [ -n "$N_MASTER" ] && NODEOK=0 && {
-	${SUDO}ifconfig $CLUSTER_DEVICE |grep $CLUSTER_IP >/dev/null || { 
-		currip=$(${SUDO}ifconfig $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
-		${SUDO}ifconfig $CLUSTER_DEVICE $CLUSTER_IP
-		${SUDO}ifconfig $CLUSTER_DEVICE add $currip
+	${SUDO}/sbin/ifconfig $CLUSTER_DEVICE |grep $CLUSTER_IP >/dev/null || { 
+		currip=$(${SUDO}/sbin/ifconfig $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
+		${SUDO}/sbin/ifconfig $CLUSTER_DEVICE $CLUSTER_IP
+		${SUDO}/sbin/ifconfig $CLUSTER_DEVICE add $currip
 	}
 	. $MYSQLHA_HOME/master_routine.sh
 }

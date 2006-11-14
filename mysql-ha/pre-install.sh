@@ -82,7 +82,8 @@
 	SHUTDOWN=/sbin/shutdown
 	FAKE=/usr/bin/fake
 	IFCONFIG=/sbin/ifconfig
-	echo "mysqlha	ALL=NOPASSWD:$PS, $KILL, $RC_SCRIPT, $SHUTDOWN, $FAKE, $IFCONFIG" >> /etc/sudoers
+	FUSER=/sbin/fuser
+	echo "mysqlha	ALL=NOPASSWD:$FUSER, $PS, $KILL, $RC_SCRIPT, $SHUTDOWN, $FAKE, $IFCONFIG" >> /etc/sudoers
 	echo -n '/usr/bin/sudo ' > $MYSQLHA_HOME/sudo_prefix
 	echo -n 'mysqlha' > $MYSQLHA_HOME/ssh_user
 } || {

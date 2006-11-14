@@ -29,8 +29,8 @@ SOFT_FAIL=1
 
 [ -z "$SOFT_FAIL" ] && SOFT_FAIL=1
 
-${SUDO}ifconfig -a | grep Link | awk '{print $1}' | while read ifname; do
-        [ "$(${SUDO}ifconfig $ifname | grep inet|awk '{print $2}'|awk -F: '{print $2}')" == "$CLUSTER_IP" ] && ${SUDO}ifconfig $ifname del $CLUSTER_IP
+${SUDO}/sbin/ifconfig -a | grep Link | awk '{print $1}' | while read ifname; do
+        [ "$(${SUDO}/sbin/ifconfig $ifname | grep inet|awk '{print $2}'|awk -F: '{print $2}')" == "$CLUSTER_IP" ] && ${SUDO}/sbin/ifconfig $ifname del $CLUSTER_IP
 done
 
 [ $SOFT_FAIL -eq 0 ] && {
@@ -39,9 +39,9 @@ done
 	     #work either so this script would never be executed (gratuitious ARP would have
 	     #to do the job)
 	${SUDO}$RC_SCRIPT stop
-	${SUDO}ps -fu mysql |awk '{print $2}'|xargs ${SUDO}kill
+	${SUDO}/bin/ps -fu mysql |awk '{print $2}'|xargs ${SUDO}/bin/kill
 	sleep $SIG_KILL_WAIT 
-	${SUDO}ps -fu mysql |awk '{print $2}'|xargs ${SUDO}kill -9
+	${SUDO}/bin/ps -fu mysql |awk '{print $2}'|xargs ${SUDO}/bin/kill -9
 	log "failover finished, soft mode (notify)"
 	exit 0
 } || {
