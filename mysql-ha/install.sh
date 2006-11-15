@@ -57,7 +57,7 @@ $MYSQLHA_HOME/pre-install.sh || exit 1
 
 SSH_USER=$(cat $MYSQLHA_HOME/ssh_user)
 HOME=/root
-[ "$SSH_USER" == "mysqlha" ] && HOME=$MYSQLHA_HOME
+[ "$SSH_USER" == "mysqlha" ] && HOME=/home/mysqlha
 
 #now build aux packages and create config files
 cd $MYSQLHA_HOME/extern/fping-2.2b2/

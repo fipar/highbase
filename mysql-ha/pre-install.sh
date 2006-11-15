@@ -74,7 +74,7 @@
 #check for sudo and configure accordingly
 [ -n "$(type -a sudo 2>/dev/null)" ] && {
 	echo "creating sudo based installation">&2
-	useradd -d $MYSQLHA_HOME mysqlha 2>/dev/null #if this is the slave, this might be already created by the ssh setup 
+	useradd mysqlha 2>/dev/null #if this is the slave, this might be already created by the ssh setup 
 	groupadd mysqlha 2>/dev/null #on red hat we have the private user group scheme, so this will fail
 	usermod -G mysqlha mysqlha 2>/dev/null #again, we don't need this on red hat
 	# populating path
