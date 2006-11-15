@@ -128,6 +128,7 @@ Otherwise just type enter.
 EOMSG
 read option
 [ "$option" = "y" -o "$option" == "Y" ] && {
+
 	echo "enter the name/ip for the other node (i.e., if this is the master, enter the slave's name/ip">&2
 	read OTHERBOX
 	cat <<EOMSG >&2
@@ -141,9 +142,8 @@ EOMSG
 	su - $SSH_USER -c "ssh-keygen -t dsa"
 	# test or create environment in peer
 	cat << EOSCR > prepareEnvironment.tmp.sh
-#!/bin/bash
-test -d $HOME || mkdir $HOME
-useradd -d $HOME mysqlha 2>/dev/null
+#!/bin/bash -x
+useradd mysqlha
 groupadd mysqlha 2>/dev/null
 usermod -G mysqlha mysqlha 2>/dev/null
 rm -f /tmp/prepareEnvironment.tmp.sh
