@@ -6,7 +6,6 @@
 # THIS SCRIPT IS USEFUL ONLY ON TEST SYSTEMS
 # ******************************************
 
-rm -rf /usr/mysql-ha
 userdel mysqlha
 groupdel mysqlha
 grep -v mysql-ha /etc/bashrc > tmpf && mv -f tmpf /etc/bashrc
