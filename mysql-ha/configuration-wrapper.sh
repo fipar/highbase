@@ -19,14 +19,17 @@ clear
 # check for python and run the corresponding configurator (wxpython is verified from in there)
 [ -n "$(type -a python)" -a -z "$($MYSQLHA_HOME/check-wxpython.py)" ] && {
 	$MYSQLHA_HOME/configuration-wxpython.py
+	$MYSQLHA_HOME/configuration-post.sh
 	exit
 }
 
 # check for dialog backend and run the corresponding configurator
 [ -n "$(type -a dialog)" ] && {
 	$MYSQLHA_HOME/configuration-dialog.sh
+	$MYSQLHA_HOME/configuration-post.sh
 	exit
 }
 
 # run the original configurator
 $MYSQLHA_HOME/configuration-menu.sh
+$MYSQLHA_HOME/configuration-post.sh
