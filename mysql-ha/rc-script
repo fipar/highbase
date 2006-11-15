@@ -51,7 +51,7 @@ start()
 	chown $USER.$USER $logf
 	su - $USER -c "cd $MYSQLHA_HOME; nohup ./configurator.sh >>$logf 2>&1 &"
 	sleep 1
-	ps -ef|grep configurator| awk '{print $2}' > $pidf
+	ps -ef|grep configurator|grep -v PID|head -1| awk '{print $2}' > $pidf
 	[ -f $pidf ] && {
 		[ -d /proc/$(cat $pidf) ] && echo "OK">&2 || {
 			echo "ERROR ($(cat $pidf) does not appear to be running)">&2			return 1
