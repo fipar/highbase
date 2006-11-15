@@ -25,6 +25,8 @@
 CHK_PROG="mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $CLUSTER_IP"
 
 SSH_USER=$(cat $MYSQLHA_HOME/ssh_user)
+SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
+FPING=$(type fping | awk '{print $3}')
 
 #
 # we try to kill every mysql process on the master node, except for the replication thread, just in case the node isn't responding
@@ -88,10 +90,12 @@ MYSQL_VER=`mysql --version |awk '{ print $5 }' |awk -F. '{ print $1 }'`
 CHK_PROG="mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $MASTER_NODE"
 should_failover=0
 
+
+
 wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && log "mysql responded (ok)" || {
 	sleep $MONITOR_CHK_THRESHOLD
 	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && "mysql responded within CHK_THRESHOLD (warning)" || {
-		fping -c $FPING_ATTEMPTS $MASTER_NODE && {
+		${SUDO}${FPING} -c $FPING_ATTEMPTS $MASTER_NODE && {
 			attempt_kill && {
 				log "mysql.monitor was succesfull after kill (notify)"
 				return 0

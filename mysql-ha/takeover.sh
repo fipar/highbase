@@ -23,6 +23,9 @@
 
 . $MYSQLHA_HOME/common.sh
 SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
+FPING=$(type fping | awk '{print $3}')
+
+
 
 ATTEMPTS=3
 #this line has two reasons: 
@@ -37,7 +40,7 @@ mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQ
 #stop replicating
 echo "slave stop" | mysql -u${DB_USER} -p${DB_PASSWORD}
 
-fping -c$ATTEMPTS $CLUSTER_IP && {
+${SUDO}${FPING} -c$ATTEMPTS $CLUSTER_IP && {
 	log "takeover with master node still holding cluster ip, going to gratuitious ARP mode (error)"
 	nohup ${SUDO}/usr/bin/fake $CLUSTER_IP &
 } || {
