@@ -142,7 +142,7 @@ EOMSG
 	su - $SSH_USER -c "ssh-keygen -t dsa"
 	# test or create environment in peer
 	cat << EOSCR > prepareEnvironment.tmp.sh
-#!/bin/bash -x
+#!/bin/bash
 useradd mysqlha
 groupadd mysqlha 2>/dev/null
 usermod -G mysqlha mysqlha 2>/dev/null
