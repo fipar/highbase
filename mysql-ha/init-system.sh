@@ -10,4 +10,4 @@ userdel mysqlha
 groupdel mysqlha
 grep -v mysql-ha /etc/bashrc > tmpf && mv -f tmpf /etc/bashrc
 grep -v mysqlha /etc/sudoers > tmpf && mv -f tmpf /etc/sudoers
-
+chmod 440 /etc/sudoers
