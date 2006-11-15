@@ -23,7 +23,7 @@
 
 . $MYSQLHA_HOME/common.sh
 SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
-FPING=$(type fping | awk '{print $3}')
+FPING=/usr/local/sbin/fping
 
 
 

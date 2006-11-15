@@ -26,7 +26,7 @@ CHK_PROG="mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --data
 
 SSH_USER=$(cat $MYSQLHA_HOME/ssh_user)
 SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
-FPING=$(type fping | awk '{print $3}')
+FPING=/usr/local/sbin/fping
 
 #
 # we try to kill every mysql process on the master node, except for the replication thread, just in case the node isn't responding

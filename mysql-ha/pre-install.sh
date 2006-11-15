@@ -85,7 +85,7 @@
 	FAKE=/usr/bin/fake
 	IFCONFIG=/sbin/ifconfig
 	FUSER=/sbin/fuser
-	FPING=$(type fping | awk '{print $3}')
+	FPING=/usr/local/sbin/fping
 	echo "mysqlha	ALL=NOPASSWD:$FPING, $FUSER, $PS, $KILL, $RC_SCRIPT, $SHUTDOWN, $FAKE, $IFCONFIG" >> /etc/sudoers
 	echo -n '/usr/bin/sudo ' > $MYSQLHA_HOME/sudo_prefix
 	echo -n 'mysqlha' > $MYSQLHA_HOME/ssh_user
