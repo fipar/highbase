@@ -47,7 +47,9 @@ start()
 {
 	[ -f $pidf ] && echo "$progname already running (found pid file)">&2 && return 1
 	echo -n "starting $progname: ">&2
-	su - $(cat $MYSQLHA_HOME/ssh_user) -c "nohup $startedname >>$logf 2>&1 &"
+	USER=$(cat $MYSQLHA_HOME/ssh_user)
+	chown $USER.$USER $logf
+	su - $USER -c "cd $MYSQLHA_HOME; nohup ./configurator.sh >>$logf 2>&1 &"
 	echo $! > $pidf
 	sleep 1
 	[ -f $pidf ] && {
