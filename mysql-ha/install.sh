@@ -80,6 +80,7 @@ cp mysql.monitor $BINDIR
 
 cd ..
 echo 'almost done, now some interactive scripts...'>&2
+sleep 1
 ./configuration-wrapper.sh 
 ./setup_fake.sh
 [ -d $RC_DIR ] && {
