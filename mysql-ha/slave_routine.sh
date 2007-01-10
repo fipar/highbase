@@ -90,13 +90,17 @@ MYSQL_VER=`mysql --version |awk '{ print $5 }' |awk -F. '{ print $1 }'`
 CHK_PROG="mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $MASTER_NODE"
 should_failover=0
 
-
+#this new little config change allows for a faster recovery if you know most of the times mysql will be down 
+#instead of just choked with processess
+#notice that by default, WE NO LONGER ATTEMPT TO KILL ALL MYSQL PROCESSES, we just go straight into the restart procedure, 
+#thus saving a few seconds
+[ -n "$ATTEMPT_KILL" ] || ATTEMPT_KILL=0
 
 wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && log "mysql responded (ok)" || {
 	sleep $MONITOR_CHK_THRESHOLD
 	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && "mysql responded within CHK_THRESHOLD (warning)" || {
 		${SUDO}${FPING} -c $FPING_ATTEMPTS $MASTER_NODE && {
-			attempt_kill && {
+			[ $ATTEMPT_KILL -eq 1 ] &&  attempt_kill && {
 				log "mysql.monitor was succesfull after kill (notify)"
 				return 0
 			}
