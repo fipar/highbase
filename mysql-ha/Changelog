@@ -1,3 +1,9 @@
+01-16-2007
+* We now properly remove the ssh-agent sock after a hard failure
+* We now support threshold times in seconds, milliseconds and microseconds, by using usleep instead of sleep in all places except for the main loops (that
+would give administrators the possibility to choke their own MySQL servers, I think..)
+* Updated the sample mysql-ha.conf file accordingly
+
 11-13-2006
 * Added changes to support sudo
 
