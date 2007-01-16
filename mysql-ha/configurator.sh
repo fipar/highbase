@@ -13,7 +13,6 @@
 # it is this script that starts either master_routine.sh or slave_routine.sh
 # depending on which node we are in
 
-
 [ -n "$MYSQLHA_HOME" ] || export MYSQLHA_HOME="/usr/mysql-ha" #you can either set this here or in the environment
 . $MYSQLHA_HOME/compat.sh
 
@@ -26,6 +25,7 @@ variables=$(grep '=' $CONF_FILE|awk -F= '{print $1}')
 for variable in $variables; do
 	eval "export $variable"
 done
+
 
 . $MYSQLHA_HOME/common.sh
 
@@ -42,6 +42,8 @@ AGENT_SOCK=/tmp/mysql-ha-ssh-agent.sock
 	done
 	${SUDO}/bin/kill -9 $(${SUDO}/sbin/fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
 }
+
+test -f $AGENT_SOCK && rm -f $AGENT_SOCK
 
 ssh-agent -a $AGENT_SOCK # TODO: we start the ssh-agent, but we don't stop it
 export SSH_AUTH_SOCK=$AGENT_SOCK

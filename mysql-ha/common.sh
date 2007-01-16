@@ -104,6 +104,18 @@ exit $2
 }
 
 
+#############################
+
+
+# extracts a time value suitable for use with usleep
+extractTime()
+{
+echo $1 | grep ms >/dev/null && echo $((${1%ms*} * 1000)) && return
+echo $1 | grep us >/dev/null && echo ${1%us*} && return
+echo $(($1 * 1000000))
+}
+
+
 #routine to obtain the name of the master node
 set_master_node()
 {
