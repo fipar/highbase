@@ -13,6 +13,15 @@
 
 . $MYSQLHA_HOME/common.sh
 
+#this line has two reasons:
+#1) it should be impossible but might just happen that we try and go for a takeover while the master has started to
+#provide the service again (this SHOULD be IMPOSSIBLE since we forced a failover first, but if we put the words
+#High Availability on this project's name, we might aswell expect unexpected things and be prepared
+#2) a user with root privileges might accidentaly run this script, so we want to make sure that we really need
+#to do a takeover
+mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $MASTER_NODE && log "failover attempt with master node up (error)" && exit 1
+
+
 SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
 
 

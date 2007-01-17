@@ -60,8 +60,9 @@ shift 2
 $COMMAND $* &
 childpid=$!
 
+. $MYSQLHA_HOME/common.sh
 
-sleep $TIMEOUT
+usleep $(extractTime $TIMEOUT)
 
 check_pid_name $COMMAND $childpid && { 
 	kill $childpid
