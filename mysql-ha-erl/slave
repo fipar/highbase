@@ -1,0 +1,3 @@
+#!/bin/bash
+
+erl -name slave@python.seriema-systems.com -noshell -s mysqlha slave -s init stop

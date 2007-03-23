@@ -1,0 +1,3 @@
+#!/bin/bash
+
+erl -name master@python.seriema-systems.com -noshell -s mysqlha -s init stop
