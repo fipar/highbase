@@ -49,9 +49,9 @@ start()
 	echo -n "starting $progname: ">&2
 	USER=$(cat $MYSQLHA_HOME/ssh_user)
 	chown $USER.$USER $logf
-	su - $USER -c "cd $MYSQLHA_HOME; nohup ./configurator.sh >>$logf 2>&1 &"
-	sleep 1
-	ps -ef|grep configurator|grep -v PID|head -1| awk '{print $2}' > $pidf
+	touch $pidf
+	chown $USER.$USER $pidf
+	nohup su - $USER -c "cd $MYSQLHA_HOME; ./configurator.sh $pidf>>$logf 2>&1" & >/dev/null 2>&1
 	[ -f $pidf ] && {
 		[ -d /proc/$(cat $pidf) ] && echo "OK">&2 || {
 			echo "ERROR ($(cat $pidf) does not appear to be running)">&2			return 1
@@ -77,10 +77,12 @@ AGENT_SOCK=/tmp/mysql-ha-ssh-agent.sock
 
 	echo -n "stopping $progname: ">&2
 	pid=$(cat $pidf)
-	cat $pidf
-	echo $pidf
+	#cat $pidf
+	#echo $pidf
 	echo "\$3 == $pid {print \$2}" > /tmp/awkscr.$$ # TODO: learn to escape AWK scripts 
 	ps -ef|awk -f /tmp/awkscr.$$ |xargs kill 2>/dev/null#kill the children
+	usleep 30
+	ps -ef|awk -f /tmp/awkscr.$$ |xargs kill -9 2>/dev/null#i mean it
 	rm -f /tmp/awkscr.$$
 	kill $(cat $pidf)	
 	sleep 1

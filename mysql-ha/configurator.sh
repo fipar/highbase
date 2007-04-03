@@ -13,6 +13,9 @@
 # it is this script that starts either master_routine.sh or slave_routine.sh
 # depending on which node we are in
 
+# store my pid. i should always get this as parameter
+[ -n "$1" ] && echo $$ > $1
+
 [ -n "$MYSQLHA_HOME" ] || export MYSQLHA_HOME="/usr/mysql-ha" #you can either set this here or in the environment
 . $MYSQLHA_HOME/compat.sh
 
@@ -50,9 +53,13 @@ export SSH_AUTH_SOCK=$AGENT_SOCK
 ssh-add
 
 #start mysqld if it's stopped
-[ $($RC_SCRIPT status |grep -c stop) -eq 0 ] || $RC_SCRIPT start
+[ $($RC_SCRIPT status |grep -c stop) -eq 0 ] ||  {
+	log "Starting mysqld (debug)"
+	${SUDO}$RC_SCRIPT start
+}
 
 [ -n "$N_MASTER" ] && NODEOK=0 && {
+	log "Configuring network interface (debug)"
 	${SUDO}/sbin/ifconfig $CLUSTER_DEVICE |grep $CLUSTER_IP >/dev/null || { 
 		currip=$(${SUDO}/sbin/ifconfig $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
 		${SUDO}/sbin/ifconfig $CLUSTER_DEVICE $CLUSTER_IP
@@ -63,5 +70,6 @@ ssh-add
 [ -n "$N_SLAVE" ] && NODEOK=0 && . $MYSQLHA_HOME/slave_routine.sh
 [ -z "$NODEOK" ] && {
 	echo "i couldn't figure out if i'm master or slave, aborting">&2
+	[ -n "$1" ] && rm -f $1
 	exit 1
 }
