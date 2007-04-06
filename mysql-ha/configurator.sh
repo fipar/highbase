@@ -48,6 +48,12 @@ AGENT_SOCK=/tmp/mysql-ha-ssh-agent.sock
 
 test -f $AGENT_SOCK && rm -f $AGENT_SOCK
 
+[ -n "$1" ] && [ "$1" == "shutdown-master" ] && {
+	echo "shutting down master"
+	${SUDO}/sbin/ifconfig ${CLUSTER_DEVICE} $(${SUDO}/sbin/ifconfig ${CLUSTER_DEVICE}:0 | grep inet | awk '{print $2}' | awk -F: '{print $2}')
+	exit
+}
+
 ssh-agent -a $AGENT_SOCK # TODO: we start the ssh-agent, but we don't stop it
 export SSH_AUTH_SOCK=$AGENT_SOCK
 ssh-add

@@ -76,6 +76,7 @@ AGENT_SOCK=/tmp/mysql-ha-ssh-agent.sock
 }
 
 	echo -n "stopping $progname: ">&2
+	[ -n "$N_MASTER" ] && [ $N_MASTER -eq 1 ] && su - $USER -c "cd $MYSQLHA_HOME; ./configurator.sh shutdown-master"
 	pid=$(cat $pidf)
 	#cat $pidf
 	#echo $pidf
