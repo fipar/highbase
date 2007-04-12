@@ -51,7 +51,12 @@ start()
 	chown $USER.$USER $logf
 	touch $pidf
 	chown $USER.$USER $pidf
-	nohup su - $USER -c "cd $MYSQLHA_HOME; ./configurator.sh $pidf>>$logf 2>&1" & >/dev/null 2>&1
+	encrypted=0
+	grep ENCRYPTED /home/$USER/.ssh/id_dsa >/dev/null && {
+		encrypted=1
+		su - $USER -c "cd $MYSQLHA_HOME; ./configurator.sh -o start-agent"	
+	}
+	nohup su - $USER -c "cd $MYSQLHA_HOME; ./configurator.sh -p $pidf -e $encrypted>>$logf 2>&1" & >/dev/null 2>&1
 	[ -f $pidf ] && {
 		[ -d /proc/$(cat $pidf) ] && echo "OK">&2 || {
 			echo "ERROR ($(cat $pidf) does not appear to be running)">&2			return 1
@@ -76,7 +81,7 @@ AGENT_SOCK=/tmp/mysql-ha-ssh-agent.sock
 }
 
 	echo -n "stopping $progname: ">&2
-	[ -n "$N_MASTER" ] && [ $N_MASTER -eq 1 ] && su - $USER -c "cd $MYSQLHA_HOME; ./configurator.sh shutdown-master"
+	su - $USER -c "cd $MYSQLHA_HOME; ./configurator.sh -o shutdown-master"
 	pid=$(cat $pidf)
 	#cat $pidf
 	#echo $pidf

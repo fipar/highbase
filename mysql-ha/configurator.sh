@@ -13,8 +13,28 @@
 # it is this script that starts either master_routine.sh or slave_routine.sh
 # depending on which node we are in
 
-# store my pid. i should always get this as parameter
-[ -n "$1" ] && echo $$ > $1
+# get my options
+
+pidf=
+operation=
+encrypted=0
+
+while getopts "p:o:e:" oname; do
+	case $oname in
+		p ) pidf=$OPTARG;;
+		o ) operation=$OPTARG;;
+		e ) encrypted=$OPTARG;;
+	esac
+done
+
+# small function to start the ssh agent
+start_agent()
+{
+ssh-agent -a $AGENT_SOCK # TODO: we start the ssh-agent, but we don't stop it here
+export SSH_AUTH_SOCK=$AGENT_SOCK
+ssh-add
+}
+
 
 [ -n "$MYSQLHA_HOME" ] || export MYSQLHA_HOME="/usr/mysql-ha" #you can either set this here or in the environment
 . $MYSQLHA_HOME/compat.sh
@@ -48,15 +68,24 @@ AGENT_SOCK=/tmp/mysql-ha-ssh-agent.sock
 
 test -f $AGENT_SOCK && rm -f $AGENT_SOCK
 
-[ -n "$1" ] && [ "$1" == "shutdown-master" ] && {
+[ -n "$operation" ] && [ "$operation" == "shutdown-master" ] && {
 	echo "shutting down master"
 	${SUDO}/sbin/ifconfig ${CLUSTER_DEVICE} $(${SUDO}/sbin/ifconfig ${CLUSTER_DEVICE}:0 | grep inet | awk '{print $2}' | awk -F: '{print $2}')
 	exit
 }
 
-ssh-agent -a $AGENT_SOCK # TODO: we start the ssh-agent, but we don't stop it
-export SSH_AUTH_SOCK=$AGENT_SOCK
-ssh-add
+
+
+[ -n "$operation" ] && [ "$operation" == "start-agent" ] && {  #if we're starting the agent, then this is all we need to run 
+start_agent 	
+exit
+} 
+
+[ $encrypted -eq 0 ] && start_agent # if the dsa key is encrypted, we don't need to start the agent, since it's already started through
+	  			    # a previous invocation of configurator with the -o start-agent option 
+
+# store my pid. i should always get this as parameter
+[ -n "$pidf" ] && echo $$ > $pidf
 
 #start mysqld if it's stopped
 [ $($RC_SCRIPT status |grep -c stop) -eq 0 ] ||  {
