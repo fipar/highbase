@@ -30,6 +30,8 @@ takeover(Config) ->
 	ClusterDevice = config:get_val("CLUSTER_DEVICE",Config),
 	ClusterIp = config:get_val("CLUSTER_IP",Config),
 	%tabli:command(" should we run an external script or learn how to do this in erlang??  "),
+	% for the first release, we'll rely on an external command. write scripts to handle everything and add yet another
+	% config parameter to specify where the hell we're installed
 	io:format("someday, i'll be configuring ~p as the primary address for ~p",[ClusterIp,ClusterDevice]),
 	true.
 
@@ -80,8 +82,8 @@ start() ->
 	Password = config:get_val("DB_PASSWORD",Config),
 	Database = config:get_val("MYSQL_DATABASE",Config),
 	Master = config:get_val("MASTER",Config),
-%	SlaveNode = config:get_val("MASTER_ERL_NODE",Config),
-	{Status,Output} = tabli:safe_invoke_monitor('master@python.seriema-systems.com',mysqlha,checkService,[User,Password,Database,Master],1500),
+	SlaveNode = config:get_val("SLAVE_ERL_NODE",Config),
+	{Status,Output} = tabli:safe_invoke_monitor(SlaveNode,mysqlha,checkService,[User,Password,Database,Master],1500),
 	case Status of
 		ok ->
 			io:format("checkService returned ok (~p)~n",[Output]);
