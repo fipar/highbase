@@ -35,7 +35,7 @@ ATTEMPTS=3
 #High Availability on this project's name, we might aswell expect unexpected things and be prepared
 #2) a user with root privileges might accidentaly run this script, so we want to make sure that we really need
 #to do a takeover
-mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $MASTER_NODE && log "takeover attempt with master node up (error)" && exit 1
+mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $CLUSTER_IP && log "takeover attempt with master node up (error)" && exit 1
 
 #stop replicating
 echo "slave stop" | mysql -u${DB_USER} -p${DB_PASSWORD}
