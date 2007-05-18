@@ -42,20 +42,20 @@ echo "slave stop" | mysql -u${DB_USER} -p${DB_PASSWORD}
 
 ${SUDO}${FPING} -c$ATTEMPTS $CLUSTER_IP && {
 	log "takeover with master node still holding cluster ip, going to gratuitious ARP mode (error)"
-	nohup ${SUDO}/usr/bin/fake $CLUSTER_IP &
+	nohup ${SUDO}${FAKE} $CLUSTER_IP &
 } || {
 	log "takeover with master node down, doing simple /sbin/ifconfig"
 	#start listening
-	currip=$(${SUDO}/sbin/ifconfig $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
-	${SUDO}/sbin/ifconfig $CLUSTER_DEVICE $CLUSTER_IP
-	${SUDO}/sbin/ifconfig $CLUSTER_DEVICE add $currip
+	currip=$(${SUDO}${IFCONFIG} $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
+	${SUDO}${IFCONFIG} $CLUSTER_DEVICE $CLUSTER_IP
+	${SUDO}${IFCONFIG} $CLUSTER_DEVICE add $currip
 }
 
 #just to be paranoid, this code should never run
-[ $(${SUDO}/sbin/ifconfig $CLUSTER_DEVICE|grep -c $CLUSTER_IP) -eq 0 ] && {
-	currip=$(${SUDO}/sbin/ifconfig $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
-	${SUDO}/sbin/ifconfig $CLUSTER_DEVICE $CLUSTER_IP
-	${SUDO}/sbin/ifconfig $CLUSTER_DEVICE add $currip
+[ $(${SUDO}${IFCONFIG} $CLUSTER_DEVICE|grep -c $CLUSTER_IP) -eq 0 ] && {
+	currip=$(${SUDO}${IFCONFIG} $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
+	${SUDO}${IFCONFIG} $CLUSTER_DEVICE $CLUSTER_IP
+	${SUDO}${IFCONFIG} $CLUSTER_DEVICE add $currip
 } && echo "manually added $CLUSTER_IP to $CLUSTER_DEVICE"
 
 log "takeover complete (notify)"

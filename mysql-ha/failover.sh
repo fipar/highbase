@@ -38,8 +38,8 @@ SOFT_FAIL=1
 
 [ -z "$SOFT_FAIL" ] && SOFT_FAIL=1
 
-${SUDO}/sbin/ifconfig -a | grep Link | awk '{print $1}' | while read ifname; do
-        [ "$(${SUDO}/sbin/ifconfig $ifname | grep inet|awk '{print $2}'|awk -F: '{print $2}')" == "$CLUSTER_IP" ] && ${SUDO}/sbin/ifconfig $ifname del $CLUSTER_IP
+${SUDO}${IFCONFIG} -a | grep Link | awk '{print $1}' | while read ifname; do
+        [ "$(${SUDO}${IFCONFIG} $ifname | grep inet|awk '{print $2}'|awk -F: '{print $2}')" == "$CLUSTER_IP" ] && ${SUDO}${IFCONFIG} $ifname del $CLUSTER_IP
 done
 
 [ $SOFT_FAIL -eq 0 ] && {
@@ -48,13 +48,13 @@ done
 	     #work either so this script would never be executed (gratuitious ARP would have
 	     #to do the job)
 	${SUDO}$RC_SCRIPT stop
-	${SUDO}/bin/ps -fu mysql |awk '{print $2}'|xargs ${SUDO}/bin/kill
+	${SUDO}${PS} -fu mysql |awk '{print $2}'|xargs ${SUDO}${KILL}
 	usleep $(extractTime $SIG_KILL_WAIT)
-	${SUDO}/bin/ps -fu mysql |awk '{print $2}'|xargs ${SUDO}/bin/kill -9
+	${SUDO}${PS} -fu mysql |awk '{print $2}'|xargs ${SUDO}${KILL} -9
 	log "failover finished, soft mode (notify)"
 	exit 0
 } || {
 	sync; sync
 	log "starting failover, hard mode, shutting down box (notify)"
-	nohup ${SUDO}/sbin/shutdown -h now &
+	nohup ${SUDO}${SHUTDOWN} -h now &
 }

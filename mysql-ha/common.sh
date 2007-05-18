@@ -56,7 +56,7 @@ send_email()
 {
 
 HOST=`hostname`
-echo $* | /bin/mail -s "mysql-ha notice ($HOST)" $NOTIFY_EMAIL
+echo $* | $MAIL -s "mysql-ha notice ($HOST)" $NOTIFY_EMAIL
 }
 
 send_stdout()
@@ -68,7 +68,7 @@ send_netbios()
 {
 destinations='' #include a space-separated list of netbios names here
 for destination in $destinations; do
-	echo $* | smbclient -M $destination
+	echo $* | $SENDMAIL -M $destination
 done
 }
 

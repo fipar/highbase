@@ -56,21 +56,21 @@ SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
 
 AGENT_SOCK=/tmp/mysql-ha-ssh-agent.sock
 
-[ -n "$(${SUDO}/sbin/fuser $AGENT_SOCK)" ] && {
+[ -n "$(${SUDO}${FUSER} $AGENT_SOCK)" ] && {
 	echo "killing old ssh-agent"
-	${SUDO}/bin/kill $(${SUDO}/sbin/fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
+	${SUDO}${KILL} $(${SUDO}${FUSER} $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
 	for i in $(seq 10); do
 		usleep 20
 		echo -n "."
 	done
-	${SUDO}/bin/kill -9 $(${SUDO}/sbin/fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
+	${SUDO}${KILL} -9 $(${SUDO}${FUSER} $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
 }
 
 test -f $AGENT_SOCK && rm -f $AGENT_SOCK
 
 [ -n "$operation" ] && [ "$operation" == "shutdown-master" ] && {
 	echo "shutting down master"
-	${SUDO}/sbin/ifconfig ${CLUSTER_DEVICE} $(${SUDO}/sbin/ifconfig ${CLUSTER_DEVICE}:0 | grep inet | awk '{print $2}' | awk -F: '{print $2}')
+	${SUDO}${IFCONFIG} ${CLUSTER_DEVICE} $(${SUDO}${IFCONFIG} ${CLUSTER_DEVICE}:0 | grep inet | awk '{print $2}' | awk -F: '{print $2}')
 	exit
 }
 
@@ -95,10 +95,10 @@ exit
 
 [ -n "$N_MASTER" ] && NODEOK=0 && {
 	log "Configuring network interface (debug)"
-	${SUDO}/sbin/ifconfig $CLUSTER_DEVICE |grep $CLUSTER_IP >/dev/null || { 
-		currip=$(${SUDO}/sbin/ifconfig $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
-		${SUDO}/sbin/ifconfig $CLUSTER_DEVICE $CLUSTER_IP
-		${SUDO}/sbin/ifconfig $CLUSTER_DEVICE add $currip
+	${SUDO}${IFCONFIG} $CLUSTER_DEVICE |grep $CLUSTER_IP >/dev/null || { 
+		currip=$(${SUDO}${IFCONFIG} $CLUSTER_DEVICE|grep inet | awk '{print $2}'|awk -F: '{print $2}')
+		${SUDO}${IFCONFIG} $CLUSTER_DEVICE $CLUSTER_IP
+		${SUDO}${IFCONFIG} $CLUSTER_DEVICE add $currip
 	}
 	. $MYSQLHA_HOME/master_routine.sh
 }
