@@ -1,3 +1,7 @@
+05-18-2007
+* changed references from MASTER_NODE to CLUSTER_IP in takeover, failover and slave_routine, when it was appropiate
+* introduced changes in compat.sh, several main cluster files, and the installation documentation, according to bug
+reports 1707251 and 1707212
 04-06-2007
 * The rc-script releases the CLUSTER_IP when invoked with the stop argument
 01-16-2007
