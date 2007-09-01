@@ -27,12 +27,33 @@ while getopts "p:o:e:" oname; do
 	esac
 done
 
-# small function to start the ssh agent
+SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
+
+AGENT_SOCK=/tmp/mysql-ha-ssh-agent.sock
+
+# start the ssh agent
 start_agent()
 {
 ssh-agent -a $AGENT_SOCK # TODO: we start the ssh-agent, but we don't stop it here
 export SSH_AUTH_SOCK=$AGENT_SOCK
 ssh-add
+}
+
+
+# stop the ssh agent if it's running
+stop_agent()
+{
+[ -n "$(${SUDO}${FUSER} $AGENT_SOCK)" ] && {
+	echo "killing old ssh-agent"
+	${SUDO}${KILL} $(${SUDO}${FUSER} $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
+	for i in $(seq 10); do
+		usleep 20
+		echo -n "."
+	done
+	${SUDO}${KILL} -9 $(${SUDO}${FUSER} $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
+}
+
+rm -f $AGENT_SOCK
 }
 
 
@@ -49,35 +70,19 @@ for variable in $variables; do
 	eval "export $variable"
 done
 
-
 . $MYSQLHA_HOME/common.sh
 
-SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
-
-AGENT_SOCK=/tmp/mysql-ha-ssh-agent.sock
-
-[ -n "$(${SUDO}${FUSER} $AGENT_SOCK)" ] && {
-	echo "killing old ssh-agent"
-	${SUDO}${KILL} $(${SUDO}${FUSER} $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
-	for i in $(seq 10); do
-		usleep 20
-		echo -n "."
-	done
-	${SUDO}${KILL} -9 $(${SUDO}${FUSER} $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
-}
-
-test -f $AGENT_SOCK && rm -f $AGENT_SOCK
-
 [ -n "$operation" ] && [ "$operation" == "shutdown-master" ] && {
+	[ -n "$N_MASTER" ] || exit
 	echo "shutting down master"
 	${SUDO}${IFCONFIG} ${CLUSTER_DEVICE} $(${SUDO}${IFCONFIG} ${CLUSTER_DEVICE}:0 | grep inet | awk '{print $2}' | awk -F: '{print $2}')
 	exit
 }
 
 
-
 [ -n "$operation" ] && [ "$operation" == "start-agent" ] && {  #if we're starting the agent, then this is all we need to run 
-start_agent 	
+stop_agent
+start_agent
 exit
 } 
 
