@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 #
 # configurator.sh
 # this file is part of the mysql-ha suite
@@ -26,6 +26,8 @@ while getopts "p:o:e:" oname; do
 		e ) encrypted=$OPTARG;;
 	esac
 done
+
+. $MYSQLHA_HOME/role.include
 
 SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
 
@@ -97,6 +99,7 @@ exit
 	log "Starting mysqld (debug)"
 	${SUDO}$RC_SCRIPT start
 }
+
 
 [ -n "$N_MASTER" ] && NODEOK=0 && {
 	log "Configuring network interface (debug)"
