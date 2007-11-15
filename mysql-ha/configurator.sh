@@ -49,7 +49,7 @@ stop_agent()
 	echo "killing old ssh-agent"
 	${SUDO}${KILL} $(${SUDO}${FUSER} $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
 	for i in $(seq 10); do
-		usleep 20
+		$SLEEP $(extractTime 20ms)
 		echo -n "."
 	done
 	${SUDO}${KILL} -9 $(${SUDO}${FUSER} $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null

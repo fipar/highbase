@@ -49,7 +49,7 @@ done
 	     #to do the job)
 	${SUDO}$RC_SCRIPT stop
 	${SUDO}${PS} -fu mysql |awk '{print $2}'|xargs ${SUDO}${KILL}
-	usleep $(extractTime $SIG_KILL_WAIT)
+	$SLEEP $(extractTime $SIG_KILL_WAIT)
 	${SUDO}${PS} -fu mysql |awk '{print $2}'|xargs ${SUDO}${KILL} -9
 	log "failover finished, soft mode (notify)"
 	exit 0

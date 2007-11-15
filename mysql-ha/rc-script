@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 #
 # mysql-had
 # this file is part of the mysql-ha suite (named rc-script on the cvs tree)
@@ -61,6 +61,10 @@ pidf="/var/run/mysql-ha.pid"
 logf="/var/log/mysql-ha.log"
 startedname="$MYSQLHA_HOME/configurator.sh"
 
+. $MYSQLHA_HOME/role.include
+. $MYSQLHA_HOME/compat.sh
+. $MYSQLHA_HOME/common.sh
+
 
 start()
 {
@@ -95,25 +99,25 @@ stop()
 AGENT_SOCK=/tmp/mysql-ha-ssh-agent.sock
 
 [ -n "$(fuser $AGENT_SOCK)" ] && {
-	kill $(fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
-	usleep 200
-	kill -9 $(fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
+	kill $(fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') >/dev/null 2>&1
+	$SLEEP $(extractTime 200)
+	kill -9 $(fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') >/dev/null 2>&1
 }
 
 	echo -n "stopping $progname: ">&2
-	su - $USER -c "cd $MYSQLHA_HOME; env MYSQLHA_HOME=$MYSQLHA_HOME ./configurator.sh -o shutdown-master"
+	su - $USER -c "cd $MYSQLHA_HOME; env MYSQLHA_HOME=$MYSQLHA_HOME ./configurator.sh -o shutdown-master" >/dev/null 2>&1
 	pid=$(cat $pidf)
 	#cat $pidf
 	#echo $pidf
 	echo "\$3 == $pid {print \$2}" > /tmp/awkscr.$$ # TODO: learn to escape AWK scripts 
-	ps -ef|awk -f /tmp/awkscr.$$ |xargs kill 2>/dev/null#kill the children
-	usleep 30
-	ps -ef|awk -f /tmp/awkscr.$$ |xargs kill -9 2>/dev/null#i mean it
+	ps -ef|awk -f /tmp/awkscr.$$ |xargs kill >/dev/null 2>&1#kill the children
+	$SLEEP $(extractTime 30ms)
+	ps -ef|awk -f /tmp/awkscr.$$ |xargs kill -9 >/dev/null 2>&1#i mean it
 	rm -f /tmp/awkscr.$$
 	kill $(cat $pidf)	
 	sleep 1
 	[ -d /proc/$(cat $pidf) ] && {
-		kill -9 $(cat $pidf)
+		kill -9 $(cat $pidf) >/dev/null 2>&1
 		echo "OK (had to kill -9)">&2
 	} || echo "OK">&2
 	rm -f $pidf

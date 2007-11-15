@@ -62,11 +62,11 @@ childpid=$!
 
 . $MYSQLHA_HOME/common.sh
 
-usleep $(extractTime $TIMEOUT)
+$SLEEP $(extractTime $TIMEOUT)
 
 check_pid_name $COMMAND $childpid && { 
 	kill $childpid
-	usleep ${RANDOM}00 #give it a chance to exit gracefully
+	$SLEEP $(extractTime ${RANDOM}00) #give it a chance to exit gracefully
 	check_pid_name $COMMAND $childpid && kill -9 $childpid && log "had to kill -9 $COMMAND with $childpid" || log "had to kill $COMMAND with $childpid"
 	exit 1
 }

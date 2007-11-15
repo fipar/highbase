@@ -30,7 +30,7 @@
 }
 
 #check for mysql and mysqladmin
-[ -n "$(type -a mysql)" -a -n "$(type -a mysqladmin)" ] || {
+[ -n "$(type -a mysql 2>/dev/null)" -a -n "$(type -a mysqladmin 2>/dev/null)" ] || {
 	echo "i need mysql's client programs (mysql, mysqladmin)">&2
 	exit 1
 }
@@ -42,26 +42,32 @@
 }
 
 #check for syslog
-[ -n "$(type -a logger)" ] || {
+[ -n "$(type -a logger 2>/dev/null)" ] || {
 	echo "i need logger to write to syslog">&2
 	exit 1
 }
 
 #check for perl
-[ -n "$(type -a perl)" ] || {
+[ -n "$(type -a perl 2>/dev/null)" ] || {
 	echo "i need perl">&2
 	exit 1
 }
 
 #check for gcc and make
-[ -n "$(type -a make)" -a -n "$(type -a gcc)" ] || {
+[ -n "$(type -a make 2>/dev/null)" -a -n "$(type -a gcc)" ] || {
 	echo "i need make and gcc">&2
 	exit 1
 }
 
 #check for ssh
-[ -n "$(type -a ssh)" ] || {
+[ -n "$(type -a ssh 2>/dev/null)" ] || {
 	echo "i need ssh">&2
+	exit 1
+}
+
+#check for usleep or bc
+[ -n "$(type -a usleep 2>/dev/null)" -o -n "$(type -a bc 2>/dev/null)" ] || {
+	echo "i need usleep or bc in order to give you proper sleep times">&2
 	exit 1
 }
 

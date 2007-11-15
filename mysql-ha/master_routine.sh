@@ -18,7 +18,7 @@ shouldrun || log "shouldrun returned false (ok)"
 CHK_PROG="mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $SLAVE"
 
 $CHK_PROG && log "mysql.monitor was succesfull (ok)" || {
-	usleep $(extractTime $MONITOR_CHK_THRESHOLD)
+	$SLEEP $(extractTime $MONITOR_CHK_THRESHOLD)
 	$CHK_PROG && log "mysql.monitor was successfull in $SLAVE within CHK_THRESHOLD (warning)" || {
 		log "mysql.monitor was unsuccssessfull in $SLAVE (warning)"
 	}

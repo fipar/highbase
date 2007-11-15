@@ -17,6 +17,11 @@ DEBIAN_CHK_CONFIG='update-rc.d mysql-had start 20 3 4 5'
 	export BASHRC="/etc/bash.bashrc"
 }
 
+# in case we don't have usleep in our system
+NO_USLEEP=0
+SLEEP=$(type sleep)
+[ -n "$(type usleep 2>/dev/null)" ] && SLEEP=$(type usleep) || NO_USLEEP=1
+export SLEEP USLEEP
 
 # we don't set FPING here because you must manually install it and it should always end up in the same place
 

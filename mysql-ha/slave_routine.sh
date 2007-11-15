@@ -35,7 +35,7 @@ attempt_kill()
 {
 	log "about to run mysql_kill on $MASTER_NODE (warning)"
 	wrapper_safe_cmd.sh $SSH_PATIENCE $MYSQLHA_HOME/pwrap ssh ${SSH_USER}@$MASTER_NODE $MYSQLHA_HOME/mysql_kill.sh || log "could not run mysql_kill.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
-	usleep $(extractTime $MYSQL_KILL_WAIT)
+	$SLEEP $(extractTime $MYSQL_KILL_WAIT)
 	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && return 0 || return 1
 }
 
@@ -43,7 +43,7 @@ attempt_restart()
 {
 	log "about to run mysql_restart on $MASTER_NODE (warning)"
 	wrapper_safe_cmd.sh $SSH_PATIENCE $MYSQLHA_HOME/pwrap ssh ${SSH_USER}@$MASTER_NODE $MYSQLHA_HOME/restart_mysql.sh || log "could not run mysql_restart.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
-	usleep $(extractTime $MYSQL_RESTART_WAIT)
+	$SLEEP $(extractTime $MYSQL_RESTART_WAIT)
 	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && return 0 || return 1
 }
 
@@ -97,7 +97,7 @@ should_failover=0
 [ -n "$ATTEMPT_KILL" ] || ATTEMPT_KILL=0
 
 wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && log "mysql responded (ok)" || {
-	usleep $(extractTime $MONITOR_CHK_THRESHOLD)
+	$SLEEP $(extractTime $MONITOR_CHK_THRESHOLD)
 	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && "mysql responded within MONITOR_CHK_THRESHOLD (warning)" || {
 		${SUDO}${FPING} -c $FPING_ATTEMPTS $MASTER_NODE && {
 			[ $ATTEMPT_KILL -eq 1 ] &&  attempt_kill && {
