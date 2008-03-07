@@ -1,17 +1,18 @@
 #!/bin/bash
 #
 # failover.sh
-# this file is part of the mysql-ha suite
+# this file is part of the highbase suite
 # Copyrght (C) 2002 Fernando Ipar. see the file COPYING for more info
 #
 
-# the slave node will run this script if mysql.monitor
+# the slave node will run this script if mysql-monitor
 # fails but the master machine is still running
-# this is run only AFTER mysqk_kill.sh and mysql_restart.sh are
+# this is run only AFTER mysql_kill.sh and mysql_restart.sh are
 # tried
 
-
-. $MYSQLHA_HOME/common.sh
+HIGHBASE_HOME="$(dirname "$0")"
+export HIGHBASE_HOME
+. $HIGHBASE_HOME/common.sh
 
 #this line has two reasons:
 #1) it should be impossible but might just happen that we try and go for a takeover while the master has started to
@@ -19,10 +20,10 @@
 #High Availability on this project's name, we might aswell expect unexpected things and be prepared
 #2) a user with root privileges might accidentaly run this script, so we want to make sure that we really need
 #to do a takeover
-mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $CLUSTER_IP && log "failover attempt with master node up (error)" && exit 1
+$HIGHBASE_HOME/mysql-monitor "$CLUSTER_IP" "$MYSQL_USER" "$MYSQL_PASSWORD" "$MYSQL_DATABASE" && log "failover attempt with master node up (error)" && exit 1
 
 
-SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
+SUDO=$(cat $HIGHBASE_HOME/sudo_prefix)
 
 
 #this is a boolean variable. if it is 0, then a soft failover

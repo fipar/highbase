@@ -1,7 +1,7 @@
 #!/bin/bash -x
 #
 # configurator.sh
-# this file is part of the mysql-ha suite
+# this file is part of the highbase suite
 # Copyright (C) 2002 Fernando Ipar. see the file COPYING for more info
 
 #
@@ -27,44 +27,44 @@ while getopts "p:o:e:" oname; do
 	esac
 done
 
-. $MYSQLHA_HOME/role.include
+. $(dirname "$0")/role.include
 
-SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
+SUDO=$(cat $(dirname "$0")/sudo_prefix)
 
-AGENT_SOCK=/tmp/mysql-ha-ssh-agent.sock
+AGENT_SOCK=/tmp/highbase-ssh-agent.sock
 
 # start the ssh agent
-start_agent()
-{
-ssh-agent -a $AGENT_SOCK # TODO: we start the ssh-agent, but we don't stop it here
-export SSH_AUTH_SOCK=$AGENT_SOCK
-ssh-add
+start_agent() {
+	# TODO: we start the ssh-agent, but we don't stop it here
+	ssh-agent -a $AGENT_SOCK
+	export SSH_AUTH_SOCK=$AGENT_SOCK
+	ssh-add
 }
 
 
 # stop the ssh agent if it's running
-stop_agent()
-{
-[ -n "$(${SUDO}${FUSER} $AGENT_SOCK)" ] && {
-	echo "killing old ssh-agent"
-	${SUDO}${KILL} $(${SUDO}${FUSER} $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
-	for i in $(seq 10); do
-		$SLEEP $(extractTime 20ms)
-		echo -n "."
-	done
-	${SUDO}${KILL} -9 $(${SUDO}${FUSER} $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
+stop_agent() {
+	[ -n "$(${SUDO}${FUSER} $AGENT_SOCK)" ] && {
+		echo "killing old ssh-agent"
+		${SUDO}${KILL} $(${SUDO}${FUSER} $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
+		for i in $(seq 10); do
+			$SLEEP $(extractTime 20ms)
+			echo -n "."
+		done
+		${SUDO}${KILL} -9 $(${SUDO}${FUSER} $AGENT_SOCK 2>&1|awk -F: '{print $2}') 2>/dev/null
+	}
+
+	rm -f $AGENT_SOCK
 }
 
-rm -f $AGENT_SOCK
-}
 
-
-[ -n "$MYSQLHA_HOME" ] || export MYSQLHA_HOME="/usr/mysql-ha" #you can either set this here or in the environment
-. $MYSQLHA_HOME/compat.sh
+HIGHBASE_HOME="$(dirname "$0")"
+export HIGHBASE_HOME
+. $HIGHBASE_HOME/compat.sh
 
 . $BASHRC
 
-CONF_FILE=/etc/mysql-ha.conf
+CONF_FILE=/etc/highbase.conf
 
 variables=$(grep '=' $CONF_FILE|awk -F= '{print $1}')
 . $CONF_FILE
@@ -72,7 +72,7 @@ for variable in $variables; do
 	eval "export $variable"
 done
 
-. $MYSQLHA_HOME/common.sh
+. $HIGHBASE_HOME/common.sh
 
 [ -n "$operation" ] && [ "$operation" == "shutdown-master" ] && {
 	[ -n "$N_MASTER" ] || exit
@@ -82,14 +82,16 @@ done
 }
 
 
-[ -n "$operation" ] && [ "$operation" == "start-agent" ] && {  #if we're starting the agent, then this is all we need to run 
-stop_agent
-start_agent
-exit
+[ -n "$operation" ] && [ "$operation" == "start-agent" ] && {
+	# if we're starting the agent, then this is all we need to run 
+	stop_agent
+	start_agent
+	exit
 } 
 
-[ $encrypted -eq 0 ] && start_agent # if the dsa key is encrypted, we don't need to start the agent, since it's already started through
-	  			    # a previous invocation of configurator with the -o start-agent option 
+# if the dsa key is encrypted, we don't need to start the agent, since it's already started through
+# a previous invocation of configurator with the -o start-agent option 
+[ $encrypted -eq 0 ] && start_agent
 
 # store my pid. i should always get this as parameter
 [ -n "$pidf" ] && echo $$ > $pidf
@@ -108,11 +110,12 @@ exit
 		${SUDO}${IFCONFIG} $CLUSTER_DEVICE $CLUSTER_IP
 		${SUDO}${IFCONFIG} $CLUSTER_DEVICE add $currip
 	}
-	. $MYSQLHA_HOME/master_routine.sh
+	. $HIGHBASE_HOME/master_routine.sh
 }
-[ -n "$N_SLAVE" ] && NODEOK=0 && . $MYSQLHA_HOME/slave_routine.sh
+[ -n "$N_SLAVE" ] && NODEOK=0 && . $HIGHBASE_HOME/slave_routine.sh
 [ -z "$NODEOK" ] && {
-	echo "i couldn't figure out if i'm master or slave, aborting">&2
+	echo "i couldn't figure out if i'm master or slave, aborting" >&2
 	[ -n "$1" ] && rm -f $1
 	exit 1
 }
+

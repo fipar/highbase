@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # mysql_restart.sh
-# this file is part of the mysql-ha suite
+# this file is part of the highbase suite
 # Copyright 2002 Fernando Ipar - fipar@acm.org / fipar@users.sourceforge.net
 
 # This program is free software; you can redistribute it
@@ -21,8 +21,8 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 
-. $MYSQLHA_HOME/common.sh
-SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
+. $HIGHBASE_HOME/common.sh
+SUDO=$(cat $HIGHBASE_HOME/sudo_prefix)
 
 OF=/tmp/restart_mysql.$$
 

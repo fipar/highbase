@@ -1,5 +1,5 @@
 #!/bin/bash
-# pre-install.sh - this file is part of the mysql-ha suite
+# pre-install.sh - this file is part of the highbase suite
 #
 # Fernando Ipar - fipar@acm.org / fipar@koaladev.com / fipar@users.sourceforge.net
 # Copyright (C) 2002 Fernando Ipar.
@@ -20,7 +20,7 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 
-# check for things we need to run mysql-ha
+# check for things we need to run highbase
 
 
 #check for mysql's init script
@@ -80,26 +80,26 @@
 #check for sudo and configure accordingly
 [ -n "$(type -a sudo 2>/dev/null)" ] && {
 	echo "creating sudo based installation">&2
-	useradd mysqlha 2>/dev/null #if this is the slave, this might be already created by the ssh setup 
-	groupadd mysqlha 2>/dev/null #on red hat we have the private user group scheme, so this will fail
-	usermod -G mysqlha mysqlha 2>/dev/null #again, we don't need this on red hat
+	useradd highbase 2>/dev/null #if this is the slave, this might be already created by the ssh setup 
+	groupadd highbase 2>/dev/null #on red hat we have the private user group scheme, so this will fail
+	usermod -G highbase highbase 2>/dev/null #again, we don't need this on red hat
 	# populating path
 	[ -x /etc/init.d/mysql ] && RC_SCRIPT=/etc/init.d/mysql || RC_SCRIPT=/etc/init.d/mysqld
 	PS=/bin/ps
-	KILL=/bin/kill # not the builtin, i _don't know_ how to use that with sudo
+	# not the builtin, i _don't know_ how to use that with sudo
+	KILL=/bin/kill
 	SHUTDOWN=/sbin/shutdown
-	FAKE=/usr/bin/fake
+	FAKE=$HIGHBASE_HOME/extern/fake
 	IFCONFIG=/sbin/ifconfig
 	FUSER=/sbin/fuser
-	FPING=/usr/local/sbin/fping
-	echo "mysqlha	ALL=NOPASSWD:$FPING, $FUSER, $PS, $KILL, $RC_SCRIPT, $SHUTDOWN, $FAKE, $IFCONFIG" >> /etc/sudoers
-	echo -n '/usr/bin/sudo ' > $MYSQLHA_HOME/sudo_prefix
-	echo -n 'mysqlha' > $MYSQLHA_HOME/ssh_user
+	FPING=$HIGHBASE_HOME/extern/fping
+	echo "highbase	ALL=NOPASSWD:$FPING, $FUSER, $PS, $KILL, $RC_SCRIPT, $SHUTDOWN, $FAKE, $IFCONFIG" >> /etc/sudoers
+	echo -n '/usr/bin/sudo ' > $HIGHBASE_HOME/sudo_prefix
+	echo -n 'highbase' > $HIGHBASE_HOME/ssh_user
 } || {
 	echo "i couldn't find sudo in your path, creating sudo less installation">&2
-	echo -n ''>$MYSQLHA_HOME/sudo_prefix
-	echo -n 'root' > $MYSQLHA_HOME/ssh_user
+	echo -n ''>$HIGHBASE_HOME/sudo_prefix
+	echo -n 'root' > $HIGHBASE_HOME/ssh_user
 }
-
 
 exit 0

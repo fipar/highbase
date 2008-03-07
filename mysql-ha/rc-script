@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# mysql-had
-# this file is part of the mysql-ha suite (named rc-script on the cvs tree)
+# highbased
+# this file is part of the highbase suite (named rc-script on the cvs tree)
 
 # Copyright 2002 Fernando Ipar - fipar@acm.org / fipar@users.sourceforge.net
 
@@ -23,15 +23,15 @@
 # Boston, MA 02111-1307 USA
 
 ### BEGIN INIT INFO
-# Provides:          mysql-ha
+# Provides:         highbase
 # Required-Start:    
 # Required-Stop:     
 # Should-Start:      
 # Should-Stop:       
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start and stop the mysql-ha daemon 
-# Description:  mysql-ha is a high availability clustering system for use 
+# Short-Description: Start and stop the highbase daemon 
+# Description:  highbase is a high availability clustering system for use 
 # with the mysql database server. it uses mysql's builtin replication 
 # features to achieve data redundance, fake to migrate a unique cluster IP 
 # from master to slave in the event of a failure, and is highly customizable 
@@ -42,44 +42,54 @@
 
 
 # chkconfig: 2345 98 88
-# description: mysql-ha is a high availability clustering system for use \
+# description: highbase is a high availability clustering system for use \
 # with the mysql database server. it uses mysql's builtin replication \
 # features to achieve data redundance, fake to migrate a unique cluster IP \
 # from master to slave in the event of a failure, and is highly customizable \
 # and in active development
-# processname: mysql-had
-# config: /etc/mysql-ha.conf
-# pidfile: /var/run/mysql-ha.pid
+# processname: highbased
+# config: /etc/highbase.conf
+# pidfile: /var/run/highbase.pid
 
-export MYSQLHA_HOME=/usr/mysql-ha
-#FIXME: figure out a way to get this out of the installation process
+if [ -f "/etc/highbase.conf" ]; then
+	. /etc/highbase.conf
+elif [ -f "/etc/sysconfig/highbase" ]; then
+	. /etc/sysconfig/highbase
+elif [ -f "./highbase.conf" ]; then
+	. ./highbase.conf
+else
+	echo "highbase not configured."
+	exit 0
+fi
 
-. /etc/profile # so we get the path
+export HIGHBASE_HOME
 
-progname=$(basename $0)
-pidf="/var/run/mysql-ha.pid"
-logf="/var/log/mysql-ha.log"
-startedname="$MYSQLHA_HOME/configurator.sh"
+. /etc/profile
 
-. $MYSQLHA_HOME/role.include
-. $MYSQLHA_HOME/compat.sh
-. $MYSQLHA_HOME/common.sh
+progname="$(basename $0)"
+pidf="/var/run/highbase.pid"
+logf="/var/log/highbase.log"
+startedname="$HIGHBASE_HOME/configurator.sh"
+
+. $HIGHBASE_HOME/role.include
+. $HIGHBASE_HOME/compat.sh
+. $HIGHBASE_HOME/common.sh
 
 
 start()
 {
 	[ -f $pidf ] && echo "$progname already running (found pid file)">&2 && return 1
 	echo -n "starting $progname: ">&2
-	USER=$(cat $MYSQLHA_HOME/ssh_user)
+	USER=$(cat $HIGHBASE_HOME/ssh_user)
 	chown $USER.$USER $logf
 	touch $pidf
 	chown $USER.$USER $pidf
 	encrypted=0
 	grep ENCRYPTED /home/$USER/.ssh/id_dsa >/dev/null && {
 		encrypted=1
-		su - $USER -c "cd $MYSQLHA_HOME; env MYSQLHA_HOME=$MYSQLHA_HOME ./configurator.sh -o start-agent"	
+		su - $USER -c "cd $HIGHBASE_HOME; env HIGHBASE_HOME=$HIGHBASE_HOME ./configurator.sh -o start-agent"	
 	}
-	nohup su - $USER -c "cd $MYSQLHA_HOME; env MYSQLHA_HOME=$MYSQLHA_HOME ./configurator.sh -p $pidf -e $encrypted>>$logf 2>&1" & >/dev/null 2>&1
+	nohup su - $USER -c "cd $HIGHBASE_HOME; env HIGHBASE_HOME=$HIGHBASE_HOME ./configurator.sh -p $pidf -e $encrypted>>$logf 2>&1" & >/dev/null 2>&1
 	[ -f $pidf ] && {
 		[ -d /proc/$(cat $pidf) ] && echo "OK">&2 || {
 			echo "ERROR ($(cat $pidf) does not appear to be running)">&2
@@ -96,23 +106,21 @@ stop()
 		return 1
 	}
 
-AGENT_SOCK=/tmp/mysql-ha-ssh-agent.sock
+AGENT_SOCK=/tmp/highbase-ssh-agent.sock
 
 [ -n "$(fuser $AGENT_SOCK)" ] && {
 	kill $(fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') >/dev/null 2>&1
-	$SLEEP $(extractTime 200)
+	/bin/usleep 200
 	kill -9 $(fuser $AGENT_SOCK 2>&1|awk -F: '{print $2}') >/dev/null 2>&1
 }
 
 	echo -n "stopping $progname: ">&2
-	su - $USER -c "cd $MYSQLHA_HOME; env MYSQLHA_HOME=$MYSQLHA_HOME ./configurator.sh -o shutdown-master" >/dev/null 2>&1
+	su - $USER -c "cd $HIGHBASE_HOME; env HIGHBASE_HOME=$HIGHBASE_HOME ./configurator.sh -o shutdown-master" >/dev/null 2>&1
 	pid=$(cat $pidf)
-	#cat $pidf
-	#echo $pidf
-	echo "\$3 == $pid {print \$2}" > /tmp/awkscr.$$ # TODO: learn to escape AWK scripts 
-	ps -ef|awk -f /tmp/awkscr.$$ |xargs kill >/dev/null 2>&1#kill the children
-	$SLEEP $(extractTime 30ms)
-	ps -ef|awk -f /tmp/awkscr.$$ |xargs kill -9 >/dev/null 2>&1#i mean it
+	echo "\$3 == $pid {print \$2}" > /tmp/awkscr.$$
+	ps -ef|awk -f /tmp/awkscr.$$ |xargs kill >/dev/null 2>&1
+	/bin/usleep 30
+	ps -ef|awk -f /tmp/awkscr.$$ |xargs kill -9 >/dev/null 2>&1
 	rm -f /tmp/awkscr.$$
 	kill $(cat $pidf)	
 	sleep 1

@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # wrapper_safe_cmd.sh
-# this file is part of the mysql-ha suite
+# this file is part of the highbase suite
 # Copyright 2002 Fernando Ipar - fipar@acm.org / fipar@users.sourceforge.net
 
 # This program is free software; you can redistribute it
@@ -42,6 +42,7 @@
 	safe_cmd.sh $TIMEOUT pwrap $CMDLINE $*
 	retcod=$?
 } 
-[ $retcod -eq 143 ] && exit 0 #kill means ok
-[ $retcod -eq 137 ] && exit 1 #kill -9 means error
-exit $retcod  #whatever this might mean...
+[ $retcod -eq 143 ] && exit 0
+[ $retcod -eq 137 ] && exit 1
+exit $retcod
+

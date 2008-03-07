@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # mysql_kill.sh
-# this file is part of the mysql-ha suite
+# this file is part of the highbase suite
 # Copyright 2002 Fernando Ipar - fipar@acm.org / fipar@users.sourceforge.net
 
 # This program is free software; you can redistribute it
@@ -21,8 +21,14 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 
-#i kill (MySQL internal KILL SQL command, hence the name of this script) every mysql process
+HIGHBASE_HOME="$(dirname "$0")"
+export HIGHBASE_HOME
+. $HIGHBASE_HOME/common.sh
+
+# kill (MySQL internal KILL SQL command, hence the name of this script) every mysql process
 #except for the replication thread (PID=1)
-for pid in $(mysqladmin -u${DB_USER} -p${DB_PASSWORD} processlist|grep -v '^| Id'|awk -F\| '{print $2}'|awk '{print $1}'|grep -v ^$); do
-	[ $pid -ne 1 ] && mysqladmin -u${DB_USER} -p${DB_PASSWORD} kill $pid
+
+for pid in $(mysqladmin -u"${DB_USER}" -p"${DB_PASSWORD}" processlist|grep -v '^| Id'|awk -F\| '{print $2}'|awk '{print $1}'|grep -v ^$); do
+	[ $pid -ne 1 ] && mysqladmin -u"${DB_USER}" -p"${DB_PASSWORD}" kill $pid
 done
+

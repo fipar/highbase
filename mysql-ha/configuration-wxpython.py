@@ -73,7 +73,7 @@ class ConfiguratorFrame(wx.Frame):
 
     def __set_properties(self):
         # begin wxGlade: ConfiguratorFrame.__set_properties
-        self.SetTitle("mysql-ha configuration menu")
+        self.SetTitle("highbase configuration menu")
         _icon = wx.EmptyIcon()
         _icon.CopyFromBitmap(wx.Bitmap("ha.png", wx.BITMAP_TYPE_ANY))
         self.SetIcon(_icon)
@@ -172,7 +172,7 @@ class ConfiguratorFrame(wx.Frame):
         self.SaveConfiguration.SetMinSize((123, 26))
 	tooltip.close()
         self.SaveConfiguration.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, ""))
-        self.SaveConfiguration.SetToolTipString("Writes configuration to /etc/mysql-ha (tooltip not internationalized yet)")
+        self.SaveConfiguration.SetToolTipString("Writes configuration to /etc/highbase (tooltip not internationalized yet)")
         self.SaveConfiguration.SetDefault()
         self.Cancel.SetMinSize((85, 26))
         self.Cancel.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, ""))
@@ -243,7 +243,7 @@ class ConfiguratorFrame(wx.Frame):
         # end wxGlade
 
     def SaveConfigurationEvent(self, event): # wxGlade: ConfiguratorFrame.<event_handler>
-	configuration = open('/etc/mysql-ha.conf','w')
+	configuration = open('/etc/highbase.conf','w')
 	
 	configuration.write("CLUSTER_IP = "+self.TextCtrl_CLUSTER_IP.GetLineText(0)+"\n")
 	configuration.write("CLUSTER_NETMASK = "+self.TextCtrl_CLUSTER_NETMASK.GetLineText(0)+"\n")	

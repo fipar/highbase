@@ -1,3 +1,11 @@
+
+03-07-2008
+* Imported following updates (rufustfirefly):
+  - Changed from MYSQLHA_HOME to HIGHBASE_HOME
+  - Renamed executables and scripts to use "highbase" name
+  - Converted mysql.monitor script to C version for speed and overhead
+  - Fix minor script issues, including portability
+
 05-18-2007
 * changed references from MASTER_NODE to CLUSTER_IP in takeover, failover and slave_routine, when it was appropiate
 * introduced changes in compat.sh, several main cluster files, and the installation documentation, according to bug
@@ -8,7 +16,7 @@ reports 1707251 and 1707212
 * We now properly remove the ssh-agent sock after a hard failure
 * We now support threshold times in seconds, milliseconds and microseconds, by using usleep instead of sleep in all places except for the main loops (that
 would give administrators the possibility to choke their own MySQL servers, I think..)
-* Updated the sample mysql-ha.conf file accordingly
+* Updated the sample highbase.conf file accordingly
 
 11-13-2006
 * Added changes to support sudo
@@ -31,7 +39,7 @@ the CLUSTER_IP is the primary IP on the master node, and it's 'real' IP is left 
 
 
 11-02-2006
-* Changed takeover to remove the mysql-ha.pid file, so the rc-script now works properly in all scenarios
+* Changed takeover to remove the highbase.pid file, so the rc-script now works properly in all scenarios
 * Improved handling of MYSQLHA_HOME
 
 10-30-2006
@@ -50,7 +58,7 @@ for it!).
 10-13-2004
 * added security warnings where appropiate (during installation)
 * fixed permissions of tarball
-* fixed permissions of mysql-ha.conf after it's population
+* fixed permissions of highbase.conf after it's population
 * fixed bug in the installation that prevented the fake tarball from being properly opened
 
 --
@@ -79,7 +87,7 @@ MySQL 3.x and MySQL 4.x
 
 09-24-2002
 * minor changes to eliminate redundant script sourcing (of common.sh) 
-* changed logger so syslog lines are tagged 'mysql-had'
+* changed logger so syslog lines are tagged 'highbased'
 * fixed inconsistency in variable naming for mysql rc script (RC_SCRIPT vs MYSQL_RC)
 
 09-21-2002

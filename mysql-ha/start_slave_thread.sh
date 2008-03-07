@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # start_slave_thread.sh
-# this file is part of the mysql-ha suite
+# this file is part of the highbase suite
 # Copyright 2002 Fernando Ipar - fipar@acm.org / fipar@users.sourceforge.net
 
 # This program is free software; you can redistribute it
@@ -21,7 +21,9 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 
-. $MYSQLHA_HOME/common.sh
+HIGHBASE_HOME="$(dirname "$0")"
+export HIGHBASE_HOME
+. $HIGHBASE_HOME/common.sh
 
+echo "slave start" | mysql -u"$DB_USER" -p"$DB_PASSWORD" && log "slave thread started (ok)" || log "could not start slave thread (error)"
 
-echo "slave start" | mysql -u$DB_USER -p$DB_PASSWORD && log "slave thread started (ok)" || log "could not start slave thread (error)"

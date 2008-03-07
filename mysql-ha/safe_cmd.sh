@@ -1,6 +1,6 @@
 #!/bin/bash
 # safe_cmd.sh
-# this file is part of the mysql-ha suite
+# this file is part of the highbase suite
 # Copyright 2002 Fernando Ipar - fipar@acm.org / fipar@users.sourceforge.net
 
 # This program is free software; you can redistribute it
@@ -60,7 +60,7 @@ shift 2
 $COMMAND $* &
 childpid=$!
 
-. $MYSQLHA_HOME/common.sh
+. $HIGHBASE_HOME/common.sh
 
 $SLEEP $(extractTime $TIMEOUT)
 

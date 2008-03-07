@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # install.sh
-# this file is part of the mysql-ha suite
+# this file is part of the highbase suite
 
 #Copyright (C) 2002 Fernando Ipar.
 #This file is released under the GNU GPL, see the file COPYING for more information
@@ -27,13 +27,14 @@
 
 RC_DIR=/etc/init.d
 
-[ -n "$MYSQLHA_HOME" ] || export MYSQLHA_HOME="/usr/mysql-ha" #you can either set this here or in the environment
+# you can either set this here or in the environment
+[ -n "$HIGHBASE_HOME" ] || export HIGHBASE_HOME="/usr/local/highbase"
 
 ##
 ## END of global variables, you shouldn't need to modify anything below this
 ##
 
-. $MYSQLHA_HOME/compat.sh
+. $HIGHBASE_HOME/compat.sh
 
 [ -d $RC_DIR ] || {
 	#see if we're in an older version of redhat
@@ -53,19 +54,24 @@ RC_DIR=/etc/init.d
 }
 
 #first see if we have everything we need
-$MYSQLHA_HOME/pre-install.sh || exit 1
+$HIGHBASE_HOME/pre-install.sh || exit 1
 
-SSH_USER=$(cat $MYSQLHA_HOME/ssh_user)
+SSH_USER=$(cat $HIGHBASE_HOME/ssh_user)
 HOME=/root
-[ "$SSH_USER" == "mysqlha" ] && HOME=/home/mysqlha
+[ "$SSH_USER" == "highbase" ] && HOME=/home/highbase
 
 #now build aux packages and create config files
-cd $MYSQLHA_HOME/extern/fping-2.2b2/
-./configure && make && make check && make install && make clean || {
+cd $HIGHBASE_HOME/extern/
+tar xf fping-2.2b2.tar.gz
+cd fping-2.2b2/
+./configure && make && make check && make install && make clean || 
 	echo "couldnt build fping">&2
 	exit 1
 }
-cd $MYSQLHA_HOME/extern
+# Install fping into the extern directory
+cp fping ../ -v
+rm fping-2.2b2 -rf
+cd $HIGHBASE_HOME/extern
 tar xzvf fake*gz && rm -f fake*gz
 cd fake*
 make patch && make && make install || {
@@ -84,19 +90,19 @@ sleep 1
 ./configuration-wrapper.sh 
 ./setup_fake.sh
 [ -d $RC_DIR ] && {
-	cp -v rc-script $RC_DIR/mysql-had
-	chmod a+x $RC_DIR/mysql-had
+	cp -v rc-script $RC_DIR/highbased
+	chmod a+x $RC_DIR/highbased
 	pushd $RC_DIR
 	$CHK_CONFIG
 	popd
 } || {
-	echo "i couldn't find $RC_DIR, you should manually copy rc-script as mysql-had in your systems rc dir" >&2
+	echo "i couldn't find $RC_DIR, you should manually copy rc-script as highbased in your systems rc dir" >&2
 }
 
 cat <<EOMSG >&2
 
-mysql-ha needs passwordless ssh properly configured for the root
-or mysqlha user from master to slave and the other way around. 
+highbase needs passwordless ssh properly configured for the root
+or highbase user from master to slave and the other way around. 
 If you want me to try and set it up for you type 'y' (you will
 be asked the root password for the slave/master nodes). 
 
@@ -106,7 +112,7 @@ Otherwise just type enter.
 
   SECURITY WARNING
  
-  mysql-ha uses passwordless ssh, by authenticating using
+  highbase uses passwordless ssh, by authenticating using
   private/public key, and by storing the private key with
   an empty passphrase. this means that anyone with read
   access to the private key file can then connect to the
@@ -116,7 +122,7 @@ Otherwise just type enter.
   - set up the private key file with 700 permissions (ssh
   should refuse to run otherwise, but still, I haven't
   tried this on all distributions)
-  - create a dedicated account for mysql-ha, and give it
+  - create a dedicated account for highbase, and give it
   only the necessary privileges (the ability to run, 
   through sudo, the mysql_kill/mysql_restart/failover
   scripts)
@@ -144,9 +150,9 @@ EOMSG
 	# test or create environment in peer
 	cat << EOSCR > prepareEnvironment.tmp.sh
 #!/bin/bash
-useradd mysqlha
-groupadd mysqlha 2>/dev/null
-usermod -G mysqlha mysqlha 2>/dev/null
+useradd highbase
+groupadd highbase 2>/dev/null
+usermod -G highbase highbase 2>/dev/null
 rm -f /tmp/prepareEnvironment.tmp.sh
 EOSCR
 	chmod 700 prepareEnvironment.tmp.sh
@@ -263,11 +269,11 @@ read reply
 
 cat <<EOMSG >&2
 now you can run ./configurator.sh, interactively, to test it, 
-or nohup $MYSQLHA_HOME/configurator.sh 
+or nohup $HIGHBASE_HOME/configurator.sh 
 you can also use the rc script, if it was properly installed for your system
 
-please report any bugs to the mysql-ha-devel list (see 
-our site at http://mysql-ha.sf.net for info on this) 
+please report any bugs to the highbase-devel list (see 
+our site at http://highbase.sf.net for info on this) 
 or otherwise to fipar@users.sourceforge.net
 
 have fun!

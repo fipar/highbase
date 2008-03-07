@@ -1,0 +1,5 @@
+$Id$
+jbuchbinder@ravewireless.com
+
+Reimplementation of MySQL client check to avoid having to use Perl.
+

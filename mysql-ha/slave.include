@@ -1,8 +1,11 @@
+#!/bin/bash
 
-#this file is part of the mysql-ha suite
+#this file is part of the highbase suite
 #Copyright (C) 2002 Fernando Ipar - fipar@acm.org / fipar@users.sourceforge.net
 #see the file COPYING for more info
-export MYSQLHA_HOME=/usr/mysql-ha
-[ $(echo $PATH|grep -c "$MYSQLHA_HOME") -gt 0 ] || export PATH=$PATH:$MYSQLHA_HOME
-[ $(echo $PATH|grep -c "$MYSQLHA_HOME/extern") -gt 0 ] || export PATH=$PATH:$MYSQLHA_HOME/extern
+
+export HIGHBASE_HOME="$(dirname "$0")"
+[ $(echo $PATH|grep -c "$HIGHBASE_HOME") -gt 0 ] || export PATH=$PATH:$HIGHBASE_HOME
+[ $(echo $PATH|grep -c "$HIGHBASE_HOME/extern") -gt 0 ] || export PATH=$PATH:$HIGHBASE_HOME/extern
 export N_SLAVE=1
+

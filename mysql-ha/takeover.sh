@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # takeover.sh
-# this file is part of the mysql-ha suite
+# this file is part of the highbase suite
 # Copyright 2002 Fernando Ipar - fipar@acm.org / fipar@users.sourceforge.net
 
 # This program is free software; you can redistribute it
@@ -21,13 +21,19 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 
-. $MYSQLHA_HOME/common.sh
-SUDO=$(cat $MYSQLHA_HOME/sudo_prefix)
-FPING=/usr/local/sbin/fping
+HIGHBASE_HOME="$(dirname "$0")"
+export HIGHBASE_HOME
+. $HIGHBASE_HOME/common.sh
 
-
+SUDO=$(cat $HIGHBASE_HOME/sudo_prefix)
+FPING=$HIGHBASE_HOME/extern/fping
 
 ATTEMPTS=3
+
+if [ "${MYSQL_USER}" -eq "" ]; then
+	log "ERROR: $0 is running without proper variables! exiting!"
+	exit 1
+fi
 
 #this line has two reasons: 
 #1) it should be impossible but might just happen that we try and go for a takeover while the master has started to
@@ -35,10 +41,10 @@ ATTEMPTS=3
 #High Availability on this project's name, we might aswell expect unexpected things and be prepared
 #2) a user with root privileges might accidentaly run this script, so we want to make sure that we really need
 #to do a takeover
-mysql.monitor --username=$MYSQL_USER --password=$MYSQL_PASSWORD --database=$MYSQL_DATABASE $CLUSTER_IP && log "takeover attempt with master node up (error)" && exit 1
+$HIGHBASE_HOME/mysql-monitor "$CLUSTER_IP" "$MYSQL_USER" "$MYSQL_PASSWORD" "$MYSQL_DATABASE" && log "takeover attempt with master node up (error)" && exit 1
 
 #stop replicating
-echo "slave stop" | mysql -u${DB_USER} -p${DB_PASSWORD}
+echo "slave stop" | mysql -u"${DB_USER}" -p"${DB_PASSWORD}"
 
 ${SUDO}${FPING} -c$ATTEMPTS $CLUSTER_IP && {
 	log "takeover with master node still holding cluster ip, going to gratuitious ARP mode (error)"
@@ -59,5 +65,6 @@ ${SUDO}${FPING} -c$ATTEMPTS $CLUSTER_IP && {
 } && echo "manually added $CLUSTER_IP to $CLUSTER_DEVICE"
 
 log "takeover complete (notify)"
-rm -f /var/run/mysql-ha.pid #so the rc-script works ok
+rm -f /var/run/highbase.pid
 exit 0
+
