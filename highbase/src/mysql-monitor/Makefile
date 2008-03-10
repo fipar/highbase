@@ -6,7 +6,7 @@
 all: clean mysql-monitor
 
 mysql-monitor:
-	gcc -I/usr/include/mysql -o monitor.o -c monitor.c
+	gcc `mysql_config --cflags` -o monitor.o -c monitor.c
 	gcc -L/usr/lib `mysql_config --libs` -o mysql-monitor monitor.c
 
 clean:
