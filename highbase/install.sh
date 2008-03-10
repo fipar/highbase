@@ -82,9 +82,12 @@ make patch && make && make install || {
 cd ..
 [ -z $PATH ] && echo "PATH not set">&2 && exit 1
 BINDIR=$(echo $PATH|awk -F: '{print $1}')
-cp mysql.monitor $BINDIR
-
+##cp mysql.monitor $BINDIR
 cd ..
+
+echo "Building mysql-monitor binary
+cd src/mysql-monitor ; make ; cp mysql-monitor ../.. -v ; cd ../..
+
 echo 'almost done, now some interactive scripts...'>&2
 sleep 1
 ./configuration-wrapper.sh 
