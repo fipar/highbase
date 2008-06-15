@@ -26,7 +26,7 @@
 
 HIGHBASE_HOME="$(dirname "$0")"
 export HIGHBASE_HOME
-. $HIGHBASE_HOME/highbase.conf
+#. $HIGHBASE_HOME/highbase.conf
 . $HIGHBASE_HOME/compat.sh
 
 ##########################
@@ -117,10 +117,18 @@ extractTime() {
 	}
 }
 
+[ -z $HIGHBASE_HOME ] && export HIGHBASE_HOME=$(dirname $0)
+SUDO=$($HIGHBASE_HOME/sudo_prefix)
 
 #routine to obtain the name of the master node
 set_master_node() {
 	MASTER_NODE=$(cat /etc/my.cnf |grep master-host|awk -F= '{print $2}'|awk '{print $1}')
+	[ -z "$MASTER_NODE" ] && {
+		# MySQL 5 doesn't need master config in my.cnf if there's a master.info file in place, so we also
+		# look there. This is very beta, we must verify the format of this file to make sure the master's name
+		# is always on the same position ## TODO ##
+		MASTER_NODE=$(${SUDO}$HIGHBASE_HOME/get_master.sh)
+	} 
 	[ -n "$MASTER_NODE" ] && export MASTER_NODE || die "could not get master-host from /etc/my.cnf" 1
 	export MASTER_NODE
 }

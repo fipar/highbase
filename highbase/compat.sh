@@ -34,6 +34,7 @@ export SHUTDOWN=$(which shutdown 2>/dev/null)
 export FAKE=$(which fake 2>/dev/null)
 export MAIL=$(which mail 2>/dev/null)
 export SMBCLIENT=$(which smbclient 2>/dev/null)
+export FPING=$(which fping 2>/dev/null)
 [ -x /etc/init.d/mysqld ] && export RC_SCRIPT=/etc/init.d/mysqld || {
 	[ -x /etc/init.d/mysql ] && export RC_SCRIPT=/etc/init.d/mysql
 }
@@ -49,13 +50,22 @@ export SMBCLIENT=$(which smbclient 2>/dev/null)
 [ -z "$FAKE" ] && export FAKE=/usr/bin/fake
 [ -z "$MAIL" ] && export MAIL=/bin/mail
 [ -z "$SMBCLIENT" ] && export SMBCLIENT=/usr/bin/smbclient
+[ -z "$FPING" ] && export FPING=/usr/local/sbin/fping
+
+[ -z "$HIGHBASE_HOME" ] && export HIGHBASE_HOME=$(dirname $0)
 
 get_sudoers_line() {
-	echo "This is the sudoers line I was able to write after examining your PATH: ">&2
-	echo >&2
-	echo "highbase ALL=NOPASSWD:$HIGHBASE_HOME/fping, $FUSER, $PS, $KILL, $RC_SCRIPT, $SHUTDOWN, $FAKE, $IFCONFIG"
-	echo >&2
-	echo "If this makes sense to you, append it to your /etc/sudoers file (this messages are sent to stderr, while the line itself">&2
-	echo "is sent to stdout for easy pipelining)">&2
+	cat <<EOF>&2
+	This is the sudoers line I was able to write after examining your PATH: 
+
+	highbase ALL=NOPASSWD:$FPING, $HIGHBASE_HOME/get_master.sh, $FUSER, $PS, $KILL, $RC_SCRIPT, $SHUTDOWN, $FAKE, $IFCONFIG
+	
+	If this makes sense to you, append it to your /etc/sudoers file (this messages are sent to stderr, while the line itself
+	is sent to stdout for easy pipelining)
+
+	Please note that the get_master.sh script is located at HIGHBASE_HOME, and at this stage, this directory might be guessed as '.'
+	If this is the case, please change it accordingly. 
+
+EOF
 }
 
