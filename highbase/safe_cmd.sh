@@ -1,7 +1,7 @@
 #!/bin/bash
 # safe_cmd.sh
 # this file is part of the highbase suite
-# Copyright 2002 Fernando Ipar - fipar@acm.org / fipar@users.sourceforge.net
+# Copyright 2002 Fernando Ipar - fipar@seriema-systems.com / fipar@users.sourceforge.net
 
 # This program is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public

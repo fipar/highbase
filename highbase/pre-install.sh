@@ -1,7 +1,7 @@
 #!/bin/bash
 # pre-install.sh - this file is part of the highbase suite
 #
-# Fernando Ipar - fipar@acm.org / fipar@koaladev.com / fipar@users.sourceforge.net
+# Fernando Ipar - fipar@seriema-systems.com / fipar@users.sourceforge.net
 # Copyright (C) 2002 Fernando Ipar.
 # This file is released under the GNU GPL, see the file COPYING for more information
 #
