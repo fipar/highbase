@@ -15,7 +15,7 @@ shouldrun() {
 main() {
 	shouldrun || log "shouldrun returned false (ok)"
 
-	if [ -n "${MYSQL_USER}" ]; then
+	if [ -z "${MYSQL_USER}" ]; then
 		echo "Horrible error, no configuration."
 		exit 1
 	fi
