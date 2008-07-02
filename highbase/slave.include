@@ -4,7 +4,7 @@
 #Copyright (C) 2002 Fernando Ipar - fipar@seriema-systems.com / fipar@users.sourceforge.net
 #see the file COPYING for more info
 
-export HIGHBASE_HOME="$(dirname "$0")"
+[ -z "$HIGHBASE_HOME" ] && export HIGHBASE_HOME="$(dirname "$0")"
 [ $(echo $PATH|grep -c "$HIGHBASE_HOME") -gt 0 ] || export PATH=$PATH:$HIGHBASE_HOME
 [ $(echo $PATH|grep -c "$HIGHBASE_HOME/extern") -gt 0 ] || export PATH=$PATH:$HIGHBASE_HOME/extern
 export N_SLAVE=1

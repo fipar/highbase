@@ -24,8 +24,7 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 
-HIGHBASE_HOME="$(dirname "$0")"
-export HIGHBASE_HOME
+[ -z "$HIGHBASE_HOME" ] && HIGHBASE_HOME="$(dirname "$0")" && export HIGHBASE_HOME
 #. $HIGHBASE_HOME/highbase.conf
 . $HIGHBASE_HOME/compat.sh
 
