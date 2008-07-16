@@ -20,9 +20,9 @@ CUSTOM_CHK_CONFIG=
 
 # in case we don't have usleep in our system
 NO_USLEEP=0
-SLEEP=$(type sleep)
+SLEEP=$(which sleep)
 [ -n "$(type usleep 2>/dev/null)" ] && SLEEP=$(which usleep) || NO_USLEEP=1
-export SLEEP USLEEP
+export SLEEP NO_USLEEP
 
 # we don't set FPING here because you must manually install it and it should always end up in the same place
 
@@ -58,7 +58,7 @@ get_sudoers_line() {
 	cat <<EOF>&2
 	This is the sudoers line I was able to write after examining your PATH: 
 
-	highbase ALL=NOPASSWD:$FPING, $HIGHBASE_HOME/get_master.sh, $FUSER, $PS, $KILL, $RC_SCRIPT, $SHUTDOWN, $FAKE, $IFCONFIG
+	highbase ALL=NOPASSWD:$FPING, $HIGHBASE_HOME/get_master.sh $FUSER, $PS, $KILL, $RC_SCRIPT, $SHUTDOWN, $FAKE, $IFCONFIG
 	
 	If this makes sense to you, append it to your /etc/sudoers file (this messages are sent to stderr, while the line itself
 	is sent to stdout for easy pipelining)
