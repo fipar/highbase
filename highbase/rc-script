@@ -117,6 +117,11 @@ AGENT_SOCK=/tmp/highbase-ssh-agent.sock
 	echo -n "stopping $progname: ">&2
 	su - $USER -c "cd $HIGHBASE_HOME; env HIGHBASE_HOME=$HIGHBASE_HOME ./configurator.sh -o shutdown-master" >/dev/null 2>&1
 	pid=$(cat $pidf)
+	[ -z "$pid" ] && {
+		echo "Highbase is not running!">&2
+		rm -f $pidf
+		exit 1
+	}
 	echo "\$3 == $pid {print \$2}" > /tmp/awkscr.$$
 	ps -ef|awk -f /tmp/awkscr.$$ |xargs kill >/dev/null 2>&1
 	$SLEEP $(extractTime 200ms)

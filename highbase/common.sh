@@ -117,7 +117,7 @@ extractTime() {
 }
 
 [ -z $HIGHBASE_HOME ] && export HIGHBASE_HOME=$(dirname $0)
-SUDO=$($HIGHBASE_HOME/sudo_prefix)
+SUDO=$(cat $HIGHBASE_HOME/sudo_prefix)
 
 #routine to obtain the name of the master node
 set_master_node() {
