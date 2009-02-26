@@ -35,14 +35,14 @@ SUDO=$(< $HIGHBASE_HOME/sudo_prefix)
 # becaused it's choked by a bad client, a deadlock, etc.
 attempt_kill() {
 	log "about to run mysql_kill on $MASTER_NODE (warning)"
-	$HIGHBASE_HOME/wrapper_safe_cmd.sh $SSH_PATIENCE $HIGHBASE_HOME/pwrap ssh ${SSH_USER}@$MASTER_NODE $HIGHBASE_HOME/mysql_kill.sh || log "could not run mysql_kill.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
+	$HIGHBASE_HOME/wrapper_safe_cmd.sh $SSH_PATIENCE $HIGHBASE_HOME/pwrap ssh ${SSH_USER}@$MASTER_NODE env HIGHBASE_HOME=$HIGHBASE_HOME N_MASTER=1 $HIGHBASE_HOME/mysql_kill.sh || log "could not run mysql_kill.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
 	$SLEEP $(extractTime $MYSQL_KILL_WAIT)
 	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && return 0 || return 1
 }
 
 attempt_restart() {
 	log "about to run mysql_restart on $MASTER_NODE (warning)"
-	wrapper_safe_cmd.sh $SSH_PATIENCE $HIGHBASE_HOME/pwrap ssh ${SSH_USER}@$MASTER_NODE $HIGHBASE_HOME/restart_mysql.sh || log "could not run mysql_restart.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
+	wrapper_safe_cmd.sh $SSH_PATIENCE $HIGHBASE_HOME/pwrap ssh ${SSH_USER}@$MASTER_NODE env HIGHBASE_HOME=$HIGHBASE_HOME N_MASTER=1 $HIGHBASE_HOME/restart_mysql.sh || log "could not run mysql_restart.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
 	$SLEEP $(extractTime $MYSQL_RESTART_WAIT)
 	wrapper_safe_cmd.sh $MONITOR_PATIENCE $CHK_PROG && return 0 || return 1
 }
@@ -118,7 +118,7 @@ main() {
 			$HIGHBASE_HOME/takeover.sh
 			[ $should_failover -eq 1 ] && {
 				log "mysql-monitor failed but $MASTER_NODE is running, going for the failover (error)"
-				$HIGHBASE_HOME/wrapper_safe_cmd.sh $SSH_PATIENCE $HIGHBASE_HOME/pwrap ssh ${SSH_USER}@$MASTER_NODE $HIGHBASE_HOME/failover.sh || {
+				$HIGHBASE_HOME/wrapper_safe_cmd.sh $SSH_PATIENCE $HIGHBASE_HOME/pwrap ssh ${SSH_USER}@$MASTER_NODE env HIGHBASE_HOME=$HIGHBASE_HOME N_MASTER=1 $HIGHBASE_HOME/failover.sh || {
 					log "could not failover.sh on $MASTER_NODE due to timeout abortion of safe_cmd.sh (error)"
 					}
 			}
