@@ -4,8 +4,6 @@
 # this file is part of the highbase suite
 # Copyright (C) 2002 Fernando Ipar, see the file COPYING for more info
 
-HIGHBASE_HOME="$(dirname "$0")"
-export HIGHBASE_HOME
 . $HIGHBASE_HOME/common.sh
 
 shouldrun() {

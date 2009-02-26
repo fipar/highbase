@@ -27,8 +27,6 @@
 # user on the highbase.conf file
 #
 
-HIGHBASE_HOME="$(dirname "$0")"
-export HIGHBASE_HOME
 . $HIGHBASE_HOME/common.sh
 
 CONF_FILE=/etc/highbase.conf

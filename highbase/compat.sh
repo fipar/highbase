@@ -52,8 +52,6 @@ export FPING=$(which fping 2>/dev/null)
 [ -z "$SMBCLIENT" ] && export SMBCLIENT=/usr/bin/smbclient
 [ -z "$FPING" ] && export FPING=/usr/local/sbin/fping
 
-[ -z "$HIGHBASE_HOME" ] && export HIGHBASE_HOME=$(dirname $0)
-
 get_sudoers_line() {
 	cat <<EOF>&2
 	This is the sudoers line I was able to write after examining your PATH: 

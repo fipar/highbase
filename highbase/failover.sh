@@ -10,8 +10,6 @@
 # this is run only AFTER mysql_kill.sh and mysql_restart.sh are
 # tried
 
-HIGHBASE_HOME="$(dirname "$0")"
-export HIGHBASE_HOME
 . $HIGHBASE_HOME/common.sh
 
 #this line has two reasons:

@@ -21,8 +21,6 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 
-HIGHBASE_HOME="$(dirname "$0")"
-export HIGHBASE_HOME
 . $HIGHBASE_HOME/common.sh
 
 # kill (MySQL internal KILL SQL command, hence the name of this script) every mysql process

@@ -21,12 +21,13 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 
-HIGHBASE_HOME="$(dirname "$0")"
-export HIGHBASE_HOME
 . $HIGHBASE_HOME/common.sh
 
 SUDO=$(cat $HIGHBASE_HOME/sudo_prefix)
-FPING=$HIGHBASE_HOME/extern/fping
+#the following line is removed, it is legacy, FPING is now exported from compat.sh and taken from the environment 
+#FPING=$HIGHBASE_HOME/extern/fping
+
+echo "FPING in takeover is $FPING, now I'll die" && exit 1
 
 ATTEMPTS=3
 

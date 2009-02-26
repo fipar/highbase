@@ -24,8 +24,10 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 
-[ -z "$HIGHBASE_HOME" ] && HIGHBASE_HOME="$(dirname "$0")" && export HIGHBASE_HOME
-#. $HIGHBASE_HOME/highbase.conf
+[ -z "$HIGHBASE_HOME" ] && {
+	echo "HIGHBASE_HOME not set, aborting">&2
+	exit 1
+} 
 . $HIGHBASE_HOME/compat.sh
 
 ##########################
@@ -116,7 +118,6 @@ extractTime() {
 	}
 }
 
-[ -z $HIGHBASE_HOME ] && export HIGHBASE_HOME=$(dirname $0)
 SUDO=$(cat $HIGHBASE_HOME/sudo_prefix)
 
 #routine to obtain the name of the master node

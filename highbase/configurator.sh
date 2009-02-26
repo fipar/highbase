@@ -19,6 +19,15 @@ pidf=
 operation=
 encrypted=0
 
+CONF_FILE=/etc/highbase.conf
+
+variables=$(grep '=' $CONF_FILE|awk -F= '{print $1}')
+. $CONF_FILE
+for variable in $variables; do
+	eval "export $variable"
+done
+
+
 while getopts "p:o:e:" oname; do
 	case $oname in
 		p ) pidf=$OPTARG;;
@@ -58,19 +67,9 @@ stop_agent() {
 }
 
 
-[ -z $HIGHBASE_HOME ] && HIGHBASE_HOME="$(dirname "$0")"
-export HIGHBASE_HOME
 . $HIGHBASE_HOME/compat.sh
-
 . $BASHRC
 
-CONF_FILE=/etc/highbase.conf
-
-variables=$(grep '=' $CONF_FILE|awk -F= '{print $1}')
-. $CONF_FILE
-for variable in $variables; do
-	eval "export $variable"
-done
 . $HIGHBASE_HOME/common.sh
 
 [ -n "$operation" ] && [ "$operation" == "shutdown-master" ] && {
