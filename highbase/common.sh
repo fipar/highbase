@@ -102,21 +102,23 @@ die() {
 
 
 bcrun() {
-	echo "scale=6; $*" | bc
+        echo "scale=6; $*" | bc
 }
 
 # extracts a time value suitable for use with usleep
 extractTime() {
-	[ $NO_USLEEP -eq 0 ] && {
-		echo $1 | grep ms >/dev/null && echo $((${1%ms*} * 1000)) && return
-		echo $1 | grep us >/dev/null && echo ${1%us*} && return
-		echo $(($1 * 1000000))
-	} || {
-		echo $1 | grep ms >/dev/null && echo $(bcrun "${1%ms*} / 1000") && return
-		echo $1 | grep us >/dev/null && echo $(bcrun "${1%us*} / 1000000") && return
-		echo $(bcrun "$1 * 1000000")
-	}
+        [ $NO_USLEEP -eq 0 ] && {
+                echo $1 | grep ms >/dev/null && echo $((${1%ms*} * 1000)) && return
+                echo $1 | grep us >/dev/null && echo ${1%us*} && return
+                echo $(($1 * 1000000))
+        } || {
+                echo $1 | grep ms >/dev/null && echo $(bcrun "${1%ms*} / 1000") && return
+                echo $1 | grep us >/dev/null && echo $(bcrun "${1%us*} / 1000000") && return
+                echo $1 
+        }
 }
+
+
 
 SUDO=$(cat $HIGHBASE_HOME/sudo_prefix)
 

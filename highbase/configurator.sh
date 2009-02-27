@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 #
 # configurator.sh
 # this file is part of the highbase suite

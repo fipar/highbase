@@ -33,13 +33,13 @@
 [ -z "$1" ] && echo "usage: wrapper_safe_cmd.sh <timeout (secs)> <cmdline> [arg1 arg2 arg3 ...]">&2 && exit 1
 [ -z "$2" ] && echo "usage: wrapper_safe_cmd.sh <timeout (secs)> <cmdline> [arg1 arg2 arg3 ...]">&2 && exit 1
 [ "$2" == "pwrap" ] && {
-	safe_cmd.sh $*
+	$HIGHBASE_HOME/safe_cmd.sh $*
 	retcod=$?
 } || {
 	TIMEOUT=$1
 	CMDLINE=$2
 	shift 2
-	safe_cmd.sh $TIMEOUT pwrap $CMDLINE $*
+	$HIGHBASE_HOME/safe_cmd.sh $TIMEOUT $HIGHBASE_HOME/pwrap $CMDLINE $*
 	retcod=$?
 } 
 [ $retcod -eq 143 ] && exit 0
