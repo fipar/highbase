@@ -95,7 +95,7 @@ stop_agent() {
 [ -n "$pidf" ] && echo $$ > $pidf
 
 #start mysqld if it's stopped
-[ $($RC_SCRIPT status |grep -c stop) -eq 0 ] ||  {
+[ $(${SUDO}$RC_SCRIPT status |grep -c stop) -eq 0 ] ||  {
 	log "Starting mysqld (debug)"
 	${SUDO}$RC_SCRIPT start
 }
