@@ -1,3 +1,7 @@
+03-03-2009
+- Fixes minor bugs in the startup script
+- Overall fixes
+
 17-07-2008
 - Fixed bugs in the startup procedure
 - Fixed bugs in the usleep dependency compatibility
