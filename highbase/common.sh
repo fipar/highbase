@@ -145,7 +145,7 @@ prepare_environment() {
 	export SAFE_CMD_DONE=143 # exit code from SAFE_CMD that means it was killed by it's child
 	[ -x /etc/init.d/mysqld ] && RC_SCRIPT=/etc/init.d/mysqld
 	[ -x /etc/init.d/mysql ] && RC_SCRIPT=/etc/init.d/mysql
-	[ -z "$RC_SCRIPT" ] && echo "i couldn't figure out where your mysql rc script lives" && exit 1
+	[ -z "$RC_SCRIPT" ] && echo "($HOSTNAME) i couldn't figure out where your mysql rc script lives" && exit 1
 	export RC_SCRIPT
 }
 

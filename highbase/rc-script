@@ -89,7 +89,7 @@ start()
 		encrypted=1
 		su - $USER -c "cd $HIGHBASE_HOME; env HIGHBASE_HOME=$HIGHBASE_HOME ./configurator.sh -o start-agent"	
 	}
-	nohup su - $USER -c "cd $HIGHBASE_HOME; env HIGHBASE_HOME=$HIGHBASE_HOME ./configurator.sh -p $pidf -e $encrypted>>$logf 2>&1" &>/dev/null 2>&1 &
+	nohup su - $USER -c "cd $HIGHBASE_HOME; env HIGHBASE_HOME=$HIGHBASE_HOME ./configurator.sh -p $pidf -e $encrypted 2>&1 >>$logf" &>/dev/null &
 	[ -f $pidf ] && {
 		[ -d /proc/$(cat $pidf) ] && echo "OK">&2 || {
 			echo "ERROR ($(cat $pidf) does not appear to be running)">&2
