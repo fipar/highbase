@@ -24,8 +24,6 @@
 . $HIGHBASE_HOME/common.sh
 
 SUDO=$(cat $HIGHBASE_HOME/sudo_prefix)
-#the following line is removed, it is legacy, FPING is now exported from compat.sh and taken from the environment 
-#FPING=$HIGHBASE_HOME/extern/fping
 
 echo "FPING in takeover is $FPING, now I'll die" && exit 1
 

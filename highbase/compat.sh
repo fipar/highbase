@@ -34,7 +34,7 @@ export SHUTDOWN=$(which shutdown 2>/dev/null)
 export FAKE=$(which fake 2>/dev/null)
 export MAIL=$(which mail 2>/dev/null)
 export SMBCLIENT=$(which smbclient 2>/dev/null)
-export FPING=$(which fping 2>/dev/null)
+export FPING=$(which ping 2>/dev/null)
 [ -x /etc/init.d/mysqld ] && export RC_SCRIPT=/etc/init.d/mysqld || {
 	[ -x /etc/init.d/mysql ] && export RC_SCRIPT=/etc/init.d/mysql
 }
@@ -50,13 +50,13 @@ export FPING=$(which fping 2>/dev/null)
 [ -z "$FAKE" ] && export FAKE=/usr/bin/fake
 [ -z "$MAIL" ] && export MAIL=/bin/mail
 [ -z "$SMBCLIENT" ] && export SMBCLIENT=/usr/bin/smbclient
-[ -z "$FPING" ] && export FPING=/usr/local/sbin/fping
+[ -z "$FPING" ] && export FPING=/bin/ping
 
 get_sudoers_line() {
 	cat <<EOF>&2
 	This is the sudoers line I was able to write after examining your PATH: 
 
-	highbase ALL=NOPASSWD:$FPING, $HIGHBASE_HOME/get_master.sh, $FUSER, $PS, $KILL, $RC_SCRIPT, $SHUTDOWN, $FAKE, $IFCONFIG
+	highbase ALL=NOPASSWD:$HIGHBASE_HOME/get_master.sh, $FUSER, $PS, $KILL, $RC_SCRIPT, $SHUTDOWN, $FAKE, $IFCONFIG
 	
 	If this makes sense to you, append it to your /etc/sudoers file (this messages are sent to stderr, while the line itself
 	is sent to stdout for easy pipelining)

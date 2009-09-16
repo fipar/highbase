@@ -92,8 +92,7 @@
 	FAKE=$HIGHBASE_HOME/extern/fake
 	IFCONFIG=/sbin/ifconfig
 	FUSER=/sbin/fuser
-	FPING=$HIGHBASE_HOME/extern/fping
-	echo "highbase	ALL=NOPASSWD:$FPING, $FUSER, $PS, $KILL, $RC_SCRIPT, $SHUTDOWN, $FAKE, $IFCONFIG" >> /etc/sudoers
+	echo "highbase	ALL=NOPASSWD $FUSER, $PS, $KILL, $RC_SCRIPT, $SHUTDOWN, $FAKE, $IFCONFIG" >> /etc/sudoers
 	echo -n '/usr/bin/sudo ' > $HIGHBASE_HOME/sudo_prefix
 	echo -n 'highbase' > $HIGHBASE_HOME/ssh_user
 } || {

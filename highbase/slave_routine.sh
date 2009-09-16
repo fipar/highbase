@@ -27,8 +27,6 @@ CHK_PROG="$HIGHBASE_HOME/mysql-monitor \"$CLUSTER_IP\" \"$MYSQL_USER\" \"$MYSQL_
 
 SSH_USER=$(< $HIGHBASE_HOME/ssh_user)
 SUDO=$(< $HIGHBASE_HOME/sudo_prefix)
-# the following line is removed, it was a legacy set up, FPING is now exported from compat.sh and gotten from the environment
-#FPING=$HIGHBASE_HOME/extern/fping
 
 #
 # we try to kill every mysql process on the master node, except for the replication thread, just in case the node isn't responding
